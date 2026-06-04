@@ -104,9 +104,7 @@ export default function Calculator() {
             transition={{ duration: 0.7 }}
             className="lg:col-span-5 lg:sticky lg:top-32"
           >
-            <div className="ornament mb-6">
-              <span className="text-[11px] tracking-[0.2em] uppercase font-semibold">{t(lang, "calc.eyebrow")}</span>
-            </div>
+            <span className="badge-pill mb-6">{t(lang, "calc.eyebrow")}</span>
             <h2 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-5 sm:mb-6 text-balance">
               {t(lang, "calc.title")}
             </h2>
@@ -124,7 +122,7 @@ export default function Calculator() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="lg:col-span-7 bg-onyx-800 border border-onyx-700 p-5 sm:p-8"
+            className="lg:col-span-7 feature-card p-5 sm:p-8"
           >
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <div className="flex items-center gap-3">
@@ -163,7 +161,7 @@ export default function Calculator() {
                           animate={{ opacity: 1, height: "auto", marginBottom: undefined }}
                           exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="bg-onyx-900 border border-onyx-700 p-4 sm:p-5 relative"
+                          className="bg-onyx-900/60 backdrop-blur-sm border border-pearl-100/8 rounded-2xl p-4 sm:p-5 relative"
                         >
                           <div className="flex items-start justify-between gap-3 mb-4">
                             <div className="flex items-center gap-2">
@@ -197,7 +195,7 @@ export default function Calculator() {
                                   thickness: newP?.default_thickness || item.thickness,
                                 });
                               }}
-                              className="w-full bg-onyx-800 border border-onyx-700 px-3 py-2.5 text-pearl-100 focus:border-gold-400 outline-none text-sm font-medium"
+                              className="input-modern !py-2.5 text-sm font-medium"
                             >
                               {products.map((pp) => (
                                 <option key={pp.id} value={pp.id} className="bg-onyx-900">
@@ -285,7 +283,7 @@ export default function Calculator() {
                 </button>
 
                 {/* Grand total */}
-                <div className="bg-onyx-900 border-2 border-gold-400 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3">
+                <div className="bg-gradient-to-br from-gold-400/15 to-gold-400/5 backdrop-blur-sm border-2 border-gold-400/60 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 shadow-2xl shadow-gold-400/10">
                   <div>
                     <div className="text-[10px] tracking-[0.2em] uppercase text-pearl-300 mb-1 font-semibold">
                       {t(lang, "calc.total")}

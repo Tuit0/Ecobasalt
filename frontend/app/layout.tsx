@@ -9,6 +9,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ApplicationModal from '@/components/ApplicationModal';
 import FloatingContact from '@/components/FloatingContact';
+import ScrollProgress from '@/components/ScrollProgress';
 
 export const metadata: Metadata = {
   title: 'ECO BASALT — Sendvich panellar va bazalt izolyatsiya',
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ApplicationModalProvider>
             <ChatProvider>
               <Tracking />
+              <ScrollProgress />
               <Navbar />
               <main className="min-h-screen">{children}</main>
               <Footer />

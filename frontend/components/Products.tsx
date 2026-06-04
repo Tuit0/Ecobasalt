@@ -3,7 +3,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Package } from "lucide-react";
+import { ArrowUpRight, Package, Sparkles } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
@@ -18,6 +18,9 @@ type Product = {
   short_uz: string; short_ru: string; short_en: string;
   cover_image?: string;
   specs?: Record<string, string>;
+  is_featured?: boolean;
+  price_from?: number;
+  price_currency?: string;
 };
 
 export default function Products() {
@@ -32,22 +35,21 @@ export default function Products() {
   });
 
   return (
-    <section id="products" className="py-16 sm:py-20 lg:py-24 bg-onyx-900">
+    <section id="products" className="py-20 sm:py-28 lg:py-32 bg-onyx-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-12">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="max-w-xl"
+            className="max-w-2xl"
           >
-            <div className="ornament mb-5 sm:mb-6">
-              <span className="text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-semibold">{t(lang, "products.eyebrow")}</span>
-            </div>
-            <h2 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-balance">
-              {t(lang, "products.title")}
+            <span className="badge-pill mb-5">{t(lang, "products.eyebrow")}</span>
+            <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl text-balance leading-tight">
+              {t(lang, "products.title").split(" ")[0]}{" "}
+              <span className="text-gradient-red">{t(lang, "products.title").split(" ").slice(1).join(" ")}</span>
             </h2>
           </motion.div>
           <motion.p
@@ -55,43 +57,41 @@ export default function Products() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-pearl-200 text-sm sm:text-base max-w-md"
+            className="text-pearl-200 text-base max-w-md"
           >
             {t(lang, "products.subtitle")}
           </motion.p>
         </div>
 
-        {/* Filter */}
-        <div className="flex flex-wrap gap-1 sm:gap-2 mb-10 sm:mb-12 border-b border-onyx-700 overflow-x-auto">
+        {/* Filter chips */}
+        <div className="flex flex-wrap gap-2 mb-10 sm:mb-12">
           <button
             onClick={() => setActive("all")}
-            className={`px-3 sm:px-5 py-2.5 sm:py-3 text-[11px] sm:text-xs uppercase tracking-[0.1em] font-semibold transition-colors relative whitespace-nowrap ${
-              active === "all" ? "text-gold-400" : "text-pearl-300 hover:text-pearl-100"
+            className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+              active === "all"
+                ? "bg-gold-400 text-pearl-100"
+                : "bg-pearl-100/5 text-pearl-200 hover:bg-pearl-100/10"
             }`}
           >
             {t(lang, "products.all")}
-            {active === "all" && (
-              <motion.span layoutId="product-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-400" />
-            )}
           </button>
           {categories.map((c) => (
             <button
               key={c.slug}
               onClick={() => setActive(c.slug)}
-              className={`px-3 sm:px-5 py-2.5 sm:py-3 text-[11px] sm:text-xs uppercase tracking-[0.1em] font-semibold transition-colors relative whitespace-nowrap ${
-                active === c.slug ? "text-gold-400" : "text-pearl-300 hover:text-pearl-100"
+              className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                active === c.slug
+                  ? "bg-gold-400 text-pearl-100"
+                  : "bg-pearl-100/5 text-pearl-200 hover:bg-pearl-100/10"
               }`}
             >
               {pickLang(c, lang, "name")}
-              {active === c.slug && (
-                <motion.span layoutId="product-tab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-400" />
-              )}
             </button>
           ))}
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           <AnimatePresence mode="popLayout">
             {filtered.map((p, i) => (
               <motion.div
@@ -100,59 +100,76 @@ export default function Products() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: i * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -4 }}
+                transition={{ delay: i * 0.05, duration: 0.5 }}
+                whileHover={{ y: -6 }}
               >
-              <Link
-                href={`/products/${p.slug}`}
-                className="group cursor-pointer bg-onyx-800 border border-onyx-700 hover:border-gold-400 transition-all duration-300 block h-full"
-              >
-                {/* Image */}
-                <div className="aspect-[4/3] relative overflow-hidden bg-onyx-700">
-                  <img
-                    src={productImage(p.slug, p.cover_image)}
-                    alt={pickLang(p, lang, "name")}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-onyx-950/30 to-transparent" />
-                  <div className="absolute top-4 left-4 text-[10px] font-mono text-gold-400 tracking-[0.15em] bg-onyx-900/80 px-2 py-1">
-                    {String(i + 1).padStart(2, "0")}
+                <Link
+                  href={`/products/${p.slug}`}
+                  className="group block overflow-hidden rounded-3xl bg-onyx-900/60 border border-pearl-100/5 hover:border-gold-400/40 transition-all duration-500 h-full backdrop-blur-sm"
+                >
+                  <div className="aspect-[4/3] relative overflow-hidden bg-onyx-800">
+                    <img
+                      src={productImage(p.slug, p.cover_image)}
+                      alt={pickLang(p, lang, "name")}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-onyx-950/80 via-transparent to-transparent" />
+
+                    {p.is_featured && (
+                      <div className="absolute top-4 left-4 badge-pill bg-onyx-950/70 backdrop-blur border-gold-400/30 text-gold-400">
+                        <Sparkles className="w-3 h-3" strokeWidth={2} />
+                        <span className="text-[11px]">Featured</span>
+                      </div>
+                    )}
+
+                    <motion.div className="absolute top-4 right-4 w-11 h-11 rounded-full bg-gold-400 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                      <ArrowUpRight className="w-5 h-5 text-pearl-100" strokeWidth={2.5} />
+                    </motion.div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="h-display text-pearl-100 text-xl mb-2 group-hover:text-gold-400 transition-colors">
-                    {pickLang(p, lang, "name")}
-                  </h3>
-                  <p className="text-pearl-300 text-sm leading-relaxed line-clamp-2 mb-4">
-                    {pickLang(p, lang, "short")}
-                  </p>
+                  <div className="p-6">
+                    <h3 className="h-display text-pearl-100 text-xl mb-2 group-hover:text-gradient-red transition-all line-clamp-1">
+                      {pickLang(p, lang, "name")}
+                    </h3>
+                    <p className="text-pearl-200 text-sm leading-relaxed line-clamp-2 mb-4">
+                      {pickLang(p, lang, "short")}
+                    </p>
 
-                  {p.specs && Object.keys(p.specs).length > 0 && (
-                    <div className="border-t border-onyx-700 pt-4 mb-4 grid grid-cols-2 gap-2">
-                      {Object.entries(p.specs).slice(0, 4).map(([k, v]) => (
-                        <div key={k} className="text-[10px]">
-                          <div className="text-pearl-300 uppercase tracking-wider mb-0.5 font-mono">{k}</div>
-                          <div className="text-pearl-100 font-semibold">{v}</div>
+                    {p.specs && Object.keys(p.specs).length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {Object.entries(p.specs).slice(0, 3).map(([k, v]) => (
+                          <span key={k} className="text-[11px] px-2.5 py-1 rounded-full bg-pearl-100/5 text-pearl-200 font-medium">
+                            <span className="text-gold-400">{k}</span> · {v}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-4 border-t border-pearl-100/5">
+                      {p.price_from ? (
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-xs text-pearl-300">from</span>
+                          <span className="h-display text-gradient-red text-lg">${p.price_from}</span>
                         </div>
-                      ))}
+                      ) : (
+                        <span className="text-xs text-pearl-300">{t(lang, "products.details") || "Details"}</span>
+                      )}
+                      <div className="text-gold-400 text-sm font-semibold">
+                        {lang === "uz" ? "Batafsil" : lang === "ru" ? "Подробнее" : "View"} →
+                      </div>
                     </div>
-                  )}
-
-                  <div className="flex items-center gap-2 text-gold-400 text-xs uppercase tracking-[0.1em] font-semibold group-hover:gap-3 transition-all">
-                    {t(lang, "products.details") || "Batafsil"}
-                    <ArrowUpRight className="w-4 h-4" strokeWidth={2} />
                   </div>
-                </div>
-              </Link>
+                </Link>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-20 text-pearl-300">{t(lang, "products.empty")}</div>
+          <div className="text-center py-16">
+            <Package className="w-12 h-12 text-pearl-300/30 mx-auto mb-4" strokeWidth={1} />
+            <p className="text-pearl-300">{t(lang, "products.empty")}</p>
+          </div>
         )}
       </div>
     </section>

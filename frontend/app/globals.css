@@ -35,6 +35,23 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* View transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Smooth section reveal */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 body {
@@ -43,8 +60,31 @@ body {
   font-family: var(--font-sans);
   font-weight: 400;
   overflow-x: hidden;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.011em;
 }
+
+/* Modern Typography — Linear/Vercel uslubi */
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* Tabular numbers */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Subtle text helpers */
+.text-soft { color: rgba(250, 250, 249, 0.7); }
+.text-softer { color: rgba(250, 250, 249, 0.5); }
 
 /* Subtle mesh gradient — bazalt tosh tekstura his etish */
 .mesh-bg {
@@ -93,32 +133,41 @@ body {
   color: var(--brand-red);
 }
 
-/* Subtle border */
+/* Subtle border (legacy) */
 .gold-border {
-  border: 1px solid var(--stone-700);
+  border: 1px solid rgba(250, 250, 249, 0.08);
+  border-radius: 0.75rem;
   transition: border-color 0.4s ease;
 }
 .gold-border:hover {
-  border-color: var(--brand-red);
+  border-color: rgba(220, 38, 38, 0.4);
 }
 
-/* Sodda divider — kulrang chiziq */
+/* Modern divider */
 .divider-gold {
   height: 1px;
-  background: var(--stone-700);
+  background: rgba(250, 250, 249, 0.08);
 }
 
-/* Eyebrow label — kichik qizil chiziq + matn */
+/* Modern eyebrow — pill stilida (badge-pill ishlatish tavsiya etiladi) */
 .ornament {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   color: var(--brand-red);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 .ornament::before {
   content: "";
-  width: 32px;
-  height: 1px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
   background: var(--brand-red);
 }
 .ornament::after {
@@ -137,49 +186,79 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* Tugmalar — industrial sodda */
+/* Modern Pill Buttons — 2026 standard */
 .btn-gold {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.95rem 2rem;
-  background: transparent;
+  padding: 0.85rem 1.75rem;
+  background: rgba(250, 250, 249, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--stone-50);
-  border: 1px solid var(--stone-700);
+  border: 1px solid rgba(250, 250, 249, 0.15);
+  border-radius: 9999px;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  overflow: hidden;
+}
+.btn-gold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0), rgba(220, 38, 38, 0.15));
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 .btn-gold:hover {
-  border-color: var(--brand-red);
-  color: var(--brand-red);
+  border-color: rgba(220, 38, 38, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(220, 38, 38, 0.15);
+}
+.btn-gold:hover::before {
+  opacity: 1;
 }
 
 .btn-solid-gold {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.95rem 2rem;
-  background: var(--brand-red);
-  color: var(--stone-50);
-  border: 1px solid var(--brand-red);
+  padding: 0.85rem 1.75rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+  background-size: 200% 200%;
+  color: #fafaf9;
+  border: 1px solid transparent;
+  border-radius: 9999px;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.btn-solid-gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
 }
 .btn-solid-gold:hover {
-  background: var(--brand-red-deep);
-  border-color: var(--brand-red-deep);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25);
+  background-position: 100% 100%;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(220, 38, 38, 0.45), 0 0 60px rgba(220, 38, 38, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn-solid-gold:hover::after {
+  transform: translateX(100%);
 }
 
 /* Glow card — hover qizg'ish glow */
@@ -248,20 +327,18 @@ body {
   text-shadow: 0 0 30px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.3);
 }
 
-/* Text shadow — rasm fonida o'qish uchun (deep + crisp) */
+/* Drop shadow (filter) — gradient text bilan ham ishlaydi */
 .text-shadow {
-  text-shadow:
-    0 0 2px rgba(0, 0, 0, 1),
-    0 2px 6px rgba(0, 0, 0, 0.95),
-    0 4px 16px rgba(0, 0, 0, 0.9),
-    0 8px 40px rgba(0, 0, 0, 0.8);
+  filter:
+    drop-shadow(0 2px 8px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 4px 24px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.95));
 }
 
 .text-shadow-sm {
-  text-shadow:
-    0 1px 2px rgba(0, 0, 0, 1),
-    0 2px 8px rgba(0, 0, 0, 0.9),
-    0 4px 16px rgba(0, 0, 0, 0.7);
+  filter:
+    drop-shadow(0 1px 4px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 2px 12px rgba(0, 0, 0, 0.6));
 }
 
 /* Text wrapper — orqasida yumshoq dark glow (faqat text egallagan joyda) */
@@ -279,42 +356,203 @@ body {
   pointer-events: none;
 }
 
-/* Heading display — Montserrat Bold (logo bilan bir xil) */
-.h-display {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1;
-}
-
 .h-italic {
   font-family: var(--font-display);
   font-weight: 600;
 }
 
-/* Eyebrow */
+/* Modern eyebrow — kichik, kam tracking, modern */
 .eyebrow {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--brand-red);
 }
 
-/* Surface card — bazalt tosh hissi */
-.lux-card {
-  background: var(--stone-800);
-  border: 1px solid var(--stone-700);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.lux-card:hover {
-  border-color: var(--brand-red);
-  transform: translateY(-4px);
+/* Section padding — consistent */
+.section-padding {
+  padding-top: clamp(4rem, 8vw, 8rem);
+  padding-bottom: clamp(4rem, 8vw, 8rem);
 }
 
-/* Corner accents — olib tashlandi (industrial luksusga mos emas) */
+/* Modern container with consistent padding */
+.container-modern {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 4vw, 2rem);
+  padding-right: clamp(1rem, 4vw, 2rem);
+}
+
+/* Modern feature card */
+.feature-card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(41, 37, 36, 0.5) 0%, rgba(28, 25, 23, 0.7) 100%);
+  border: 1px solid rgba(250, 250, 249, 0.06);
+  backdrop-filter: blur(8px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(220, 38, 38, 0.25);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(220, 38, 38, 0.06);
+}
+
+/* Modern input */
+.input-modern {
+  width: 100%;
+  background: rgba(15, 14, 12, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(250, 250, 249, 0.1);
+  border-radius: 1rem;
+  padding: 0.95rem 1.25rem;
+  color: var(--stone-50);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.input-modern::placeholder {
+  color: rgba(250, 250, 249, 0.35);
+}
+.input-modern:focus {
+  outline: none;
+  border-color: rgba(220, 38, 38, 0.5);
+  background: rgba(15, 14, 12, 0.9);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(41, 37, 36, 0.5) 25%, rgba(68, 64, 60, 0.5) 50%, rgba(41, 37, 36, 0.5) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: 0.75rem;
+}
+
+/* Soft divider */
+.divider-soft {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(250, 250, 249, 0.1) 50%, transparent);
+}
+
+/* Modern Card — glassmorphism + soft shadow */
+.lux-card {
+  background: linear-gradient(135deg, rgba(41, 37, 36, 0.6) 0%, rgba(28, 25, 23, 0.8) 100%);
+  border: 1px solid rgba(250, 250, 249, 0.06);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+.lux-card:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 60px rgba(220, 38, 38, 0.08);
+}
+
 .corner-frame {
   position: relative;
+}
+
+/* Modern utility classes */
+.glass {
+  background: rgba(41, 37, 36, 0.4);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(250, 250, 249, 0.08);
+}
+
+.gradient-mesh {
+  background-image:
+    radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(220, 38, 38, 0.05) 0px, transparent 50%);
+}
+
+.text-gradient-red {
+  background: linear-gradient(135deg, #fef2f2 0%, #fca5a5 30%, #ef4444 70%, #dc2626 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animated underline (modern link) */
+.link-modern {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.link-modern::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-modern:hover::after {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/* Floating effect */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float-y { animation: float-y 6s ease-in-out infinite; }
+
+/* Scroll fade-in */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modern badge */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  color: #fca5a5;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Asymmetric layouts */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Marquee */

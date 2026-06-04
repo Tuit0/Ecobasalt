@@ -9,6 +9,8 @@ import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { useApplicationModal } from "@/lib/application-modal";
+import CursorGradient from "./CursorGradient";
+import MagneticButton from "./MagneticButton";
 
 type HeroSlide = {
   id: number;
@@ -127,34 +129,31 @@ export default function Hero() {
       <div className="orb orb-warm w-[700px] h-[700px] top-1/3 -left-60 opacity-60" />
       <div className="orb orb-red w-[500px] h-[500px] bottom-1/4 -right-40 opacity-40" />
 
+      {/* Cursor-follow gradient (desktop only) */}
+      <CursorGradient size={700} color="rgba(220, 38, 38, 0.2)" />
+
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-16 sm:pt-32 sm:pb-20"
       >
         <div className="max-w-3xl">
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="ornament mb-6 sm:mb-10"
-          >
-            <span className="text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-semibold text-shadow-sm">{eyebrow}</span>
-          </motion.div>
-
-          {/* Title */}
+          {/* Title — first half white, second half red gradient */}
           <h1 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 text-balance text-shadow">
-            {title.split(" ").map((word, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block mr-3 sm:mr-4"
-              >
-                {word}
-              </motion.span>
-            ))}
+            {(() => {
+              const words = title.split(" ");
+              const mid = Math.ceil(words.length / 2);
+              return words.map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  className={`inline-block mr-3 sm:mr-4 ${i >= mid ? "text-gradient-red" : ""}`}
+                >
+                  {word}
+                </motion.span>
+              ));
+            })()}
           </h1>
 
           {/* Subtitle */}
@@ -167,29 +166,33 @@ export default function Hero() {
             {subtitle}
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — Magnetic */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 sm:mb-20"
           >
-            <button onClick={() => showModal()} className="btn-solid-gold group">
-              {t(lang, "hero.cta_primary")}
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
-            </button>
-            <Link href="/products" className="btn-gold group">
-              <Download className="w-4 h-4 mr-2" strokeWidth={2} />
-              {t(lang, "hero.cta_secondary")}
-            </Link>
+            <MagneticButton strength={0.25}>
+              <button onClick={() => showModal()} className="btn-solid-gold group">
+                {t(lang, "hero.cta_primary")}
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+              </button>
+            </MagneticButton>
+            <MagneticButton strength={0.25}>
+              <Link href="/products" className="btn-gold group">
+                <Download className="w-4 h-4 mr-2" strokeWidth={2} />
+                {t(lang, "hero.cta_secondary")}
+              </Link>
+            </MagneticButton>
           </motion.div>
 
-          {/* Specs strip */}
+          {/* Specs cards */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
-            className="grid grid-cols-3 gap-px bg-onyx-700/80 max-w-2xl backdrop-blur"
+            className="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl"
           >
             {[
               { num: "EI 240", unit: "min", label: t(lang, "hero.badge_fire") },
@@ -198,14 +201,14 @@ export default function Hero() {
             ].map((b, i) => (
               <div
                 key={i}
-                className="bg-onyx-900/90 backdrop-blur p-3 sm:p-5 group hover:bg-onyx-800 transition-colors cursor-default"
+                className="bg-onyx-900/60 backdrop-blur-xl border border-pearl-100/10 rounded-2xl p-3 sm:p-5 group hover:border-gold-400/40 hover:bg-onyx-900/80 transition-all duration-300 cursor-default"
               >
-                <div className="text-[9px] sm:text-[10px] tracking-[0.1em] sm:tracking-[0.15em] uppercase text-pearl-300 mb-1.5 sm:mb-2 font-semibold line-clamp-1">{b.label}</div>
+                <div className="text-[10px] sm:text-xs text-pearl-300 mb-1.5 sm:mb-2 font-medium line-clamp-1">{b.label}</div>
                 <div className="flex items-baseline gap-1">
-                  <div className="h-display text-xl sm:text-3xl md:text-4xl text-pearl-100 group-hover:text-gold-400 transition-colors">
+                  <div className="h-display text-xl sm:text-2xl md:text-3xl text-pearl-100 group-hover:text-gradient-red transition-all">
                     {b.num}
                   </div>
-                  <div className="text-[10px] sm:text-sm text-pearl-300 font-mono">{b.unit}</div>
+                  <div className="text-[10px] sm:text-xs text-pearl-300 font-medium">{b.unit}</div>
                 </div>
               </div>
             ))}

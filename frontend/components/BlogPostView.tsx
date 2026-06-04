@@ -78,7 +78,7 @@ export default function BlogPostView({ slug }: { slug: string }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-pearl-300 hover:text-gold-400 text-xs uppercase tracking-[0.15em] font-semibold mb-10 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pearl-100/5 border border-pearl-100/10 text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/10 text-sm font-medium mb-10 transition-all backdrop-blur-sm"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           {t(lang, "nav.blog")}
@@ -90,13 +90,13 @@ export default function BlogPostView({ slug }: { slug: string }) {
           transition={{ duration: 0.6 }}
           className="mb-10"
         >
-          <div className="text-[10px] tracking-[0.25em] uppercase text-gold-400 mb-5 font-semibold">
+          <span className="badge-pill mb-5">
             {t(lang, `blog.cat_${post.category}`)}
-          </div>
+          </span>
           <h1 className="h-display text-pearl-100 text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-5 sm:mb-6 text-balance leading-tight">
             {title}
           </h1>
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-xs text-pearl-300 uppercase tracking-wider font-semibold">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-5 text-xs sm:text-sm text-pearl-300 font-medium">
             {dateStr && (
               <span className="flex items-center gap-2">
                 <Calendar className="w-3 h-3" strokeWidth={2} />
@@ -114,7 +114,7 @@ export default function BlogPostView({ slug }: { slug: string }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="aspect-[5/3] bg-onyx-800 border border-onyx-700 overflow-hidden mb-12 relative"
+          className="aspect-[5/3] rounded-3xl border border-pearl-100/8 overflow-hidden mb-12 relative shadow-2xl shadow-black/30"
         >
           <img
             src={post.cover_image || blogImage(post.slug)}
@@ -138,13 +138,13 @@ export default function BlogPostView({ slug }: { slug: string }) {
           <div className="text-base md:text-lg">{body && renderBody(body)}</div>
         </motion.div>
 
-        <div className="border-t border-b border-onyx-700 py-6 mb-16 flex items-center justify-between">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-pearl-300 font-semibold">SHARE</span>
-          <div className="flex gap-3">
+        <div className="border-t border-b border-pearl-100/8 py-6 mb-16 flex items-center justify-between">
+          <span className="text-xs text-pearl-300 font-semibold">SHARE</span>
+          <div className="flex gap-2">
             {["Telegram", "Facebook", "LinkedIn"].map((s) => (
               <button
                 key={s}
-                className="text-xs uppercase tracking-[0.1em] text-pearl-300 hover:text-gold-400 transition-colors font-semibold flex items-center gap-1"
+                className="px-3 py-1.5 rounded-full bg-pearl-100/5 border border-pearl-100/10 text-xs text-pearl-200 hover:text-gold-400 hover:border-gold-400/30 transition-all font-medium flex items-center gap-1.5"
               >
                 <Share2 className="w-3 h-3" strokeWidth={2} />
                 {s}
@@ -155,15 +155,13 @@ export default function BlogPostView({ slug }: { slug: string }) {
 
         {related.length > 0 && (
           <div>
-            <div className="ornament mb-6">
-              <span className="text-[11px] tracking-[0.2em] uppercase font-semibold">RELATED ARTICLES</span>
-            </div>
+            <span className="badge-pill mb-6">RELATED ARTICLES</span>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               {related.map((p) => (
                 <Link
                   key={p.id}
                   href={`/blog/${p.slug}`}
-                  className="group bg-onyx-800 border border-onyx-700 hover:border-gold-400 transition-all duration-300"
+                  className="group block overflow-hidden rounded-3xl bg-onyx-800/40 border border-pearl-100/5 hover:border-gold-400/40 transition-all duration-500 backdrop-blur-sm hover:-translate-y-1"
                 >
                   <div className="aspect-[5/3] overflow-hidden relative">
                     <img
