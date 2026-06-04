@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+.input {
+  @apply w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:border-brand-500 outline-none transition-colors;
+}
+.btn {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors cursor-pointer;
+}
+.btn-primary {
+  @apply btn bg-brand-500 hover:bg-brand-400 text-white;
+}
+.btn-secondary {
+  @apply btn bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700;
+}
+.btn-danger {
+  @apply btn bg-red-600 hover:bg-red-500 text-white;
+}
+.card {
+  @apply bg-slate-900 border border-slate-800 rounded-xl;
+}
+.label {
+  @apply block text-xs uppercase tracking-wider text-slate-400 mb-1.5;
+}

@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Premium tipografika — Montserrat (logoga mos) + Inter (body) + JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-serif: 'Montserrat', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Mineral Eco palitra — bazalt tosh + tabiat + signal qizil */
+  --stone-950: #0c0a09;  /* eng chuqur — fon */
+  --stone-900: #1c1917;  /* asosiy fon (warm graphite) */
+  --stone-800: #292524;  /* surface (cards) */
+  --stone-700: #44403c;  /* border / muted surface */
+  --stone-400: #a8a29e;  /* muted text */
+  --stone-200: #e7e5e4;  /* secondary text */
+  --stone-50:  #fafaf9;  /* primary text (oq) */
+
+  --forest-deep: #14532d;  /* deep forest accent */
+  --forest:      #166534;
+  --forest-soft: #22c55e;  /* highlight */
+
+  --brand-red: #dc2626;   /* signal aksent (faqat CTA) */
+  --brand-red-deep: #b91c1c;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--stone-900);
+  color: var(--stone-50);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  overflow-x: hidden;
+  letter-spacing: -0.005em;
+}
+
+/* Subtle mesh gradient — bazalt tosh tekstura his etish */
+.mesh-bg {
+  background-image:
+    radial-gradient(at 20% 30%, rgba(34, 197, 94, 0.04) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(20, 83, 45, 0.06) 0px, transparent 50%);
+}
+
+/* Glow orblar — kam, faqat hero'da */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(100px);
+  pointer-events: none;
+}
+.orb-red {
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.18), transparent 70%);
+}
+.orb-warm {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.15), transparent 70%);
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--stone-900);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--stone-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-red);
+}
+
+::selection {
+  background: var(--brand-red);
+  color: var(--stone-50);
+}
+
+/* Brand text — qizil oqartirilgan (sodda, shimmer'siz) */
+.text-gold-gradient {
+  color: var(--brand-red);
+}
+
+/* Subtle border */
+.gold-border {
+  border: 1px solid var(--stone-700);
+  transition: border-color 0.4s ease;
+}
+.gold-border:hover {
+  border-color: var(--brand-red);
+}
+
+/* Sodda divider — kulrang chiziq */
+.divider-gold {
+  height: 1px;
+  background: var(--stone-700);
+}
+
+/* Eyebrow label — kichik qizil chiziq + matn */
+.ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--brand-red);
+}
+.ornament::before {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: var(--brand-red);
+}
+.ornament::after {
+  display: none;
+}
+
+/* Grain overlay — bazalt tosh tekstura */
+.grain-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Tugmalar — industrial sodda */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 2rem;
+  background: transparent;
+  color: var(--stone-50);
+  border: 1px solid var(--stone-700);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.btn-gold:hover {
+  border-color: var(--brand-red);
+  color: var(--brand-red);
+}
+
+.btn-solid-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 2rem;
+  background: var(--brand-red);
+  color: var(--stone-50);
+  border: 1px solid var(--brand-red);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.btn-solid-gold:hover {
+  background: var(--brand-red-deep);
+  border-color: var(--brand-red-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25);
+}
+
+/* Glow card — hover qizg'ish glow */
+.glow-card {
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, transparent, rgba(220, 38, 38, 0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  border-radius: inherit;
+  z-index: -1;
+}
+.glow-card:hover {
+  transform: translateY(-6px);
+}
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+/* Tilt card 3D */
+.tilt-card {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+.tilt-card:hover {
+  transform: perspective(1000px) rotateY(-4deg) rotateX(4deg) translateY(-8px);
+}
+
+/* Magnetic underline */
+.link-magnetic {
+  position: relative;
+  display: inline-block;
+}
+.link-magnetic::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: #dc2626;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-magnetic:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Marquee container */
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* Glow text */
+.text-glow {
+  text-shadow: 0 0 30px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.3);
+}
+
+/* Text shadow — rasm fonida o'qish uchun (deep + crisp) */
+.text-shadow {
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 1),
+    0 2px 6px rgba(0, 0, 0, 0.95),
+    0 4px 16px rgba(0, 0, 0, 0.9),
+    0 8px 40px rgba(0, 0, 0, 0.8);
+}
+
+.text-shadow-sm {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 1),
+    0 2px 8px rgba(0, 0, 0, 0.9),
+    0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Text wrapper — orqasida yumshoq dark glow (faqat text egallagan joyda) */
+.text-protect {
+  position: relative;
+  isolation: isolate;
+}
+.text-protect::before {
+  content: "";
+  position: absolute;
+  inset: -16px -24px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 80%);
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Heading display — Montserrat Bold (logo bilan bir xil) */
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.h-italic {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+/* Eyebrow */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+}
+
+/* Surface card — bazalt tosh hissi */
+.lux-card {
+  background: var(--stone-800);
+  border: 1px solid var(--stone-700);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lux-card:hover {
+  border-color: var(--brand-red);
+  transform: translateY(-4px);
+}
+
+/* Corner accents — olib tashlandi (industrial luksusga mos emas) */
+.corner-frame {
+  position: relative;
+}
+
+/* Marquee */
+.marquee-row {
+  display: flex;
+  gap: 4rem;
+  animation: marquee 60s linear infinite;
+  white-space: nowrap;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
