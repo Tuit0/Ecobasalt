@@ -2,6 +2,10 @@ version: "3.9"
 
 x-restart-policy: &restart unless-stopped
 
+# Port mapping: HOST:CONTAINER
+# Container ichidagi portlar saqlanadi, host portlari .env orqali sozlanadi.
+# Production: server nginx (host) → proxy_pass localhost:7000/7001/7002
+
 services:
   backend:
     build:
@@ -17,12 +21,12 @@ services:
       TELEGRAM_ADMIN_CHAT_ID: ${TELEGRAM_ADMIN_CHAT_ID:-}
       MEDIA_DIR: /app/media
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001,http://localhost}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:7001,http://localhost:7002,http://localhost,https://${DOMAIN:-example.com},https://admin.${DOMAIN:-example.com},https://api.${DOMAIN:-example.com}}
     volumes:
       - basalt_media:/app/media
       - basalt_data:/app/data
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "${BACKEND_PORT:-7000}:8000"
     networks:
       - basalt_net
 
@@ -35,9 +39,10 @@ services:
       - backend
     environment:
       BACKEND_URL: http://backend:8000
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://${DOMAIN:-example.com}}
       NODE_ENV: production
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-7001}:3000"
     networks:
       - basalt_net
 
@@ -52,19 +57,22 @@ services:
       BACKEND_URL: http://backend:8000
       NODE_ENV: production
     ports:
-      - "${ADMIN_PORT:-3001}:3001"
+      - "${ADMIN_PORT:-7002}:3001"
     networks:
       - basalt_net
 
+  # Nginx ixtiyoriy — agar server'da nginx mavjud bo'lsa, bu servis kerak emas.
+  # Profile bilan o'chirib qo'yildi. Ishga tushirish uchun: docker compose --profile with-nginx up -d
   nginx:
     image: nginx:alpine
     restart: *restart
+    profiles: ["with-nginx"]
     depends_on:
       - frontend
       - admin
       - backend
     ports:
-      - "${HTTP_PORT:-80}:80"
+      - "${HTTP_PORT:-7080}:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - basalt_media:/var/www/media:ro
