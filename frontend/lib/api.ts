@@ -22,8 +22,16 @@ export const fetcher = (url: string) => fetch(url).then(r => r.json());
 // Lang helpers
 export type Lang = 'uz' | 'ru' | 'en';
 
-export function pickLang<T extends Record<string, any>>(obj: T | undefined | null, lang: Lang, prefix = 'name'): string {
-  if (!obj) return '';
+export function pickLang(obj: any, lang: Lang, prefix = 'name'): string {
+  if (obj == null) return '';
+  // String yoki number bo'lsa, to'g'ridan-to'g'ri qaytarish (text/number content blocks uchun)
+  if (typeof obj === 'string') return obj;
+  if (typeof obj === 'number') return String(obj);
+  // Multilang object: {uz, ru, en}
+  if (typeof obj === 'object' && (obj.uz != null || obj.ru != null || obj.en != null)) {
+    return obj[lang] || obj.uz || obj.en || '';
+  }
+  // Prefix bilan (name_uz, title_uz, va h.k.) — Products/Projects uchun
   return obj[`${prefix}_${lang}`] || obj[`${prefix}_uz`] || obj[`${prefix}_en`] || '';
 }
 

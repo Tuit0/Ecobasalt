@@ -9,7 +9,10 @@ import { useChat } from "@/lib/chat-context";
 
 export default function FloatingContact() {
   const { lang } = useLang();
-  const { data } = useSWR("/api/content/blocks?section=contact", fetcher);
+  const { data } = useSWR("/api/content/blocks?section=contact", fetcher, {
+    refreshInterval: 30000,
+    revalidateOnFocus: true,
+  });
   const blocks = blocksToMap(data || []);
   const { show: showChat, open: chatOpen } = useChat();
   const [open, setOpen] = useState(false);
@@ -20,23 +23,23 @@ export default function FloatingContact() {
   const yt = pickLang(blocks["contact.youtube"], lang) || "";
 
   type Item =
-    | { kind: "link"; href: string; icon: any; label: string; color: string; external: boolean }
-    | { kind: "action"; onClick: () => void; icon: any; label: string; color: string };
+    | { kind: "link"; href: string; icon: any; label: string; gradient: string; external: boolean }
+    | { kind: "action"; onClick: () => void; icon: any; label: string; gradient: string };
 
   const items: Item[] = [
     {
       kind: "action",
       onClick: () => { showChat(); setOpen(false); },
       icon: MessagesSquare,
-      label: "Live Chat",
-      color: "bg-gold-400",
+      label: lang === "uz" ? "Live Chat" : lang === "ru" ? "Чат" : "Live Chat",
+      gradient: "from-gold-400 to-red-500",
     },
     {
       kind: "link",
       href: `tel:${phone.replace(/\s/g, "")}`,
       icon: Phone,
-      label: "Phone",
-      color: "bg-onyx-800 border border-onyx-700",
+      label: lang === "uz" ? "Telefon" : lang === "ru" ? "Телефон" : "Phone",
+      gradient: "from-emerald-400 to-emerald-600",
       external: false,
     },
     {
@@ -44,7 +47,7 @@ export default function FloatingContact() {
       href: tg,
       icon: Telegram,
       label: "Telegram",
-      color: "bg-[#229ED9]",
+      gradient: "from-sky-400 to-[#229ED9]",
       external: true,
     },
     {
@@ -52,15 +55,14 @@ export default function FloatingContact() {
       href: ig,
       icon: Instagram,
       label: "Instagram",
-      color: "bg-gradient-to-br from-[#f09433] via-[#e6683c] to-[#bc1888]",
+      gradient: "from-[#f09433] via-[#e6683c] to-[#bc1888]",
       external: true,
     },
     ...(yt && yt !== "#"
-      ? [{ kind: "link" as const, href: yt, icon: Youtube, label: "YouTube", color: "bg-[#FF0000]", external: true }]
+      ? [{ kind: "link" as const, href: yt, icon: Youtube, label: "YouTube", gradient: "from-red-500 to-red-700", external: true }]
       : []),
   ];
 
-  // Chat ochiq bo'lsa, floating button yashir
   if (chatOpen) return null;
 
   return (
@@ -72,19 +74,24 @@ export default function FloatingContact() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-end gap-3 mb-3"
+            className="flex flex-col items-end gap-2.5 mb-3"
           >
             {items.map((it, i) => {
               const Icon = it.icon;
               const inner = (
                 <>
-                  <span className="absolute right-full mr-3 px-3 py-1.5 bg-onyx-900 text-pearl-100 text-xs uppercase tracking-wider font-semibold border border-onyx-700 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all whitespace-nowrap pointer-events-none">
+                  {/* Label pill */}
+                  <span className="px-3.5 py-1.5 rounded-full bg-onyx-900/90 backdrop-blur-xl border border-pearl-100/10 text-pearl-100 text-xs font-semibold shadow-xl shadow-black/30 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300 pointer-events-none whitespace-nowrap">
                     {it.label}
                   </span>
-                  <Icon className="w-5 h-5 text-white" strokeWidth={1.8} />
+                  {/* Icon button */}
+                  <span className={`w-12 h-12 rounded-full bg-gradient-to-br ${it.gradient} text-white flex items-center justify-center shadow-xl shadow-black/40 group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-5 h-5" strokeWidth={2} />
+                  </span>
                 </>
               );
-              const cls = `group relative flex items-center justify-center w-12 h-12 ${it.color} text-white shadow-lg hover:shadow-2xl transition-all`;
+
+              const cls = "group flex items-center gap-3";
 
               return it.kind === "link" ? (
                 <motion.a
@@ -95,8 +102,7 @@ export default function FloatingContact() {
                   initial={{ opacity: 0, scale: 0.5, x: 20 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.5, x: 20 }}
-                  transition={{ delay: i * 0.05, duration: 0.3 }}
-                  whileHover={{ scale: 1.1, x: -4 }}
+                  transition={{ delay: i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className={cls}
                   aria-label={it.label}
                 >
@@ -109,8 +115,7 @@ export default function FloatingContact() {
                   initial={{ opacity: 0, scale: 0.5, x: 20 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.5, x: 20 }}
-                  transition={{ delay: i * 0.05, duration: 0.3 }}
-                  whileHover={{ scale: 1.1, x: -4 }}
+                  transition={{ delay: i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className={cls}
                   aria-label={it.label}
                 >
@@ -122,13 +127,19 @@ export default function FloatingContact() {
         )}
       </AnimatePresence>
 
+      {/* Main toggle button */}
       <motion.button
         onClick={() => setOpen(!open)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 bg-gold-400 hover:bg-gold-600 text-pearl-100 shadow-2xl flex items-center justify-center transition-colors relative"
+        className="relative w-14 h-14 rounded-full bg-gradient-to-br from-gold-400 via-red-500 to-gold-600 text-pearl-100 shadow-2xl shadow-gold-400/40 flex items-center justify-center transition-colors"
         aria-label={open ? "Close" : "Contact"}
       >
+        {/* Animated outer ring */}
+        {!open && (
+          <span className="absolute inset-0 rounded-full border-2 border-gold-400/50 animate-ping" />
+        )}
+
         <AnimatePresence mode="wait">
           {open ? (
             <motion.span
@@ -138,7 +149,7 @@ export default function FloatingContact() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="w-6 h-6" strokeWidth={2} />
+              <X className="w-6 h-6" strokeWidth={2.5} />
             </motion.span>
           ) : (
             <motion.span
@@ -148,13 +159,14 @@ export default function FloatingContact() {
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <MessageCircle className="w-6 h-6" strokeWidth={1.8} />
+              <MessageCircle className="w-6 h-6" strokeWidth={2} />
             </motion.span>
           )}
         </AnimatePresence>
-        {/* Pulse ring */}
+
+        {/* Notification dot */}
         {!open && (
-          <span className="absolute inset-0 border-2 border-gold-400 animate-ping opacity-50" />
+          <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-onyx-950 animate-pulse" />
         )}
       </motion.button>
     </div>
