@@ -9,7 +9,10 @@ import Logo from "./Logo";
 
 export default function Footer() {
   const { lang } = useLang();
-  const { data } = useSWR("/api/content/blocks?section=contact", fetcher);
+  const { data } = useSWR("/api/content/blocks?section=contact", fetcher, {
+    refreshInterval: 30000,
+    revalidateOnFocus: true,
+  });
   const blocks = blocksToMap(data || []);
 
   const phone = pickLang(blocks["contact.phone"], lang) || "+998 90 000 00 00";

@@ -9,7 +9,11 @@ import { t } from "@/lib/i18n";
 
 export default function Contact() {
   const { lang } = useLang();
-  const { data } = useSWR("/api/content/blocks?section=contact", fetcher);
+  const { data } = useSWR("/api/content/blocks?section=contact", fetcher, {
+    refreshInterval: 30000,        // har 30 sekundda yangilash
+    revalidateOnFocus: true,        // tab fokusda yangilash
+    revalidateOnReconnect: true,
+  });
   const blocks = blocksToMap(data || []);
 
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "", product: "" });
