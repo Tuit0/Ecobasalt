@@ -17,7 +17,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("ru");
 
   useEffect(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("lang") : null;
+    const saved = typeof window !== "undefined" ? localStorage.getItem("admin_lang") : null;
     if (saved && ["uz", "ru", "en"].includes(saved)) {
       setLangState(saved as Lang);
     }
@@ -26,7 +26,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
   const setLang = (l: Lang) => {
     setLangState(l);
     if (typeof window !== "undefined") {
-      localStorage.setItem("lang", l);
+      localStorage.setItem("admin_lang", l);
     }
   };
 

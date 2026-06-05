@@ -6,6 +6,8 @@ import { Eye, Users, ClipboardList, TrendingUp, Activity, Package, MessageSquare
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import AuthLayout from "@/components/AuthLayout";
 import { fetcher } from "@/lib/api";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 export default function DashboardPage() {
   return (
@@ -16,6 +18,7 @@ export default function DashboardPage() {
 }
 
 function DashboardContent() {
+  const { lang } = useLang();
   const { data: overview } = useSWR("/admin/overview", fetcher);
   const { data: stats } = useSWR("/analytics/stats?days=14", fetcher);
   const [active, setActive] = useState<any[]>([]);
@@ -35,10 +38,10 @@ function DashboardContent() {
   }, []);
 
   const cards = [
-    { label: "Bugun ko'rishlar", value: stats?.views_today ?? "—", icon: Eye, color: "text-blue-400", bg: "bg-blue-500/10" },
-    { label: "Hozir saytda", value: active.length, icon: Activity, color: "text-green-400", bg: "bg-green-500/10" },
-    { label: "Yangi arizalar", value: overview?.applications_new ?? "—", icon: ClipboardList, color: "text-brand-400", bg: "bg-brand-500/10" },
-    { label: "O'qilmagan chat", value: overview?.chats_unread ?? "—", icon: MessageSquare, color: "text-purple-400", bg: "bg-purple-500/10" },
+    { label: t(lang, "dashboard.views_today"), value: stats?.views_today ?? "—", icon: Eye, color: "text-blue-400", bg: "bg-blue-500/10" },
+    { label: t(lang, "dashboard.active_now"), value: active.length, icon: Activity, color: "text-green-400", bg: "bg-green-500/10" },
+    { label: t(lang, "dashboard.new_applications"), value: overview?.applications_new ?? "—", icon: ClipboardList, color: "text-brand-400", bg: "bg-brand-500/10" },
+    { label: t(lang, "dashboard.unread_chats"), value: overview?.chats_unread ?? "—", icon: MessageSquare, color: "text-purple-400", bg: "bg-purple-500/10" },
   ];
 
   const COLORS = ["#f97316", "#3b82f6", "#10b981", "#a855f7", "#ef4444"];
@@ -46,8 +49,8 @@ function DashboardContent() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-        <p className="text-slate-400 mt-1">Saytning hozirgi holati va statistikalar</p>
+        <h1 className="text-3xl font-bold text-white">{t(lang, "dashboard.title")}</h1>
+        <p className="text-slate-400 mt-1">{t(lang, "dashboard.subtitle")}</p>
       </div>
 
       {/* Stat cards */}
@@ -71,8 +74,8 @@ function DashboardContent() {
         <div className="card p-6 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold text-white">Ko'rishlar dinamikasi</h3>
-              <p className="text-sm text-slate-400">So'nggi 14 kun</p>
+              <h3 className="text-lg font-semibold text-white">{t(lang, "dashboard.views_dynamics")}</h3>
+              <p className="text-sm text-slate-400">{t(lang, "dashboard.last_14_days")}</p>
             </div>
             <TrendingUp className="w-5 h-5 text-brand-400" />
           </div>
@@ -95,7 +98,7 @@ function DashboardContent() {
         </div>
 
         <div className="card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Qurilmalar</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t(lang, "dashboard.devices")}</h3>
           <div style={{ width: "100%", height: 220 }}>
             <ResponsiveContainer>
               <PieChart>
@@ -122,13 +125,13 @@ function DashboardContent() {
             <div>
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                Hozir saytda ({active.length})
+                {t(lang, "dashboard.active_users")} ({active.length})
               </h3>
-              <p className="text-sm text-slate-400">Real vaqt</p>
+              <p className="text-sm text-slate-400">{t(lang, "dashboard.realtime")}</p>
             </div>
           </div>
           {active.length === 0 ? (
-            <div className="text-slate-500 text-sm py-6 text-center">Hozir hech kim yo'q</div>
+            <div className="text-slate-500 text-sm py-6 text-center">{t(lang, "dashboard.no_one_now")}</div>
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {active.map((u, i) => (
@@ -143,9 +146,9 @@ function DashboardContent() {
         </div>
 
         <div className="card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Top sahifalar</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t(lang, "dashboard.top_pages")}</h3>
           {(stats?.top_pages || []).length === 0 ? (
-            <div className="text-slate-500 text-sm py-6 text-center">Hali ma'lumot yo'q</div>
+            <div className="text-slate-500 text-sm py-6 text-center">{t(lang, "dashboard.no_data")}</div>
           ) : (
             <div className="space-y-3">
               {(stats?.top_pages || []).slice(0, 6).map((p: any, i: number) => (
@@ -167,11 +170,11 @@ function DashboardContent() {
       {/* Recent applications */}
       <div className="card p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">So'nggi arizalar</h3>
-          <a href="/applications" className="text-sm text-brand-400 hover:text-brand-300">Hammasi →</a>
+          <h3 className="text-lg font-semibold text-white">{t(lang, "dashboard.recent_applications")}</h3>
+          <a href="/applications" className="text-sm text-brand-400 hover:text-brand-300">{t(lang, "dashboard.view_all")}</a>
         </div>
         {(!overview?.recent_applications || overview.recent_applications.length === 0) ? (
-          <div className="text-slate-500 text-sm py-6 text-center">Arizalar yo'q</div>
+          <div className="text-slate-500 text-sm py-6 text-center">{t(lang, "dashboard.no_applications")}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
