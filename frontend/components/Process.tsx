@@ -4,6 +4,7 @@ import { MessageSquare, Pencil, Factory, Truck, ArrowRight } from "lucide-react"
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
 import { useApplicationModal } from "@/lib/application-modal";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 const STEPS = [
   {
@@ -62,7 +63,10 @@ const STEPS = [
 
 export default function Process() {
   const { lang } = useLang();
+  const visible = useSectionVisible("process");
   const { show: showModal } = useApplicationModal();
+
+  if (!visible) return null;
 
   return (
     <section id="process" className="py-20 sm:py-28 lg:py-32 relative bg-onyx-950 overflow-hidden">

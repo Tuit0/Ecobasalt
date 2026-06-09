@@ -180,12 +180,12 @@ function DashboardContent() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-slate-400 border-b border-slate-800">
-                  <th className="pb-3 font-medium">Ism</th>
-                  <th className="pb-3 font-medium">Telefon</th>
-                  <th className="pb-3 font-medium">Mahsulot</th>
-                  <th className="pb-3 font-medium">Manba</th>
-                  <th className="pb-3 font-medium">Holat</th>
-                  <th className="pb-3 font-medium">Vaqt</th>
+                  <th className="pb-3 font-medium">{t(lang, "common.name")}</th>
+                  <th className="pb-3 font-medium">{t(lang, "common.phone")}</th>
+                  <th className="pb-3 font-medium">{t(lang, "applications.product")}</th>
+                  <th className="pb-3 font-medium">{t(lang, "applications.source")}</th>
+                  <th className="pb-3 font-medium">{t(lang, "common.status")}</th>
+                  <th className="pb-3 font-medium">{t(lang, "common.date")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -195,8 +195,8 @@ function DashboardContent() {
                     <td className="py-3 text-slate-300 font-mono text-xs">{a.phone}</td>
                     <td className="py-3 text-slate-400">{a.product || "—"}</td>
                     <td className="py-3"><span className="text-xs px-2 py-0.5 bg-slate-800 rounded text-slate-300">{a.source}</span></td>
-                    <td className="py-3"><StatusBadge status={a.status} /></td>
-                    <td className="py-3 text-slate-500 text-xs">{new Date(a.created_at).toLocaleString("uz-UZ")}</td>
+                    <td className="py-3"><StatusBadge status={a.status} lang={lang} /></td>
+                    <td className="py-3 text-slate-500 text-xs">{new Date(a.created_at).toLocaleString("ru-RU")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -208,7 +208,7 @@ function DashboardContent() {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, lang }: { status: string; lang: any }) {
   const colors: Record<string, string> = {
     new: "bg-blue-500/10 text-blue-400 border-blue-500/30",
     in_progress: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
@@ -216,10 +216,10 @@ function StatusBadge({ status }: { status: string }) {
     rejected: "bg-red-500/10 text-red-400 border-red-500/30",
   };
   const labels: Record<string, string> = {
-    new: "Yangi",
-    in_progress: "Jarayonda",
-    done: "Bajarildi",
-    rejected: "Rad etildi",
+    new: t(lang, "applications.status.new"),
+    in_progress: t(lang, "applications.status.in_progress"),
+    done: t(lang, "applications.status.done"),
+    rejected: t(lang, "applications.status.rejected"),
   };
   return <span className={`text-xs px-2 py-0.5 rounded border ${colors[status] || "bg-slate-700 text-slate-300"}`}>{labels[status] || status}</span>;
 }

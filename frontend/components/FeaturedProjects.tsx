@@ -6,6 +6,7 @@ import { ArrowUpRight, MapPin, Calendar } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { projectImage } from "@/lib/sample-images";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type Project = {
   id: number;
@@ -19,9 +20,11 @@ type Project = {
 
 export default function FeaturedProjects() {
   const { lang } = useLang();
+  const visible = useSectionVisible("projects");
   const { data: all = [] } = useSWR<Project[]>("/api/content/projects?featured=true", fetcher);
   const projects = all.slice(0, 3);
 
+  if (!visible) return null;
   if (projects.length === 0) return null;
 
   return (

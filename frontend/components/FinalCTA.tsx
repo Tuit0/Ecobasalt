@@ -4,12 +4,16 @@ import { ArrowRight, Phone, Calculator } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { useApplicationModal } from "@/lib/application-modal";
+import { useSectionVisible } from "@/lib/section-visibility";
 import MagneticButton from "./MagneticButton";
 import CursorGradient from "./CursorGradient";
 
 export default function FinalCTA() {
   const { lang } = useLang();
+  const visible = useSectionVisible("final_cta");
   const { show: showModal } = useApplicationModal();
+
+  if (!visible) return null;
 
   return (
     <section className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden">

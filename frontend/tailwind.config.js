@@ -7,60 +7,60 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Mineral Eco palitra — bazalt tosh (dark stone)
+        // Industrial Luxury palitra — chuqur bazalt + oxblood brand
         // Legacy nomlari saqlanadi: onyx = dark stone, pearl = light text, gold = brand red
         onyx: {
-          50:  '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',  // border
-          800: '#292524',  // surface (cards)
-          900: '#1c1917',  // asosiy fon (warm graphite)
-          950: '#0c0a09',  // eng chuqur
+          50:  '#f5f1ec',
+          100: '#e8e3de',
+          200: '#c4beb8',
+          300: '#a8a29e',
+          400: '#8a847f',
+          500: '#5c5651',
+          600: '#3d3735',
+          700: '#2a2624',  // border
+          800: '#1a1716',  // surface (cards)
+          900: '#0c0a09',  // asosiy fon (deep onyx)
+          950: '#050505',  // drama background
         },
-        // Brand qizil — signal aksent (CTA only)
+        // Brand oxblood qizil — premium industrial (Tesla/Audi/Ferrari uslubi)
         gold: {
-          50:  '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#dc2626',
-          500: '#dc2626',
-          600: '#b91c1c',
-          700: '#991b1b',
-          800: '#7f1d1d',
-          900: '#5b1414',
+          50:  '#fef2f3',
+          100: '#fde6e8',
+          200: '#fbcfd3',
+          300: '#f6a4ac',  // soft hover
+          400: '#a91d2a',  // PRIMARY — oxblood (komponentlarda asosiy)
+          500: '#a91d2a',  // primary alias
+          600: '#7d1820',  // deep accent
+          700: '#601319',
+          800: '#460f13',
+          900: '#2d090c',
         },
-        // Pearl — light text (oq)
+        // Pearl — warm ivory text
         pearl: {
-          50:  '#fafaf9',
-          100: '#fafaf9',  // primary
-          200: '#e7e5e4',  // secondary
-          300: '#a8a29e',  // muted
+          50:  '#fdfaf6',
+          100: '#f5f1ec',  // primary text
+          200: '#e8e3de',  // secondary
+          300: '#c4beb8',  // tertiary
+          400: '#8a847f',  // muted
         },
-        // Forest — eco green sekundar aksent
+        // Forest — eco aksent (juda muted, faqat sertifikat/success uchun)
         forest: {
-          400: '#22c55e',
-          500: '#16a34a',
-          600: '#15803d',
-          700: '#166534',
-          800: '#14532d',
-          900: '#052e16',
+          400: '#4a8568',
+          500: '#2a5c40',
+          600: '#1d3a2a',
+          700: '#162c20',
+          800: '#0f1f17',
+          900: '#08120d',
         },
       },
       fontFamily: {
-        // Modern bold display
-        display: ['var(--font-display)', 'Bricolage Grotesque', 'system-ui', 'sans-serif'],
-        // Serif body uchun (display bilan bir xil — Bricolage italic ham bor)
-        serif: ['var(--font-serif)', 'Bricolage Grotesque', 'system-ui', 'sans-serif'],
-        // Sans — toza tipografika body uchun
+        // Industrial Display — Inter Tight (premium engineering)
+        display: ['var(--font-display)', 'Inter Tight', 'Inter', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Inter Tight', 'Inter', 'system-ui', 'sans-serif'],
+        // Body — toza Inter
         sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
-        // Mono — texnik raqamlar va detallar
-        mono: ['var(--font-mono)', 'monospace'],
+        // Mono — texnik raqamlar
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
       },
       letterSpacing: {
         'luxury': '0.25em',
@@ -118,8 +118,8 @@ module.exports = {
           '100%': { transform: 'rotate(360deg) translateX(120px) rotate(-360deg)' },
         },
         glow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(220, 38, 38, 0.3), 0 0 40px rgba(220, 38, 38, 0.15)' },
-          '50%':      { boxShadow: '0 0 50px rgba(220, 38, 38, 0.6), 0 0 100px rgba(220, 38, 38, 0.3)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(169, 29, 42, 0.35), 0 0 40px rgba(169, 29, 42, 0.18)' },
+          '50%':      { boxShadow: '0 0 50px rgba(169, 29, 42, 0.55), 0 0 100px rgba(169, 29, 42, 0.28)' },
         },
         'pulse-soft': {
           '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },

@@ -197,7 +197,7 @@ export default function Hero() {
             {[
               { num: "EI 240", unit: "min", label: t(lang, "hero.badge_fire") },
               { num: "0.034", unit: "W/m·K", label: t(lang, "hero.badge_thermal") },
-              { num: "50+", unit: "yil", label: t(lang, "hero.badge_durable") },
+              { num: "50+", unit: t(lang, "hero.years_unit"), label: t(lang, "hero.badge_durable") },
             ].map((b, i) => (
               <div
                 key={i}

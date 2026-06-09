@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 const TESTIMONIALS = [
   {
@@ -38,6 +39,8 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   const { lang } = useLang();
+  const visible = useSectionVisible("testimonials");
+  if (!visible) return null;
 
   return (
     <section className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden">

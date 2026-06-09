@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher, uploadFile } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save, Upload, MapPin, Calendar } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Project = {
   id?: number;
@@ -32,6 +34,7 @@ const EMPTY: Project = {
 };
 
 export default function ProjectsPage() {
+  const { lang } = useLang();
   const { data: projects = [] } = useSWR<Project[]>("/content/projects", fetcher);
   const [editing, setEditing] = useState<Project | null>(null);
 
@@ -48,7 +51,7 @@ export default function ProjectsPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("Loyihani o'chirishni tasdiqlaysizmi?")) return;
+    if (!confirm(t(lang, "projects.confirm_delete"))) return;
     await api(`/content/projects/${id}`, { method: "DELETE" });
     mutate("/content/projects");
   }
@@ -57,14 +60,14 @@ export default function ProjectsPage() {
     <AuthLayout>
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Bizning loyihalar</h1>
+          <h1 className="text-3xl font-bold">{t(lang, "projects.title")}</h1>
           <button onClick={() => setEditing({ ...EMPTY })} className="btn btn-primary">
-            <Plus className="w-4 h-4" /> Yangi loyiha
+            <Plus className="w-4 h-4" /> {t(lang, "projects.add")}
           </button>
         </div>
 
         {projects.length === 0 ? (
-          <div className="card p-12 text-center text-zinc-500">Loyihalar yo'q. Birinchisini qo'shing.</div>
+          <div className="card p-12 text-center text-zinc-500">{t(lang, "projects.empty")}</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects.map((p) => (
@@ -92,17 +95,17 @@ export default function ProjectsPage() {
                   <p className="text-sm text-zinc-400 line-clamp-2 mb-3">{p.description_uz}</p>
                   <div className="flex items-center gap-2 mb-3">
                     {p.is_featured && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">Tavsiya</span>
+                      <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">{t(lang, "common.featured")}</span>
                     )}
                     <span className={`text-xs px-2 py-0.5 rounded ${
                       p.is_active ? "bg-green-500/20 text-green-400" : "bg-zinc-700 text-zinc-400"
                     }`}>
-                      {p.is_active ? "Faol" : "Nofaol"}
+                      {p.is_active ? t(lang, "common.active") : t(lang, "common.inactive")}
                     </span>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => setEditing(p)} className="btn btn-ghost text-sm flex-1">
-                      <Edit2 className="w-3 h-3" /> Tahrirlash
+                      <Edit2 className="w-3 h-3" /> {t(lang, "common.edit")}
                     </button>
                     <button onClick={() => p.id && remove(p.id)} className="text-red-400 hover:text-red-300">
                       <Trash2 className="w-4 h-4" />
@@ -125,6 +128,7 @@ export default function ProjectsPage() {
 function ProjectModal({
   value, onChange, onSave, onClose,
 }: { value: Project; onChange: (v: Project) => void; onSave: () => void; onClose: () => void }) {
+  const { lang: uiLang } = useLang();
   const [uploading, setUploading] = useState(false);
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
 
@@ -136,7 +140,7 @@ function ProjectModal({
       const res = await uploadFile(file);
       onChange({ ...value, cover_image: res.url });
     } catch (err) {
-      alert("Xatolik: " + (err as Error).message);
+      alert(t(uiLang, "common.error") + ": " + (err as Error).message);
     }
     setUploading(false);
   }
@@ -145,7 +149,7 @@ function ProjectModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-2xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-          <h2 className="text-xl font-semibold">{value.id ? "Loyihani tahrirlash" : "Yangi loyiha"}</h2>
+          <h2 className="text-xl font-semibold">{value.id ? t(uiLang, "common.edit") : t(uiLang, "projects.add")}</h2>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
@@ -165,7 +169,7 @@ function ProjectModal({
             ))}
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Sarlavha ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.title")} ({lang})</label>
             <input
               className="input"
               value={(value as any)[`title_${lang}`] || ""}
@@ -173,7 +177,7 @@ function ProjectModal({
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Tavsif ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.description")} ({lang})</label>
             <textarea
               rows={4}
               className="input"
@@ -183,11 +187,11 @@ function ProjectModal({
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Manzil</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "projects.location")}</label>
               <input className="input" value={value.location} onChange={(e) => onChange({ ...value, location: e.target.value })} />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Yil</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "projects.year")}</label>
               <input
                 type="number"
                 className="input"
@@ -196,7 +200,7 @@ function ProjectModal({
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Maydoni (m²)</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "projects.area")}</label>
               <input
                 type="number"
                 className="input"
@@ -206,12 +210,12 @@ function ProjectModal({
             </div>
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-2 block">Asosiy rasm</label>
+            <label className="text-sm text-zinc-400 mb-2 block">{t(uiLang, "products.cover_image")}</label>
             <div className="flex items-center gap-3">
               {value.cover_image && <img src={value.cover_image} alt="" className="w-24 h-24 object-cover rounded" />}
               <label className="btn btn-ghost cursor-pointer">
                 <Upload className="w-4 h-4" />
-                {uploading ? "Yuklanmoqda..." : "Rasm yuklash"}
+                {uploading ? t(uiLang, "common.uploading") : t(uiLang, "common.upload")}
                 <input type="file" accept="image/*" className="hidden" onChange={handleImage} />
               </label>
               {value.cover_image && (
@@ -224,18 +228,18 @@ function ProjectModal({
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input type="checkbox" checked={!!value.is_featured} onChange={(e) => onChange({ ...value, is_featured: e.target.checked })} />
-              <span className="text-sm">Tavsiya etilgan</span>
+              <span className="text-sm">{t(uiLang, "common.featured")}</span>
             </label>
             <label className="flex items-center gap-2">
               <input type="checkbox" checked={!!value.is_active} onChange={(e) => onChange({ ...value, is_active: e.target.checked })} />
-              <span className="text-sm">Faol</span>
+              <span className="text-sm">{t(uiLang, "common.active")}</span>
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-zinc-800">
-          <button onClick={onClose} className="btn btn-ghost">Bekor qilish</button>
+          <button onClick={onClose} className="btn btn-ghost">{t(uiLang, "common.cancel")}</button>
           <button onClick={onSave} className="btn btn-primary">
-            <Save className="w-4 h-4" /> Saqlash
+            <Save className="w-4 h-4" /> {t(uiLang, "common.save")}
           </button>
         </div>
       </div>

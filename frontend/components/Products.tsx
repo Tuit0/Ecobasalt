@@ -8,6 +8,7 @@ import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
 import { productImage } from "@/lib/sample-images";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type Category = { id: number; slug: string; name_uz: string; name_ru: string; name_en: string };
 type Product = {
@@ -25,6 +26,7 @@ type Product = {
 
 export default function Products() {
   const { lang } = useLang();
+  const visible = useSectionVisible("products");
   const { data: categories = [] } = useSWR<Category[]>("/api/products/categories", fetcher);
   const { data: products = [] } = useSWR<Product[]>("/api/products", fetcher);
   const [active, setActive] = useState<string>("all");
@@ -33,6 +35,8 @@ export default function Products() {
     const cat = categories.find((c) => c.slug === active);
     return cat && p.category_id === cat.id;
   });
+
+  if (!visible) return null;
 
   return (
     <section id="products" className="py-20 sm:py-28 lg:py-32 bg-onyx-950">

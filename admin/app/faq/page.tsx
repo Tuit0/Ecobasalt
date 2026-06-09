@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save, Eye, EyeOff } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type FAQ = {
   id?: number;
@@ -24,6 +26,7 @@ const EMPTY: FAQ = {
 const CATEGORIES = ["general", "technical", "pricing", "delivery"];
 
 export default function FAQPage() {
+  const { lang } = useLang();
   const { data: faqs = [] } = useSWR<FAQ[]>("/faqs/admin/all", fetcher);
   const [editing, setEditing] = useState<FAQ | null>(null);
 
@@ -39,7 +42,7 @@ export default function FAQPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("Savol o'chirilsinmi?")) return;
+    if (!confirm(t(lang, "faq.confirm_delete"))) return;
     await api(`/faqs/${id}`, { method: "DELETE" });
     mutate("/faqs/admin/all");
   }
@@ -49,16 +52,16 @@ export default function FAQPage() {
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">FAQ — Savol-javoblar</h1>
-            <p className="text-slate-400 text-sm mt-1">Tez-tez so'raladigan savollar</p>
+            <h1 className="text-3xl font-bold text-white">{t(lang, "faq.title")}</h1>
+            <p className="text-slate-400 text-sm mt-1">{t(lang, "faq.subtitle")}</p>
           </div>
           <button onClick={() => setEditing({ ...EMPTY, order: faqs.length })} className="btn btn-primary">
-            <Plus className="w-4 h-4" /> Yangi savol
+            <Plus className="w-4 h-4" /> {t(lang, "faq.add")}
           </button>
         </div>
 
         {faqs.length === 0 ? (
-          <div className="card p-12 text-center text-slate-500">Savollar yo'q.</div>
+          <div className="card p-12 text-center text-slate-500">{t(lang, "faq.empty")}</div>
         ) : (
           <div className="space-y-3">
             {faqs.map((f, i) => (
@@ -67,7 +70,7 @@ export default function FAQPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] uppercase tracking-wider bg-slate-800 text-slate-300 px-2 py-0.5 rounded">{f.category}</span>
-                    {!f.is_active && <span className="text-[10px] uppercase text-red-400">faolsiz</span>}
+                    {!f.is_active && <span className="text-[10px] uppercase text-red-400">{t(lang, "common.inactive")}</span>}
                   </div>
                   <div className="font-semibold text-white">{f.question_uz}</div>
                   <div className="text-sm text-slate-400 line-clamp-2 mt-1">{f.answer_uz}</div>
@@ -90,12 +93,13 @@ export default function FAQPage() {
 function FAQModal({
   value, onChange, onSave, onClose,
 }: { value: FAQ; onChange: (v: FAQ) => void; onSave: () => void; onClose: () => void }) {
+  const { lang: uiLang } = useLang();
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-2xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <h2 className="text-xl font-semibold text-white">FAQ</h2>
+          <h2 className="text-xl font-semibold text-white">{t(uiLang, "sidebar.faq")}</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-4">
@@ -107,33 +111,33 @@ function FAQModal({
             ))}
           </div>
           <div>
-            <label className="label">Savol ({lang}) *</label>
+            <label className="label">{t(uiLang, "faq.question")} ({lang}) *</label>
             <textarea rows={2} className="input" value={(value as any)[`question_${lang}`] || ""} onChange={(e) => onChange({ ...value, [`question_${lang}`]: e.target.value })} />
           </div>
           <div>
-            <label className="label">Javob ({lang})</label>
+            <label className="label">{t(uiLang, "faq.answer")} ({lang})</label>
             <textarea rows={5} className="input" value={(value as any)[`answer_${lang}`] || ""} onChange={(e) => onChange({ ...value, [`answer_${lang}`]: e.target.value })} />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="label">Kategoriya</label>
+              <label className="label">{t(uiLang, "common.category")}</label>
               <select className="input" value={value.category || ""} onChange={(e) => onChange({ ...value, category: e.target.value })}>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="label">Tartib</label>
+              <label className="label">{t(uiLang, "common.order")}</label>
               <input type="number" className="input" value={value.order} onChange={(e) => onChange({ ...value, order: parseInt(e.target.value) || 0 })} />
             </div>
             <label className="flex items-center gap-2 mt-7">
               <input type="checkbox" checked={value.is_active} onChange={(e) => onChange({ ...value, is_active: e.target.checked })} />
-              <span className="text-sm text-white">Faol</span>
+              <span className="text-sm text-white">{t(uiLang, "common.active")}</span>
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-slate-800">
-          <button onClick={onClose} className="btn btn-ghost">Bekor qilish</button>
-          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> Saqlash</button>
+          <button onClick={onClose} className="btn btn-ghost">{t(uiLang, "common.cancel")}</button>
+          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> {t(uiLang, "common.save")}</button>
         </div>
       </div>
     </div>

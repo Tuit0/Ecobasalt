@@ -8,6 +8,7 @@ import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
 import { blogImage } from "@/lib/sample-images";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type BlogPost = {
   id: number;
@@ -22,8 +23,11 @@ type BlogPost = {
 
 export default function Blog() {
   const { lang } = useLang();
+  const visible = useSectionVisible("blog");
   const [filter, setFilter] = useState<"all" | BlogPost["category"]>("all");
   const { data: posts = [], isLoading } = useSWR<BlogPost[]>("/api/blog", fetcher);
+
+  if (!visible) return null;
 
   const cats: { id: "all" | BlogPost["category"]; label: string }[] = [
     { id: "all", label: t(lang, "blog.all") },

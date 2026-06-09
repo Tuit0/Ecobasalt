@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type CalcProduct = {
   id?: number;
@@ -27,6 +29,7 @@ const EMPTY: CalcProduct = {
 };
 
 export default function CalculatorProductsPage() {
+  const { lang } = useLang();
   const { data: items = [] } = useSWR<CalcProduct[]>("/calc/products/admin/all", fetcher);
   const [editing, setEditing] = useState<CalcProduct | null>(null);
 
@@ -42,7 +45,7 @@ export default function CalculatorProductsPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("Mahsulot o'chirilsinmi?")) return;
+    if (!confirm(t(lang, "calculator.confirm_delete"))) return;
     await api(`/calc/products/${id}`, { method: "DELETE" });
     mutate("/calc/products/admin/all");
   }
@@ -52,11 +55,11 @@ export default function CalculatorProductsPage() {
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">Kalkulyator mahsulotlari</h1>
-            <p className="text-slate-400 text-sm mt-1">Narx hisoblagich uchun panel turlari</p>
+            <h1 className="text-3xl font-bold text-white">{t(lang, "calculator.title")}</h1>
+            <p className="text-slate-400 text-sm mt-1">{t(lang, "calculator.subtitle")}</p>
           </div>
           <button onClick={() => setEditing({ ...EMPTY, order: items.length })} className="btn btn-primary">
-            <Plus className="w-4 h-4" /> Yangi mahsulot
+            <Plus className="w-4 h-4" /> {t(lang, "calculator.add")}
           </button>
         </div>
 
@@ -74,10 +77,10 @@ export default function CalculatorProductsPage() {
                 </div>
               </div>
               <div className="text-xs text-slate-400 mb-3">
-                Qalinliklar: <span className="font-mono">{p.thicknesses.join(", ")}mm</span>
+                {t(lang, "calculator.thicknesses")}: <span className="font-mono">{p.thicknesses.join(", ")}mm</span>
               </div>
               <div className="flex items-center justify-between border-t border-slate-800 pt-3">
-                <span className="text-xs text-slate-500">Default: {p.default_thickness}mm</span>
+                <span className="text-xs text-slate-500">{t(lang, "calculator.default_thickness")}: {p.default_thickness}mm</span>
                 <div className="flex gap-1">
                   <button onClick={() => setEditing(p)} className="p-1.5 text-blue-400 hover:text-blue-300"><Edit2 className="w-3.5 h-3.5" /></button>
                   <button onClick={() => p.id && remove(p.id)} className="p-1.5 text-red-400 hover:text-red-300"><Trash2 className="w-3.5 h-3.5" /></button>
@@ -96,6 +99,7 @@ export default function CalculatorProductsPage() {
 function CalcProductModal({
   value, onChange, onSave, onClose,
 }: { value: CalcProduct; onChange: (v: CalcProduct) => void; onSave: () => void; onClose: () => void }) {
+  const { lang: uiLang } = useLang();
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
   const [thicknessInput, setThicknessInput] = useState(value.thicknesses.join(", "));
 
@@ -108,12 +112,12 @@ function CalcProductModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-2xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <h2 className="text-xl font-semibold text-white">Mahsulot</h2>
+          <h2 className="text-xl font-semibold text-white">{t(uiLang, "common.new")}</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="label">Kod (slug) *</label>
+            <label className="label">{t(uiLang, "calculator.code")} *</label>
             <input className="input font-mono" placeholder="wall, roof, fridge..." value={value.code} onChange={(e) => onChange({ ...value, code: e.target.value })} />
           </div>
           <div className="flex gap-1 border-b border-slate-800">
@@ -122,21 +126,21 @@ function CalcProductModal({
             ))}
           </div>
           <div>
-            <label className="label">Nomi ({lang}) *</label>
+            <label className="label">{t(uiLang, "common.name")} ({lang}) *</label>
             <input className="input" value={(value as any)[`label_${lang}`] || ""} onChange={(e) => onChange({ ...value, [`label_${lang}`]: e.target.value })} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="label">Asosiy narx (100mm uchun) *</label>
+              <label className="label">{t(uiLang, "calculator.base_price")} *</label>
               <input type="number" step="0.5" className="input" value={value.base_price} onChange={(e) => onChange({ ...value, base_price: parseFloat(e.target.value) || 0 })} />
             </div>
             <div>
-              <label className="label">O'lchov</label>
+              <label className="label">{t(uiLang, "calculator.unit")}</label>
               <input className="input" placeholder="USD/m²" value={value.unit} onChange={(e) => onChange({ ...value, unit: e.target.value })} />
             </div>
           </div>
           <div>
-            <label className="label">Qalinliklar (mm, vergul bilan)</label>
+            <label className="label">{t(uiLang, "calculator.thicknesses")}</label>
             <div className="flex gap-2">
               <input
                 className="input flex-1 font-mono"
@@ -147,26 +151,26 @@ function CalcProductModal({
               />
               <button onClick={applyThicknesses} className="btn btn-ghost">OK</button>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Hozir: <span className="font-mono">{value.thicknesses.join(", ")}</span></p>
+            <p className="text-xs text-slate-500 mt-2">{t(uiLang, "calculator.current")}: <span className="font-mono">{value.thicknesses.join(", ")}</span></p>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="label">Standart qalinlik</label>
+              <label className="label">{t(uiLang, "calculator.default_thickness")}</label>
               <input type="number" className="input" value={value.default_thickness} onChange={(e) => onChange({ ...value, default_thickness: parseInt(e.target.value) || 100 })} />
             </div>
             <div>
-              <label className="label">Tartib</label>
+              <label className="label">{t(uiLang, "common.order")}</label>
               <input type="number" className="input" value={value.order} onChange={(e) => onChange({ ...value, order: parseInt(e.target.value) || 0 })} />
             </div>
             <label className="flex items-center gap-2 mt-7">
               <input type="checkbox" checked={value.is_active} onChange={(e) => onChange({ ...value, is_active: e.target.checked })} />
-              <span className="text-sm text-white">Faol</span>
+              <span className="text-sm text-white">{t(uiLang, "common.active")}</span>
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-slate-800">
-          <button onClick={onClose} className="btn btn-ghost">Bekor qilish</button>
-          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> Saqlash</button>
+          <button onClick={onClose} className="btn btn-ghost">{t(uiLang, "common.cancel")}</button>
+          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> {t(uiLang, "common.save")}</button>
         </div>
       </div>
     </div>

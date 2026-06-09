@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Phone, Mail, MessageSquare, Calendar, X, Save, Trash2 } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Application = {
   id: number;
@@ -18,13 +20,6 @@ type Application = {
   created_at: string;
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  new: "Yangi",
-  in_progress: "Jarayonda",
-  done: "Bajarildi",
-  rejected: "Rad etildi",
-};
-
 const STATUS_COLOR: Record<string, string> = {
   new: "bg-blue-500/20 text-blue-400 border-blue-500/40",
   in_progress: "bg-yellow-500/20 text-yellow-400 border-yellow-500/40",
@@ -33,10 +28,18 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 export default function ApplicationsPage() {
+  const { lang } = useLang();
   const [filter, setFilter] = useState<string>("all");
   const url = filter === "all" ? "/applications" : `/applications?status=${filter}`;
   const { data: apps = [] } = useSWR<Application[]>(url, fetcher, { refreshInterval: 10000 });
   const [editing, setEditing] = useState<Application | null>(null);
+
+  const STATUS_LABEL: Record<string, string> = {
+    new: t(lang, "applications.status.new"),
+    in_progress: t(lang, "applications.status.in_progress"),
+    done: t(lang, "applications.status.done"),
+    rejected: t(lang, "applications.status.rejected"),
+  };
 
   async function updateStatus(id: number, status: string) {
     await api(`/applications/${id}`, {
@@ -57,7 +60,7 @@ export default function ApplicationsPage() {
   }
 
   async function deleteApp(id: number) {
-    if (!confirm("Arizani o'chirishni tasdiqlaysizmi?")) return;
+    if (!confirm(t(lang, "common.confirm_delete"))) return;
     await api(`/applications/${id}`, { method: "DELETE" });
     mutate(url);
   }
@@ -65,7 +68,7 @@ export default function ApplicationsPage() {
   return (
     <AuthLayout>
       <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6">Arizalar</h1>
+        <h1 className="text-3xl font-bold mb-6">{t(lang, "applications.title")}</h1>
 
         <div className="flex gap-2 mb-6">
           {["all", "new", "in_progress", "done", "rejected"].map((s) => (
@@ -74,13 +77,13 @@ export default function ApplicationsPage() {
               onClick={() => setFilter(s)}
               className={`btn ${filter === s ? "btn-primary" : "btn-ghost"}`}
             >
-              {s === "all" ? "Hammasi" : STATUS_LABEL[s]}
+              {s === "all" ? t(lang, "common.all") : STATUS_LABEL[s]}
             </button>
           ))}
         </div>
 
         {apps.length === 0 ? (
-          <div className="card p-12 text-center text-zinc-500">Arizalar topilmadi</div>
+          <div className="card p-12 text-center text-zinc-500">{t(lang, "applications.empty")}</div>
         ) : (
           <div className="space-y-3">
             {apps.map((a) => (
@@ -88,7 +91,7 @@ export default function ApplicationsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold">{a.name}</h3>
+                      <h3 className="text-lg font-semibold">{a.name || t(lang, "applications.no_name")}</h3>
                       <span className={`text-xs px-2 py-1 rounded border ${STATUS_COLOR[a.status]}`}>
                         {STATUS_LABEL[a.status]}
                       </span>
@@ -126,7 +129,7 @@ export default function ApplicationsPage() {
                       <p className="text-sm text-zinc-300 bg-zinc-900/50 rounded-lg p-3 mb-2">{a.message}</p>
                     )}
                     {a.notes && (
-                      <p className="text-xs text-orange-400 italic">Eslatma: {a.notes}</p>
+                      <p className="text-xs text-orange-400 italic">{t(lang, "applications.notes")}: {a.notes}</p>
                     )}
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
@@ -142,10 +145,10 @@ export default function ApplicationsPage() {
                       ))}
                     </select>
                     <button onClick={() => setEditing(a)} className="btn btn-ghost text-sm">
-                      Eslatma
+                      {t(lang, "applications.notes")}
                     </button>
                     <button onClick={() => deleteApp(a.id)} className="text-red-400 hover:text-red-300 text-sm">
-                      <Trash2 className="w-4 h-4 inline" /> O'chirish
+                      <Trash2 className="w-4 h-4 inline" /> {t(lang, "common.delete")}
                     </button>
                   </div>
                 </div>
@@ -158,14 +161,14 @@ export default function ApplicationsPage() {
           <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
             <div className="card max-w-lg w-full">
               <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-                <h2 className="text-xl font-semibold">{editing.name} — eslatma</h2>
+                <h2 className="text-xl font-semibold">{editing.name || t(lang, "applications.no_name")} — {t(lang, "applications.notes")}</h2>
                 <button onClick={() => setEditing(null)} className="text-zinc-400 hover:text-white">
                   <X className="w-5 h-5" />
                 </button>
               </div>
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="text-sm text-zinc-400 mb-1 block">Holat</label>
+                  <label className="text-sm text-zinc-400 mb-1 block">{t(lang, "common.status")}</label>
                   <select
                     className="input"
                     value={editing.status}
@@ -179,7 +182,7 @@ export default function ApplicationsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm text-zinc-400 mb-1 block">Ichki eslatma</label>
+                  <label className="text-sm text-zinc-400 mb-1 block">{t(lang, "applications.notes_placeholder")}</label>
                   <textarea
                     rows={5}
                     className="input"
@@ -190,10 +193,10 @@ export default function ApplicationsPage() {
               </div>
               <div className="flex justify-end gap-2 p-6 border-t border-zinc-800">
                 <button onClick={() => setEditing(null)} className="btn btn-ghost">
-                  Bekor qilish
+                  {t(lang, "common.cancel")}
                 </button>
                 <button onClick={saveApp} className="btn btn-primary">
-                  <Save className="w-4 h-4" /> Saqlash
+                  <Save className="w-4 h-4" /> {t(lang, "common.save")}
                 </button>
               </div>
             </div>

@@ -5,10 +5,13 @@ import { Check, Award, Sparkles } from "lucide-react";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 export default function About() {
   const { lang } = useLang();
+  const visible = useSectionVisible("about");
   const { data } = useSWR("/api/content/blocks?section=about", fetcher);
+  if (!visible) return null;
   const blocks = blocksToMap(data || []);
 
   const title = pickLang(blocks["about.title"], lang) || t(lang, "about.title");

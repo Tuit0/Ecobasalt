@@ -11,7 +11,7 @@ import logging
 
 from app.core.config import settings
 from app.core.database import init_db, close_db
-from app.api import products, content, applications, analytics, admin, auth, media, chat, blog, cms
+from app.api import products, content, applications, analytics, admin, auth, media, chat, blog, cms, sections
 from app.bot.bot import start_bot, stop_bot
 
 logging.basicConfig(level=logging.INFO)
@@ -68,6 +68,7 @@ app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 app.include_router(blog.router, prefix="/api")
 app.include_router(cms.router, prefix="/api")
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(sections.router, prefix="/api/sections", tags=["sections"])
 
 
 @app.get("/")

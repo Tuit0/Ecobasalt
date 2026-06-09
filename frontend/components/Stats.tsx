@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { TrendingUp } from "lucide-react";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -29,7 +30,9 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 
 export default function Stats() {
   const { lang } = useLang();
+  const visible = useSectionVisible("stats");
   const { data } = useSWR("/api/content/blocks?section=stats", fetcher);
+  if (!visible) return null;
   const blocks = blocksToMap(data || []);
 
   const items = [

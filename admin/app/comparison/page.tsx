@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save, Check, Minus as MinusIcon } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type CellType = "good" | "neutral" | "bad";
 
@@ -27,15 +29,16 @@ const EMPTY: Row = {
   order: 0, is_active: true,
 };
 
-const TYPE_OPTIONS: { val: CellType; label: string; color: string }[] = [
-  { val: "good", label: "Yaxshi (yashil)", color: "text-green-400" },
-  { val: "neutral", label: "O'rta (kulrang)", color: "text-slate-400" },
-  { val: "bad", label: "Yomon (qizil)", color: "text-red-400" },
-];
-
 export default function ComparisonPage() {
+  const { lang } = useLang();
   const { data: rows = [] } = useSWR<Row[]>("/comparison/rows/admin/all", fetcher);
   const [editing, setEditing] = useState<Row | null>(null);
+
+  const TYPE_OPTIONS: { val: CellType; label: string; color: string }[] = [
+    { val: "good", label: t(lang, "comparison.type_good"), color: "text-green-400" },
+    { val: "neutral", label: t(lang, "comparison.type_neutral"), color: "text-slate-400" },
+    { val: "bad", label: t(lang, "comparison.type_bad"), color: "text-red-400" },
+  ];
 
   async function save() {
     if (!editing) return;
@@ -49,7 +52,7 @@ export default function ComparisonPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("Qator o'chirilsinmi?")) return;
+    if (!confirm(t(lang, "comparison.confirm_delete"))) return;
     await api(`/comparison/rows/${id}`, { method: "DELETE" });
     mutate("/comparison/rows/admin/all");
   }
@@ -65,11 +68,11 @@ export default function ComparisonPage() {
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">Taqqoslash jadvali</h1>
-            <p className="text-slate-400 text-sm mt-1">Bazalt vs PIR/PUR/EPS</p>
+            <h1 className="text-3xl font-bold text-white">{t(lang, "comparison.title")}</h1>
+            <p className="text-slate-400 text-sm mt-1">{t(lang, "comparison.subtitle")}</p>
           </div>
           <button onClick={() => setEditing({ ...EMPTY, order: rows.length })} className="btn btn-primary">
-            <Plus className="w-4 h-4" /> Yangi qator
+            <Plus className="w-4 h-4" /> {t(lang, "comparison.add")}
           </button>
         </div>
 
@@ -77,7 +80,7 @@ export default function ComparisonPage() {
           <table className="w-full min-w-[900px]">
             <thead>
               <tr className="border-b border-slate-800">
-                <th className="text-left p-3 text-xs uppercase text-slate-400">Xususiyat</th>
+                <th className="text-left p-3 text-xs uppercase text-slate-400">{t(lang, "comparison.feature")}</th>
                 <th className="p-3 text-xs uppercase text-brand-400">Bazalt</th>
                 <th className="p-3 text-xs uppercase text-slate-400">PIR</th>
                 <th className="p-3 text-xs uppercase text-slate-400">PUR</th>
@@ -102,21 +105,22 @@ export default function ComparisonPage() {
                 </tr>
               ))}
               {rows.length === 0 && (
-                <tr><td colSpan={6} className="p-12 text-center text-slate-500">Qatorlar yo'q.</td></tr>
+                <tr><td colSpan={6} className="p-12 text-center text-slate-500">{t(lang, "comparison.empty")}</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {editing && <RowModal value={editing} onChange={setEditing} onSave={save} onClose={() => setEditing(null)} />}
+        {editing && <RowModal value={editing} onChange={setEditing} onSave={save} onClose={() => setEditing(null)} typeOptions={TYPE_OPTIONS} />}
       </div>
     </AuthLayout>
   );
 }
 
 function RowModal({
-  value, onChange, onSave, onClose,
-}: { value: Row; onChange: (v: Row) => void; onSave: () => void; onClose: () => void }) {
+  value, onChange, onSave, onClose, typeOptions,
+}: { value: Row; onChange: (v: Row) => void; onSave: () => void; onClose: () => void; typeOptions: { val: CellType; label: string; color: string }[] }) {
+  const { lang: uiLang } = useLang();
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
 
   const ColumnEditor = ({ col, label }: { col: "basalt" | "pir" | "pur" | "eps"; label: string }) => (
@@ -126,7 +130,7 @@ function RowModal({
       </div>
       <input
         className="input mb-2"
-        placeholder={`Qiymat (${lang})`}
+        placeholder={`${t(uiLang, "comparison.value")} (${lang})`}
         value={(value as any)[`${col}_value_${lang}`] || ""}
         onChange={(e) => onChange({ ...value, [`${col}_value_${lang}`]: e.target.value })}
       />
@@ -135,7 +139,7 @@ function RowModal({
         value={(value as any)[`${col}_type`]}
         onChange={(e) => onChange({ ...value, [`${col}_type`]: e.target.value as CellType })}
       >
-        {TYPE_OPTIONS.map((t) => <option key={t.val} value={t.val}>{t.label}</option>)}
+        {typeOptions.map((tp) => <option key={tp.val} value={tp.val}>{tp.label}</option>)}
       </select>
     </div>
   );
@@ -144,7 +148,7 @@ function RowModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-4xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <h2 className="text-xl font-semibold text-white">Taqqoslash qatori</h2>
+          <h2 className="text-xl font-semibold text-white">{t(uiLang, "comparison.row_title")}</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-4">
@@ -154,7 +158,7 @@ function RowModal({
             ))}
           </div>
           <div>
-            <label className="label">Xususiyat nomi ({lang}) *</label>
+            <label className="label">{t(uiLang, "comparison.feature_name")} ({lang}) *</label>
             <input className="input" value={(value as any)[`feature_${lang}`] || ""} onChange={(e) => onChange({ ...value, [`feature_${lang}`]: e.target.value })} />
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -165,18 +169,18 @@ function RowModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="label">Tartib</label>
+              <label className="label">{t(uiLang, "common.order")}</label>
               <input type="number" className="input" value={value.order} onChange={(e) => onChange({ ...value, order: parseInt(e.target.value) || 0 })} />
             </div>
             <label className="flex items-center gap-2 mt-7">
               <input type="checkbox" checked={value.is_active} onChange={(e) => onChange({ ...value, is_active: e.target.checked })} />
-              <span className="text-sm text-white">Faol</span>
+              <span className="text-sm text-white">{t(uiLang, "common.active")}</span>
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-slate-800">
-          <button onClick={onClose} className="btn btn-ghost">Bekor qilish</button>
-          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> Saqlash</button>
+          <button onClick={onClose} className="btn btn-ghost">{t(uiLang, "common.cancel")}</button>
+          <button onClick={onSave} className="btn btn-primary"><Save className="w-4 h-4" /> {t(uiLang, "common.save")}</button>
         </div>
       </div>
     </div>

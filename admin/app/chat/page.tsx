@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher, getToken } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Send, MessageCircle, User } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Session = {
   session_id: string;
@@ -22,6 +24,7 @@ type Message = {
 };
 
 export default function ChatPage() {
+  const { lang } = useLang();
   const { data: sessions = [] } = useSWR<Session[]>("/chat/sessions", fetcher, { refreshInterval: 5000 });
   const [activeId, setActiveId] = useState<string | null>(null);
   const { data: messages = [] } = useSWR<Message[]>(
@@ -86,14 +89,14 @@ export default function ChatPage() {
     <AuthLayout>
       <div className="h-screen flex flex-col">
         <div className="p-6 border-b border-zinc-800">
-          <h1 className="text-2xl font-bold">Chat</h1>
+          <h1 className="text-2xl font-bold">{t(lang, "chat.title")}</h1>
         </div>
         <div className="flex-1 flex overflow-hidden">
           <div className="w-80 border-r border-zinc-800 overflow-y-auto">
             {sessions.length === 0 ? (
               <div className="p-6 text-center text-zinc-500">
                 <MessageCircle className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                Sessiyalar yo'q
+                {t(lang, "chat.no_sessions")}
               </div>
             ) : (
               sessions.map((s) => (
@@ -110,7 +113,7 @@ export default function ChatPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="font-semibold truncate">{s.name || "Mehmon"}</div>
+                        <div className="font-semibold truncate">{s.name || t(lang, "chat.guest")}</div>
                         {s.unread_count > 0 && (
                           <span className="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full shrink-0">
                             {s.unread_count}
@@ -131,7 +134,7 @@ export default function ChatPage() {
           <div className="flex-1 flex flex-col">
             {!activeId ? (
               <div className="flex-1 flex items-center justify-center text-zinc-500">
-                Suhbatni boshlash uchun sessiya tanlang
+                {t(lang, "chat.select_chat")}
               </div>
             ) : (
               <>
@@ -162,13 +165,13 @@ export default function ChatPage() {
                 <div className="border-t border-zinc-800 p-4 flex gap-2">
                   <input
                     className="input flex-1"
-                    placeholder="Javob yozing..."
+                    placeholder={t(lang, "chat.placeholder")}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())}
                   />
                   <button onClick={send} disabled={!text.trim()} className="btn btn-primary">
-                    <Send className="w-4 h-4" /> Yuborish
+                    <Send className="w-4 h-4" /> {t(lang, "chat.send")}
                   </button>
                 </div>
               </>

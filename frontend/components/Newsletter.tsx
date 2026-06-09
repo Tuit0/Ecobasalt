@@ -3,11 +3,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight, Check } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 export default function Newsletter() {
   const { lang } = useLang();
+  const visible = useSectionVisible("newsletter");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "ok">("idle");
+
+  if (!visible) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

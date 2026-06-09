@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Snowflake, Warehouse, Factory, ShoppingBag, Heart, Tractor } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 const INDUSTRIES = [
   {
@@ -68,6 +69,8 @@ const INDUSTRIES = [
 
 export default function Industries() {
   const { lang } = useLang();
+  const visible = useSectionVisible("industries");
+  if (!visible) return null;
 
   return (
     <section className="py-20 sm:py-28 lg:py-32 bg-onyx-900 relative overflow-hidden">

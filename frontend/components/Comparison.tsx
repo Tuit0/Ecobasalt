@@ -5,6 +5,7 @@ import { Check, X, Minus, Star } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type CellType = "good" | "neutral" | "bad";
 
@@ -37,7 +38,10 @@ function Cell({ value, type }: { value: string; type: CellType }) {
 
 export default function Comparison() {
   const { lang } = useLang();
+  const visible = useSectionVisible("comparison");
   const { data: rows = [], isLoading } = useSWR<Row[]>("/api/comparison/rows", fetcher);
+
+  if (!visible) return null;
 
   return (
     <section id="comparison" className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden">

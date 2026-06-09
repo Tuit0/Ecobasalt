@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher, uploadFile } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save, Upload } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Slide = {
   id?: number;
@@ -30,6 +32,7 @@ const EMPTY: Slide = {
 };
 
 export default function HeroSlidesPage() {
+  const { lang } = useLang();
   const { data: slides = [] } = useSWR<Slide[]>("/content/hero-slides", fetcher);
   const [editing, setEditing] = useState<Slide | null>(null);
 
@@ -45,7 +48,7 @@ export default function HeroSlidesPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm("Slayd o'chirilsinmi?")) return;
+    if (!confirm(t(lang, "hero_slides.confirm_delete"))) return;
     await api(`/content/hero-slides/${id}`, { method: "DELETE" });
     mutate("/content/hero-slides");
   }
@@ -65,15 +68,15 @@ export default function HeroSlidesPage() {
     <AuthLayout>
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Hero slaydlar</h1>
+          <h1 className="text-3xl font-bold">{t(lang, "hero_slides.title")}</h1>
           <button onClick={() => setEditing({ ...EMPTY, order: slides.length })} className="btn btn-primary">
-            <Plus className="w-4 h-4" /> Yangi slayd
+            <Plus className="w-4 h-4" /> {t(lang, "hero_slides.add")}
           </button>
         </div>
 
         {slides.length === 0 ? (
           <div className="card p-12 text-center text-zinc-500">
-            Slaydlar mavjud emas. Birinchi slayd qo'shing.
+            {t(lang, "hero_slides.empty")}
           </div>
         ) : (
           <div className="space-y-3">
@@ -120,6 +123,7 @@ export default function HeroSlidesPage() {
 function SlideModal({
   value, onChange, onSave, onClose,
 }: { value: Slide; onChange: (v: Slide) => void; onSave: () => void; onClose: () => void }) {
+  const { lang: uiLang } = useLang();
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
   const [uploading, setUploading] = useState(false);
 
@@ -131,7 +135,7 @@ function SlideModal({
       const res = await uploadFile(file);
       onChange({ ...value, image: res.url });
     } catch (err) {
-      alert("Xatolik: " + (err as Error).message);
+      alert(t(uiLang, "common.error") + ": " + (err as Error).message);
     }
     setUploading(false);
   }
@@ -140,7 +144,7 @@ function SlideModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-2xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-          <h2 className="text-xl font-semibold">Slayd</h2>
+          <h2 className="text-xl font-semibold">{t(uiLang, "hero_slides.modal_title")}</h2>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
@@ -160,7 +164,7 @@ function SlideModal({
             ))}
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Sarlavha ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.title")} ({lang})</label>
             <input
               className="input"
               value={(value as any)[`title_${lang}`] || ""}
@@ -168,7 +172,7 @@ function SlideModal({
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Ostki sarlavha ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.subtitle")} ({lang})</label>
             <textarea
               rows={2}
               className="input"
@@ -178,7 +182,7 @@ function SlideModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">CTA matni ({lang})</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "hero_slides.cta_text")} ({lang})</label>
               <input
                 className="input"
                 value={(value as any)[`cta_text_${lang}`] || ""}
@@ -186,7 +190,7 @@ function SlideModal({
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">CTA havola</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "hero_slides.cta_link")}</label>
               <input
                 className="input"
                 value={value.cta_link}
@@ -196,7 +200,7 @@ function SlideModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Tartib</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.order")}</label>
               <input
                 type="number"
                 className="input"
@@ -210,16 +214,16 @@ function SlideModal({
                 checked={value.is_active}
                 onChange={(e) => onChange({ ...value, is_active: e.target.checked })}
               />
-              <span className="text-sm">Faol</span>
+              <span className="text-sm">{t(uiLang, "common.active")}</span>
             </label>
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-2 block">Rasm</label>
+            <label className="text-sm text-zinc-400 mb-2 block">{t(uiLang, "common.image")}</label>
             <div className="flex items-center gap-3">
               {value.image && <img src={value.image} alt="" className="w-32 h-20 object-cover rounded" />}
               <label className="btn btn-ghost cursor-pointer">
                 <Upload className="w-4 h-4" />
-                {uploading ? "Yuklanmoqda..." : "Yuklash"}
+                {uploading ? t(uiLang, "common.uploading") : t(uiLang, "common.upload")}
                 <input type="file" accept="image/*" className="hidden" onChange={handleImage} />
               </label>
             </div>
@@ -227,10 +231,10 @@ function SlideModal({
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-zinc-800">
           <button onClick={onClose} className="btn btn-ghost">
-            Bekor qilish
+            {t(uiLang, "common.cancel")}
           </button>
           <button onClick={onSave} className="btn btn-primary">
-            <Save className="w-4 h-4" /> Saqlash
+            <Save className="w-4 h-4" /> {t(uiLang, "common.save")}
           </button>
         </div>
       </div>

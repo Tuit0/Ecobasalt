@@ -8,6 +8,7 @@ import {
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type Feature = {
   id: number;
@@ -34,7 +35,10 @@ const COLORS = [
 
 export default function Features() {
   const { lang } = useLang();
+  const visible = useSectionVisible("features");
   const { data: features = [], isLoading } = useSWR<Feature[]>("/api/features", fetcher);
+
+  if (!visible) return null;
 
   return (
     <section id="features" className="py-20 sm:py-28 lg:py-32 bg-onyx-900 relative overflow-hidden">

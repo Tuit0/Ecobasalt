@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { fetcher } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
+import { useSectionVisible } from "@/lib/section-visibility";
 
 type Client = {
   id: number;
@@ -16,8 +17,10 @@ type Client = {
 
 export default function TrustBar() {
   const { lang } = useLang();
+  const visible = useSectionVisible("trustbar");
   const { data: clients = [], isLoading } = useSWR<Client[]>("/api/clients", fetcher);
 
+  if (!visible) return null;
   if (!isLoading && clients.length === 0) return null;
 
   // Doubled for seamless loop

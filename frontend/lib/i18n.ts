@@ -36,6 +36,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "hero.badge_durable": "50+ yil xizmat muddati",
     "hero.badge_thermal": "λ = 0.035 W/m·K",
     "hero.scroll": "Pastga aylantiring",
+    "hero.years_unit": "yil",
 
     "stats.eyebrow": "RAQAMLARDA",
 
@@ -216,6 +217,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "hero.badge_durable": "Срок службы 50+ лет",
     "hero.badge_thermal": "λ = 0.035 Вт/м·К",
     "hero.scroll": "Прокрутите вниз",
+    "hero.years_unit": "лет",
 
     "stats.eyebrow": "В ЦИФРАХ",
 
@@ -396,6 +398,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "hero.badge_durable": "50+ Year Lifespan",
     "hero.badge_thermal": "λ = 0.035 W/m·K",
     "hero.scroll": "Scroll down",
+    "hero.years_unit": "years",
 
     "stats.eyebrow": "BY THE NUMBERS",
 

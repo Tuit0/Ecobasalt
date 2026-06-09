@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, FileText, Package, ClipboardList, Image as ImageIcon,
   MessageSquare, BarChart3, LogOut, Building2, Sparkles,
-  Newspaper, HelpCircle, Star, Users, Calculator, GitCompare, Globe,
+  Newspaper, HelpCircle, Star, Users, Calculator, GitCompare, Globe, Layers,
 } from "lucide-react";
 import { clearToken } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
@@ -30,6 +30,7 @@ export default function Sidebar() {
       title: t(lang, "sidebar.content"),
       items: [
         { href: "/content", label: t(lang, "sidebar.content_blocks"), icon: FileText },
+        { href: "/sections", label: t(lang, "sidebar.sections"), icon: Layers },
         { href: "/hero-slides", label: t(lang, "sidebar.hero_slides"), icon: Sparkles },
         { href: "/products", label: t(lang, "sidebar.products"), icon: Package },
         { href: "/projects", label: t(lang, "sidebar.projects"), icon: Building2 },

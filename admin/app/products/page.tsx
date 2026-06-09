@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher, uploadFile } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Plus, Edit2, Trash2, X, Save, Upload, Image as ImageIcon } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Category = {
   id: number;
@@ -61,6 +63,7 @@ const EMPTY_PRODUCT: Partial<Product> = {
 };
 
 export default function ProductsPage() {
+  const { lang } = useLang();
   const { data: categories = [] } = useSWR<Category[]>("/products/categories", fetcher);
   const { data: products = [] } = useSWR<Product[]>("/products/admin/all", fetcher);
   const [editing, setEditing] = useState<Partial<Product> | null>(null);
@@ -82,7 +85,7 @@ export default function ProductsPage() {
   }
 
   async function deleteProduct(id: number) {
-    if (!confirm("Mahsulotni o'chirishni tasdiqlaysizmi?")) return;
+    if (!confirm(t(lang, "products.confirm_delete"))) return;
     await api(`/products/${id}`, { method: "DELETE" });
     mutate("/products/admin/all");
   }
@@ -97,7 +100,7 @@ export default function ProductsPage() {
   }
 
   async function deleteCategory(id: number) {
-    if (!confirm("Kategoriyani o'chirishni tasdiqlaysizmi?")) return;
+    if (!confirm(t(lang, "products.confirm_delete_cat"))) return;
     await api(`/products/categories/${id}`, { method: "DELETE" });
     mutate("/products/categories");
   }
@@ -106,19 +109,19 @@ export default function ProductsPage() {
     <AuthLayout>
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Mahsulotlar</h1>
+          <h1 className="text-3xl font-bold">{t(lang, "products.title")}</h1>
           <div className="flex gap-2">
             <button
               onClick={() => setTab("products")}
               className={`btn ${tab === "products" ? "btn-primary" : "btn-ghost"}`}
             >
-              Mahsulotlar
+              {t(lang, "products.tab_products")}
             </button>
             <button
               onClick={() => setTab("categories")}
               className={`btn ${tab === "categories" ? "btn-primary" : "btn-ghost"}`}
             >
-              Kategoriyalar
+              {t(lang, "products.tab_categories")}
             </button>
           </div>
         </div>
@@ -130,7 +133,7 @@ export default function ProductsPage() {
                 onClick={() => setEditing({ ...EMPTY_PRODUCT, category_id: categories[0]?.id || 0 })}
                 className="btn btn-primary"
               >
-                <Plus className="w-4 h-4" /> Yangi mahsulot
+                <Plus className="w-4 h-4" /> {t(lang, "products.add")}
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -152,7 +155,7 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-2 mb-3">
                         {p.is_featured && (
                           <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">
-                            Tavsiya
+                            {t(lang, "common.featured")}
                           </span>
                         )}
                         <span
@@ -160,12 +163,12 @@ export default function ProductsPage() {
                             p.is_active ? "bg-green-500/20 text-green-400" : "bg-zinc-700 text-zinc-400"
                           }`}
                         >
-                          {p.is_active ? "Faol" : "Nofaol"}
+                          {p.is_active ? t(lang, "common.active") : t(lang, "common.inactive")}
                         </span>
                       </div>
                       <div className="flex gap-2">
                         <button onClick={() => setEditing(p)} className="btn btn-ghost text-sm flex-1">
-                          <Edit2 className="w-3 h-3" /> Tahrirlash
+                          <Edit2 className="w-3 h-3" /> {t(lang, "common.edit")}
                         </button>
                         <button
                           onClick={() => deleteProduct(p.id)}
@@ -189,7 +192,7 @@ export default function ProductsPage() {
                 onClick={() => setEditingCat({ slug: "", name_uz: "", name_ru: "", name_en: "", icon: "", order: 0 })}
                 className="btn btn-primary"
               >
-                <Plus className="w-4 h-4" /> Yangi kategoriya
+                <Plus className="w-4 h-4" /> {t(lang, "products.add_category")}
               </button>
             </div>
             <div className="card overflow-hidden">
@@ -200,7 +203,7 @@ export default function ProductsPage() {
                     <th className="px-4 py-3">UZ</th>
                     <th className="px-4 py-3">RU</th>
                     <th className="px-4 py-3">EN</th>
-                    <th className="px-4 py-3">Tartib</th>
+                    <th className="px-4 py-3">{t(lang, "common.order")}</th>
                     <th className="px-4 py-3"></th>
                   </tr>
                 </thead>
@@ -266,6 +269,7 @@ function ProductEditModal({
   onClose: () => void;
   categories: Category[];
 }) {
+  const { lang: uiLang } = useLang();
   const [uploading, setUploading] = useState(false);
   const [lang, setLang] = useState<"uz" | "ru" | "en">("uz");
 
@@ -277,7 +281,7 @@ function ProductEditModal({
       const res = await uploadFile(file);
       onChange({ ...value, cover_image: res.url });
     } catch (err) {
-      alert("Yuklashda xatolik: " + (err as Error).message);
+      alert(t(uiLang, "common.error") + ": " + (err as Error).message);
     }
     setUploading(false);
   }
@@ -288,7 +292,7 @@ function ProductEditModal({
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="card max-w-3xl w-full my-8">
         <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-          <h2 className="text-xl font-semibold">{value.id ? "Tahrirlash" : "Yangi mahsulot"}</h2>
+          <h2 className="text-xl font-semibold">{value.id ? t(uiLang, "common.edit") : t(uiLang, "products.add")}</h2>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
@@ -296,7 +300,7 @@ function ProductEditModal({
         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Slug</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.slug")}</label>
               <input
                 className="input"
                 value={value.slug || ""}
@@ -304,7 +308,7 @@ function ProductEditModal({
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Kategoriya</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.category")}</label>
               <select
                 className="input"
                 value={value.category_id || 0}
@@ -334,7 +338,7 @@ function ProductEditModal({
           </div>
 
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Nomi ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.name")} ({lang})</label>
             <input
               className="input"
               value={(value as any)[`name_${lang}`] || ""}
@@ -342,7 +346,7 @@ function ProductEditModal({
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Qisqa tavsif ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "products.short_desc")} ({lang})</label>
             <textarea
               className="input"
               rows={2}
@@ -351,7 +355,7 @@ function ProductEditModal({
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">To'liq tavsif ({lang})</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "products.full_desc")} ({lang})</label>
             <textarea
               className="input"
               rows={4}
@@ -361,12 +365,12 @@ function ProductEditModal({
           </div>
 
           <div>
-            <label className="text-sm text-zinc-400 mb-2 block">Rasm</label>
+            <label className="text-sm text-zinc-400 mb-2 block">{t(uiLang, "common.image")}</label>
             <div className="flex items-center gap-3">
               {value.cover_image && <img src={value.cover_image} alt="" className="w-24 h-24 object-cover rounded" />}
               <label className="btn btn-ghost cursor-pointer">
                 <Upload className="w-4 h-4" />
-                {uploading ? "Yuklanmoqda..." : "Rasm yuklash"}
+                {uploading ? t(uiLang, "common.uploading") : t(uiLang, "common.upload")}
                 <input type="file" accept="image/*" className="hidden" onChange={handleImage} />
               </label>
               {value.cover_image && (
@@ -381,13 +385,13 @@ function ProductEditModal({
           </div>
 
           <div>
-            <label className="text-sm text-zinc-400 mb-2 block">Texnik xususiyatlar</label>
+            <label className="text-sm text-zinc-400 mb-2 block">{t(uiLang, "products.specs")}</label>
             <div className="space-y-2">
               {specsArr.map(([k, v], i) => (
                 <div key={i} className="flex gap-2">
                   <input
                     className="input flex-1"
-                    placeholder="Kalit"
+                    placeholder={t(uiLang, "common.key")}
                     value={k}
                     onChange={(e) => {
                       const newSpecs = { ...value.specs };
@@ -398,7 +402,7 @@ function ProductEditModal({
                   />
                   <input
                     className="input flex-1"
-                    placeholder="Qiymat"
+                    placeholder={t(uiLang, "common.value")}
                     value={v}
                     onChange={(e) => onChange({ ...value, specs: { ...value.specs, [k]: e.target.value } })}
                   />
@@ -418,14 +422,14 @@ function ProductEditModal({
                 onClick={() => onChange({ ...value, specs: { ...value.specs, "": "" } })}
                 className="btn btn-ghost text-xs"
               >
-                <Plus className="w-3 h-3" /> Qatorr qo'shish
+                <Plus className="w-3 h-3" /> {t(uiLang, "common.add")}
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Boshlang'ich narx</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "products.price_from")}</label>
               <input
                 type="number"
                 className="input"
@@ -436,7 +440,7 @@ function ProductEditModal({
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">O'lchov</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "products.currency")}</label>
               <input
                 className="input"
                 value={value.price_currency || ""}
@@ -444,7 +448,7 @@ function ProductEditModal({
               />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Tartib</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.order")}</label>
               <input
                 type="number"
                 className="input"
@@ -461,7 +465,7 @@ function ProductEditModal({
                 checked={!!value.is_featured}
                 onChange={(e) => onChange({ ...value, is_featured: e.target.checked })}
               />
-              <span className="text-sm">Tavsiya etilgan</span>
+              <span className="text-sm">{t(uiLang, "common.featured")}</span>
             </label>
             <label className="flex items-center gap-2">
               <input
@@ -469,16 +473,16 @@ function ProductEditModal({
                 checked={!!value.is_active}
                 onChange={(e) => onChange({ ...value, is_active: e.target.checked })}
               />
-              <span className="text-sm">Faol</span>
+              <span className="text-sm">{t(uiLang, "common.active")}</span>
             </label>
           </div>
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-zinc-800">
           <button onClick={onClose} className="btn btn-ghost">
-            Bekor qilish
+            {t(uiLang, "common.cancel")}
           </button>
           <button onClick={onSave} className="btn btn-primary">
-            <Save className="w-4 h-4" /> Saqlash
+            <Save className="w-4 h-4" /> {t(uiLang, "common.save")}
           </button>
         </div>
       </div>
@@ -497,39 +501,40 @@ function CategoryEditModal({
   onSave: () => void;
   onClose: () => void;
 }) {
+  const { lang: uiLang } = useLang();
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
       <div className="card max-w-lg w-full">
         <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-          <h2 className="text-xl font-semibold">{value.id ? "Kategoriyani tahrirlash" : "Yangi kategoriya"}</h2>
+          <h2 className="text-xl font-semibold">{value.id ? t(uiLang, "common.edit") : t(uiLang, "products.add_category")}</h2>
           <button onClick={onClose} className="text-zinc-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Slug</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.slug")}</label>
             <input className="input" value={value.slug || ""} onChange={(e) => onChange({ ...value, slug: e.target.value })} />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Nomi (UZ)</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.name")} (UZ)</label>
             <input className="input" value={value.name_uz || ""} onChange={(e) => onChange({ ...value, name_uz: e.target.value })} />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Nomi (RU)</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.name")} (RU)</label>
             <input className="input" value={value.name_ru || ""} onChange={(e) => onChange({ ...value, name_ru: e.target.value })} />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 mb-1 block">Nomi (EN)</label>
+            <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.name")} (EN)</label>
             <input className="input" value={value.name_en || ""} onChange={(e) => onChange({ ...value, name_en: e.target.value })} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Ikonka</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "features.icon")}</label>
               <input className="input" value={value.icon || ""} onChange={(e) => onChange({ ...value, icon: e.target.value })} />
             </div>
             <div>
-              <label className="text-sm text-zinc-400 mb-1 block">Tartib</label>
+              <label className="text-sm text-zinc-400 mb-1 block">{t(uiLang, "common.order")}</label>
               <input
                 type="number"
                 className="input"
@@ -541,10 +546,10 @@ function CategoryEditModal({
         </div>
         <div className="flex justify-end gap-2 p-6 border-t border-zinc-800">
           <button onClick={onClose} className="btn btn-ghost">
-            Bekor qilish
+            {t(uiLang, "common.cancel")}
           </button>
           <button onClick={onSave} className="btn btn-primary">
-            <Save className="w-4 h-4" /> Saqlash
+            <Save className="w-4 h-4" /> {t(uiLang, "common.save")}
           </button>
         </div>
       </div>

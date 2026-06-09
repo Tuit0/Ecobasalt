@@ -4,6 +4,8 @@ import useSWR, { mutate } from "swr";
 import { api, fetcher, uploadFile } from "@/lib/api";
 import AuthLayout from "@/components/AuthLayout";
 import { Upload, Trash2, Copy, Check, Image as ImageIcon } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type MediaItem = {
   filename: string;
@@ -12,6 +14,7 @@ type MediaItem = {
 };
 
 export default function MediaPage() {
+  const { lang } = useLang();
   const { data: items = [] } = useSWR<MediaItem[]>("/media/list", fetcher);
   const [uploading, setUploading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
@@ -26,14 +29,14 @@ export default function MediaPage() {
       }
       mutate("/media/list");
     } catch (err) {
-      alert("Yuklashda xatolik: " + (err as Error).message);
+      alert(t(lang, "common.error") + ": " + (err as Error).message);
     }
     setUploading(false);
     e.target.value = "";
   }
 
   async function remove(filename: string) {
-    if (!confirm("Faylni o'chirishni tasdiqlaysizmi?")) return;
+    if (!confirm(t(lang, "media.confirm_delete"))) return;
     await api(`/media/${filename}`, { method: "DELETE" });
     mutate("/media/list");
   }
@@ -58,10 +61,10 @@ export default function MediaPage() {
     <AuthLayout>
       <div className="p-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Media galereya</h1>
+          <h1 className="text-3xl font-bold">{t(lang, "media.title")}</h1>
           <label className="btn btn-primary cursor-pointer">
             <Upload className="w-4 h-4" />
-            {uploading ? "Yuklanmoqda..." : "Fayl yuklash"}
+            {uploading ? t(lang, "common.uploading") : t(lang, "media.upload")}
             <input type="file" multiple accept="image/*,video/*,.pdf" className="hidden" onChange={handleUpload} />
           </label>
         </div>
@@ -69,7 +72,7 @@ export default function MediaPage() {
         {items.length === 0 ? (
           <div className="card p-12 text-center text-zinc-500">
             <ImageIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            Fayllar yo'q. Yuklash uchun tugmani bosing.
+            {t(lang, "media.no_files")}
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -90,7 +93,7 @@ export default function MediaPage() {
                       <button
                         onClick={() => copy(m.url)}
                         className="p-2 rounded bg-orange-500 text-white hover:bg-orange-600"
-                        title="URL ko'chirish"
+                        title={t(lang, "media.copy_url")}
                       >
                         {copied === m.url ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       </button>

@@ -7,6 +7,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 import { Eye, Users, Smartphone, Monitor, Tablet, TrendingUp, FileText } from "lucide-react";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 const COLORS = ["#f97316", "#3b82f6", "#10b981", "#a855f7", "#ec4899", "#eab308"];
 
@@ -31,16 +33,17 @@ type ActiveSession = {
 };
 
 export default function AnalyticsPage() {
+  const { lang } = useLang();
   const { data } = useSWR<Stats>("/analytics/stats", fetcher, { refreshInterval: 30000 });
   const { data: active = [] } = useSWR<ActiveSession[]>("/analytics/active", fetcher, { refreshInterval: 10000 });
 
   const stats = [
-    { label: "Bugungi ko'rishlar", value: data?.views_today || 0, icon: Eye, color: "text-blue-400" },
-    { label: "Hozir faol", value: data?.active_now || 0, icon: Users, color: "text-green-400" },
-    { label: "Jami ko'rishlar", value: data?.total_views || 0, icon: TrendingUp, color: "text-orange-400" },
-    { label: "Unikal sessiyalar", value: data?.unique_sessions || 0, icon: Users, color: "text-purple-400" },
-    { label: "Bugungi arizalar", value: data?.applications_today || 0, icon: FileText, color: "text-pink-400" },
-    { label: "Jami arizalar", value: data?.applications_total || 0, icon: FileText, color: "text-yellow-400" },
+    { label: t(lang, "analytics.views_today_label"), value: data?.views_today || 0, icon: Eye, color: "text-blue-400" },
+    { label: t(lang, "analytics.active_now_label"), value: data?.active_now || 0, icon: Users, color: "text-green-400" },
+    { label: t(lang, "analytics.total_views"), value: data?.total_views || 0, icon: TrendingUp, color: "text-orange-400" },
+    { label: t(lang, "analytics.unique_sessions"), value: data?.unique_sessions || 0, icon: Users, color: "text-purple-400" },
+    { label: t(lang, "analytics.applications_today"), value: data?.applications_today || 0, icon: FileText, color: "text-pink-400" },
+    { label: t(lang, "analytics.applications_total"), value: data?.applications_total || 0, icon: FileText, color: "text-yellow-400" },
   ];
 
   const devicesArr = data?.devices || [];
@@ -48,7 +51,7 @@ export default function AnalyticsPage() {
   return (
     <AuthLayout>
       <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6">Analitika</h1>
+        <h1 className="text-3xl font-bold mb-6">{t(lang, "analytics.title")}</h1>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           {stats.map((s) => (
@@ -64,7 +67,7 @@ export default function AnalyticsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           <div className="card p-5 lg:col-span-2">
-            <h2 className="text-lg font-semibold mb-4">14 kunlik ko'rishlar</h2>
+            <h2 className="text-lg font-semibold mb-4">{t(lang, "analytics.views_14_days")}</h2>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={data?.views_by_day || []}>
                 <defs>
@@ -86,9 +89,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="card p-5">
-            <h2 className="text-lg font-semibold mb-4">Qurilmalar</h2>
+            <h2 className="text-lg font-semibold mb-4">{t(lang, "analytics.devices")}</h2>
             {devicesArr.length === 0 ? (
-              <div className="text-zinc-500 text-sm py-10 text-center">Ma'lumot yo'q</div>
+              <div className="text-zinc-500 text-sm py-10 text-center">{t(lang, "analytics.no_data")}</div>
             ) : (
               <>
                 <ResponsiveContainer width="100%" height={200}>
@@ -129,7 +132,7 @@ export default function AnalyticsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <div className="card p-5">
-            <h2 className="text-lg font-semibold mb-4">Eng ko'p ochilgan sahifalar (7 kun)</h2>
+            <h2 className="text-lg font-semibold mb-4">{t(lang, "analytics.top_pages_7d")}</h2>
             <div className="space-y-3">
               {(data?.top_pages || []).slice(0, 10).map((p, i) => {
                 const max = (data?.top_pages?.[0]?.views ?? 1) || 1;
@@ -150,9 +153,9 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="card p-5">
-            <h2 className="text-lg font-semibold mb-4">Top mahsulotlar</h2>
+            <h2 className="text-lg font-semibold mb-4">{t(lang, "analytics.top_products")}</h2>
             {(data?.top_products || []).length === 0 ? (
-              <div className="text-zinc-500 text-sm">Ma'lumot yo'q</div>
+              <div className="text-zinc-500 text-sm">{t(lang, "analytics.no_data")}</div>
             ) : (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={data?.top_products || []} layout="vertical">
@@ -170,17 +173,17 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="card p-5">
-          <h2 className="text-lg font-semibold mb-4">Hozir faol foydalanuvchilar</h2>
+          <h2 className="text-lg font-semibold mb-4">{t(lang, "analytics.active_users")}</h2>
           {active.length === 0 ? (
-            <div className="text-zinc-500 text-sm py-6 text-center">Faol foydalanuvchilar yo'q</div>
+            <div className="text-zinc-500 text-sm py-6 text-center">{t(lang, "analytics.no_active")}</div>
           ) : (
             <table className="w-full text-sm">
               <thead className="text-left text-zinc-400 text-xs">
                 <tr>
-                  <th className="py-2">Sessiya</th>
-                  <th className="py-2">Sahifa</th>
-                  <th className="py-2">Qurilma</th>
-                  <th className="py-2">Oxirgi faol</th>
+                  <th className="py-2">{t(lang, "analytics.session")}</th>
+                  <th className="py-2">{t(lang, "analytics.page")}</th>
+                  <th className="py-2">{t(lang, "analytics.device")}</th>
+                  <th className="py-2">{t(lang, "analytics.last_active")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800">

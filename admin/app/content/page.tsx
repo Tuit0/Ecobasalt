@@ -5,6 +5,8 @@ import useSWR, { mutate } from "swr";
 import { Save, Loader2, Edit2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { fetcher, api } from "@/lib/api";
+import { useLang } from "@/lib/lang-context";
+import { t } from "@/lib/i18n";
 
 type Block = { id: number; key: string; section: string; block_type: string; value: any };
 
@@ -13,6 +15,7 @@ export default function ContentPage() {
 }
 
 function ContentInner() {
+  const { lang } = useLang();
   const { data: blocks = [] } = useSWR<Block[]>("/content/blocks", fetcher);
   const [editing, setEditing] = useState<Block | null>(null);
 
@@ -24,15 +27,15 @@ function ContentInner() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white">Sayt kontenti</h1>
-        <p className="text-slate-400 mt-1">Saytdagi har bir matnni shu yerdan tahrirlash mumkin</p>
+        <h1 className="text-3xl font-bold text-white">{t(lang, "content.title")}</h1>
+        <p className="text-slate-400 mt-1">{t(lang, "content.subtitle")}</p>
       </div>
 
       <div className="space-y-6">
         {Object.entries(grouped).map(([section, items]) => (
           <div key={section} className="card p-5">
             <h2 className="text-lg font-semibold text-white mb-1 capitalize">{section}</h2>
-            <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">{items.length} ta blok</p>
+            <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">{items.length} {t(lang, "content.blocks_count")}</p>
             <div className="space-y-2">
               {items.map((b) => (
                 <div key={b.id} className="bg-slate-950 rounded-lg p-4 flex items-start justify-between gap-4">
@@ -44,7 +47,7 @@ function ContentInner() {
                   </div>
                   <button onClick={() => setEditing(b)} className="btn-secondary !py-1.5 !px-3 flex-shrink-0">
                     <Edit2 className="w-3.5 h-3.5" />
-                    Tahrirlash
+                    {t(lang, "common.edit")}
                   </button>
                 </div>
               ))}
@@ -69,6 +72,7 @@ function BlockPreview({ value }: { value: any }) {
 }
 
 function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
+  const { lang } = useLang();
   const [value, setValue] = useState<any>(block.value);
   const [saving, setSaving] = useState(false);
 
@@ -86,7 +90,7 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
       mutate("/content/blocks");
       onClose();
     } catch (e) {
-      alert("Xatolik: " + (e as Error).message);
+      alert(t(lang, "common.error") + ": " + (e as Error).message);
     } finally {
       setSaving(false);
     }
@@ -97,7 +101,7 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
       <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-slate-800">
           <div className="text-xs font-mono text-brand-400">{block.key}</div>
-          <h3 className="text-xl font-semibold text-white mt-1">Tahrirlash</h3>
+          <h3 className="text-xl font-semibold text-white mt-1">{t(lang, "content.edit_block")}</h3>
           <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{block.section} · {block.block_type}</div>
         </div>
         <div className="p-6 space-y-4">
@@ -117,12 +121,12 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
             </>
           ) : block.block_type === "number" ? (
             <div>
-              <label className="label">Qiymat (raqam)</label>
+              <label className="label">{t(lang, "content.value_number")}</label>
               <input type="number" className="input" value={value || 0} onChange={(e) => setValue(parseFloat(e.target.value))} />
             </div>
           ) : block.block_type === "json" || (value && typeof value === "object") ? (
             <div>
-              <label className="label">JSON qiymati</label>
+              <label className="label">{t(lang, "content.value_json")}</label>
               <textarea
                 rows={10}
                 className="input font-mono text-sm resize-y"
@@ -134,16 +138,16 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
             </div>
           ) : (
             <div>
-              <label className="label">Matn</label>
+              <label className="label">{t(lang, "content.value_text")}</label>
               <textarea rows={5} className="input resize-y" value={value || ""} onChange={(e) => setValue(e.target.value)} />
             </div>
           )}
         </div>
         <div className="p-6 border-t border-slate-800 flex gap-3 justify-end">
-          <button onClick={onClose} className="btn-secondary">Bekor qilish</button>
+          <button onClick={onClose} className="btn-secondary">{t(lang, "common.cancel")}</button>
           <button onClick={save} disabled={saving} className="btn-primary">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Saqlash
+            {t(lang, "common.save")}
           </button>
         </div>
       </div>
