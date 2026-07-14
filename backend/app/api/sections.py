@@ -40,6 +40,8 @@ KNOWN_SECTIONS = [
     "blog",
     "final_cta",
     "about",
+    "company_stats",
+    "why_eco_basalt",
 ]
 
 

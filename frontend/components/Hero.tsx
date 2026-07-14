@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Flame, Leaf, Hourglass, Factory, Sprout } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -114,7 +114,7 @@ export default function Hero() {
                 alt="ECO BASALT"
                 width={240}
                 height={240}
-                style={{ objectFit: "contain", filter: "drop-shadow(0 0 60px rgba(220, 38, 38, 0.4))" }}
+                style={{ objectFit: "contain", filter: "drop-shadow(0 0 60px rgba(169, 29, 42, 0.4))" }}
               />
             </motion.div>
           </motion.div>
@@ -130,30 +130,26 @@ export default function Hero() {
       <div className="orb orb-red w-[500px] h-[500px] bottom-1/4 -right-40 opacity-40" />
 
       {/* Cursor-follow gradient (desktop only) */}
-      <CursorGradient size={700} color="rgba(220, 38, 38, 0.2)" />
+      <CursorGradient size={700} color="rgba(169, 29, 42, 0.2)" />
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-16 sm:pt-32 sm:pb-20"
       >
         <div className="max-w-3xl">
-          {/* Title — first half white, second half red gradient */}
+          {/* Title — solid white, no gradient (for readability) */}
           <h1 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 text-balance text-shadow">
-            {(() => {
-              const words = title.split(" ");
-              const mid = Math.ceil(words.length / 2);
-              return words.map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className={`inline-block mr-3 sm:mr-4 ${i >= mid ? "text-gradient-red" : ""}`}
-                >
-                  {word}
-                </motion.span>
-              ));
-            })()}
+            {title.split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block mr-3 sm:mr-4"
+              >
+                {word}
+              </motion.span>
+            ))}
           </h1>
 
           {/* Subtitle */}
@@ -161,33 +157,59 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-pearl-100 text-base sm:text-lg md:text-xl max-w-xl mb-8 sm:mb-12 leading-relaxed text-shadow-sm"
+            className="text-pearl-100 text-base sm:text-lg md:text-xl max-w-2xl mb-8 sm:mb-12 leading-relaxed text-shadow-sm"
           >
             {subtitle}
           </motion.p>
 
-          {/* CTAs — Magnetic */}
+          {/* Two big product CTAs — Теплоизоляция + Гидропоника */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 sm:mb-20"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-16 max-w-2xl"
           >
-            <MagneticButton strength={0.25}>
-              <button onClick={() => showModal()} className="btn-solid-gold group">
-                {t(lang, "hero.cta_primary")}
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
-              </button>
+            <MagneticButton strength={0.15}>
+              <Link
+                href="/products?cat=thermal"
+                className="group flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-gold-500/95 to-gold-600 hover:from-gold-400 hover:to-gold-500 border border-gold-400/50 transition-all duration-300 shadow-lg shadow-gold-500/25 hover:shadow-2xl hover:shadow-gold-500/40 w-full"
+              >
+                <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-pearl-100/15 flex items-center justify-center">
+                  <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-pearl-100" strokeWidth={2} />
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <div className="text-pearl-100 font-semibold text-sm sm:text-base leading-tight">
+                    {t(lang, "hero.cta_thermal")}
+                  </div>
+                  <div className="text-pearl-100/80 text-xs sm:text-[13px] mt-0.5 flex items-center gap-1">
+                    {t(lang, "hero.cta_view_catalog")}
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
+                  </div>
+                </div>
+              </Link>
             </MagneticButton>
-            <MagneticButton strength={0.25}>
-              <Link href="/products" className="btn-gold group">
-                <Download className="w-4 h-4 mr-2" strokeWidth={2} />
-                {t(lang, "hero.cta_secondary")}
+            <MagneticButton strength={0.15}>
+              <Link
+                href="/products?cat=hydroponics"
+                className="group flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-4 sm:py-5 rounded-2xl bg-onyx-900/70 backdrop-blur-xl border border-pearl-100/15 hover:border-pearl-100/30 hover:bg-onyx-900/90 transition-all duration-300 w-full"
+              >
+                <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-forest-500/20 border border-forest-400/30 flex items-center justify-center">
+                  <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-forest-400" strokeWidth={2} />
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <div className="text-pearl-100 font-semibold text-sm sm:text-base leading-tight">
+                    {t(lang, "hero.cta_hydroponics")}
+                  </div>
+                  <div className="text-pearl-300 text-xs sm:text-[13px] mt-0.5 flex items-center gap-1">
+                    {t(lang, "hero.cta_view_catalog")}
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
+                  </div>
+                </div>
               </Link>
             </MagneticButton>
           </motion.div>
 
-          {/* Specs cards */}
+          {/* Specs cards — 3 badge (Огнестойкость, Природное сырьё, 50+ лет) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -195,23 +217,29 @@ export default function Hero() {
             className="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl"
           >
             {[
-              { num: "EI 240", unit: "min", label: t(lang, "hero.badge_fire") },
-              { num: "0.034", unit: "W/m·K", label: t(lang, "hero.badge_thermal") },
-              { num: "50+", unit: t(lang, "hero.years_unit"), label: t(lang, "hero.badge_durable") },
-            ].map((b, i) => (
-              <div
-                key={i}
-                className="bg-onyx-900/60 backdrop-blur-xl border border-pearl-100/10 rounded-2xl p-3 sm:p-5 group hover:border-gold-400/40 hover:bg-onyx-900/80 transition-all duration-300 cursor-default"
-              >
-                <div className="text-[10px] sm:text-xs text-pearl-300 mb-1.5 sm:mb-2 font-medium line-clamp-1">{b.label}</div>
-                <div className="flex items-baseline gap-1">
-                  <div className="h-display text-xl sm:text-2xl md:text-3xl text-pearl-100 group-hover:text-gradient-red transition-all">
-                    {b.num}
+              { icon: Flame, num: "1000", unit: "°C", label: t(lang, "hero.badge_fire") },
+              { icon: Leaf, num: "100", unit: "%", label: t(lang, "hero.badge_eco") },
+              { icon: Hourglass, num: "50+", unit: t(lang, "hero.years_unit"), label: t(lang, "hero.badge_durable") },
+            ].map((b, i) => {
+              const Icon = b.icon;
+              return (
+                <div
+                  key={i}
+                  className="bg-onyx-900/60 backdrop-blur-xl border border-pearl-100/10 rounded-2xl p-3 sm:p-5 group hover:border-gold-400/40 hover:bg-onyx-900/80 transition-all duration-300 cursor-default"
+                >
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold-400 shrink-0" strokeWidth={2} />
+                    <div className="text-[10px] sm:text-xs text-pearl-300 font-medium line-clamp-1">{b.label}</div>
                   </div>
-                  <div className="text-[10px] sm:text-xs text-pearl-300 font-medium">{b.unit}</div>
+                  <div className="flex items-baseline gap-1">
+                    <div className="h-display text-xl sm:text-2xl md:text-3xl text-pearl-100 group-hover:text-gradient-red transition-all">
+                      {b.num}
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-pearl-300 font-medium">{b.unit}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </motion.div>
         </div>
       </motion.div>

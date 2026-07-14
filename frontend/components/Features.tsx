@@ -33,10 +33,60 @@ const COLORS = [
   { bg: "from-rose-500/20 to-rose-500/5", border: "border-rose-500/30", icon: "text-rose-400" },
 ];
 
+// Fallback "Почему выбирают базальт" — agar admin panelida features yo'q bo'lsa
+const FALLBACK_FEATURES: Feature[] = [
+  {
+    id: -1, key: "fire", icon: "Flame", order: 1,
+    title_uz: "Yong'inbardoshlik",
+    title_ru: "Огнестойкость",
+    title_en: "Fire Resistance",
+    description_uz: "Yuqori haroratlar ta'siriga chidamli — ekstremal isitish sharoitida ishonchli himoya.",
+    description_ru: "Обеспечивает надёжную защиту при воздействии высоких температур.",
+    description_en: "Reliable protection under extreme heat and open flame conditions.",
+  },
+  {
+    id: -2, key: "thermal", icon: "Thermometer", order: 2,
+    title_uz: "Samarali issiqlik izolyatsiyasi",
+    title_ru: "Эффективная теплоизоляция",
+    title_en: "Effective Thermal Insulation",
+    description_uz: "Issiqlik yo'qotishlarini kamaytiradi va binolarning energiya samaradorligini oshiradi.",
+    description_ru: "Снижает теплопотери и повышает энергоэффективность объектов.",
+    description_en: "Reduces heat loss and increases energy efficiency of buildings.",
+  },
+  {
+    id: -3, key: "eco", icon: "Leaf", order: 3,
+    title_uz: "Ekologik toza",
+    title_ru: "Экологичность",
+    title_en: "Eco-Friendly",
+    description_uz: "Tabiiy kelib chiqishi va ekologik xavfsizligi.",
+    description_ru: "Природное происхождение и экологическая безопасность.",
+    description_en: "Natural origin and environmental safety.",
+  },
+  {
+    id: -4, key: "sound", icon: "Volume2", order: 4,
+    title_uz: "Ovoz izolyatsiyasi",
+    title_ru: "Звукоизоляция",
+    title_en: "Sound Insulation",
+    description_uz: "Xonalar ichidagi shovqin darajasini pasaytiradi va akustik qulaylikni oshiradi.",
+    description_ru: "Способствует снижению уровня шума и повышает акустический комфорт внутри помещений.",
+    description_en: "Reduces noise levels and improves acoustic comfort indoors.",
+  },
+  {
+    id: -5, key: "durable", icon: "Hourglass", order: 5,
+    title_uz: "Uzoq umr",
+    title_ru: "Долговечность",
+    title_en: "Longevity",
+    description_uz: "O'nlab yillar davomida ish xususiyatlarini saqlab qoladi.",
+    description_ru: "Сохраняет эксплуатационные характеристики на протяжении десятилетий.",
+    description_en: "Retains performance characteristics for decades.",
+  },
+];
+
 export default function Features() {
   const { lang } = useLang();
   const visible = useSectionVisible("features");
-  const { data: features = [], isLoading } = useSWR<Feature[]>("/api/features", fetcher);
+  const { data, isLoading } = useSWR<Feature[]>("/api/features", fetcher);
+  const features: Feature[] = data && data.length > 0 ? data : FALLBACK_FEATURES;
 
   if (!visible) return null;
 

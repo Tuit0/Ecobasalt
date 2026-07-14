@@ -1,9 +1,9 @@
 import Hero from "@/components/Hero";
 import TrustBar from "@/components/TrustBar";
-import Stats from "@/components/Stats";
 import Features from "@/components/Features";
-import Process from "@/components/Process";
 import Products from "@/components/Products";
+import CompanyStats from "@/components/CompanyStats";
+import WhyEcoBasalt from "@/components/WhyEcoBasalt";
 import Industries from "@/components/Industries";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import Testimonials from "@/components/Testimonials";
@@ -15,10 +15,10 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustBar />
-      <Stats />
       <Features />
-      <Process />
       <Products />
+      <CompanyStats />
+      <WhyEcoBasalt />
       <Industries />
       <FeaturedProjects />
       <Testimonials />

@@ -17,6 +17,8 @@ const SECTIONS: { key: string; labelKey: string; descKey: string }[] = [
   { key: "process", labelKey: "sections.process.label", descKey: "sections.process.desc" },
   { key: "comparison", labelKey: "sections.comparison.label", descKey: "sections.comparison.desc" },
   { key: "products", labelKey: "sections.products.label", descKey: "sections.products.desc" },
+  { key: "company_stats", labelKey: "sections.company_stats.label", descKey: "sections.company_stats.desc" },
+  { key: "why_eco_basalt", labelKey: "sections.why_eco_basalt.label", descKey: "sections.why_eco_basalt.desc" },
   { key: "projects", labelKey: "sections.projects.label", descKey: "sections.projects.desc" },
   { key: "features", labelKey: "sections.features.label", descKey: "sections.features.desc" },
   { key: "faq", labelKey: "sections.faq.label", descKey: "sections.faq.desc" },

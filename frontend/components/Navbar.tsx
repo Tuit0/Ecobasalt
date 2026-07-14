@@ -28,11 +28,11 @@ export default function Navbar() {
   useEffect(() => { setOpen(false); setLangOpen(false); }, [pathname]);
 
   const navItems = [
-    { href: "/products", label: t(lang, "nav.products") },
-    { href: "/projects", label: t(lang, "nav.projects") },
-    { href: "/calculator", label: t(lang, "nav.calculator") },
+    { href: "/products?cat=thermal", label: t(lang, "nav.thermal") },
+    { href: "/products?cat=hydroponics", label: t(lang, "nav.hydroponics") },
+    { href: "/about", label: t(lang, "nav.about") },
+    { href: "/downloads", label: t(lang, "nav.docs") },
     { href: "/blog", label: t(lang, "nav.blog") },
-    { href: "/downloads", label: lang === "uz" ? "Yuklab olish" : lang === "ru" ? "Скачать" : "Downloads" },
     { href: "/contact", label: t(lang, "nav.contact") },
   ];
 

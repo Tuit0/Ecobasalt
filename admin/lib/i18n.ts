@@ -322,6 +322,10 @@ const dict: Record<Lang, Record<string, string>> = {
     "sections.blog.desc": "Bosh sahifadagi so'nggi maqolalar",
     "sections.final_cta.label": "Pastdagi CTA",
     "sections.final_cta.desc": "“Bepul maslahat” bloki",
+    "sections.company_stats.label": "ECO BASALT raqamlarda",
+    "sections.company_stats.desc": "Ishlab chiqarish quvvatlari va raqamlar bloki",
+    "sections.why_eco_basalt.label": "Nega ECO BASALT",
+    "sections.why_eco_basalt.desc": "Kompaniya afzalliklari bloki",
 
     // Lang
     "lang.language": "Til",
@@ -627,6 +631,10 @@ const dict: Record<Lang, Record<string, string>> = {
     "sections.blog.desc": "Последние статьи на главной",
     "sections.final_cta.label": "Нижний CTA",
     "sections.final_cta.desc": "Блок «Бесплатная консультация»",
+    "sections.company_stats.label": "ECO BASALT в цифрах",
+    "sections.company_stats.desc": "Блок с производственными показателями",
+    "sections.why_eco_basalt.label": "Почему ECO BASALT",
+    "sections.why_eco_basalt.desc": "Блок преимуществ компании",
 
     "lang.language": "Язык",
   },
@@ -931,6 +939,10 @@ const dict: Record<Lang, Record<string, string>> = {
     "sections.blog.desc": "Recent posts on the homepage",
     "sections.final_cta.label": "Bottom CTA",
     "sections.final_cta.desc": "\"Free consultation\" block",
+    "sections.company_stats.label": "ECO BASALT in numbers",
+    "sections.company_stats.desc": "Manufacturing capacity metrics block",
+    "sections.why_eco_basalt.label": "Why ECO BASALT",
+    "sections.why_eco_basalt.desc": "Company advantages block",
 
     "lang.language": "Language",
   },
