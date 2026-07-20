@@ -49,24 +49,21 @@ export default function Navbar() {
     >
       <div className="bg-onyx-900/70 backdrop-blur-xl border border-pearl-100/10 rounded-full px-4 sm:px-6 shadow-2xl shadow-black/30">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo */}
+          {/* Logo — simplified, no tagline, ECO BASALT inline red */}
           <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <Logo size={32} className="sm:w-9 sm:h-9 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
-            <div>
-              <div className="font-bold text-pearl-100 text-sm sm:text-base leading-none">ECO BASALT</div>
-              <div className="text-[8px] sm:text-[9px] text-gold-400 font-semibold tracking-wider mt-0.5">FIRE · ECO · MINERAL</div>
-            </div>
+            <Logo size={34} className="sm:w-10 sm:h-10 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+            <div className="font-bold text-gold-400 text-base sm:text-lg leading-none tracking-tight">ECO BASALT</div>
           </Link>
 
-          {/* Center nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Center nav — evenly spaced */}
+          <nav className="hidden lg:flex items-center gap-0.5 mx-auto">
             {navItems.map((it) => {
               const active = isActive(it.href);
               return (
                 <Link
                   key={it.href}
                   href={it.href}
-                  className={`relative px-3.5 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
+                  className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 text-center ${
                     active
                       ? "text-pearl-100 bg-pearl-100/8"
                       : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
@@ -149,8 +146,8 @@ export default function Navbar() {
           >
             <div className="flex items-center justify-between h-16 px-5 border-b border-pearl-100/5">
               <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-                <Logo size={32} />
-                <div className="font-bold text-pearl-100">ECO BASALT</div>
+                <Logo size={34} />
+                <div className="font-bold text-gold-400 tracking-tight">ECO BASALT</div>
               </Link>
               <button onClick={() => setOpen(false)} className="text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5">
                 <X className="w-5 h-5" />

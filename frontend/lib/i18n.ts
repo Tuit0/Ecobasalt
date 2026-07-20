@@ -15,7 +15,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "nav.blog": "Yangiliklar",
     "nav.docs": "Hujjatlar",
     "nav.contact": "Aloqa",
-    "nav.apply": "Qo'ng'iroqqa buyurtma",
+    "nav.apply": "Ariza qoldirish",
 
     "modal.privacy": "Mutaxassisimiz 24 soat ichida bog'lanadi. Ma'lumotlaringiz xavfsiz saqlanadi.",
 
@@ -31,12 +31,14 @@ const dict: Record<Lang, Record<string, string>> = {
     "blog.cat_eco": "Ekologiya",
 
     "hero.eyebrow": "BASALT TEXNOLOGIYALARI",
-    "hero.title": "Tabiiy bazalt. Zamonaviy yechimlar.",
+    "hero.title": "Tabiat kuchi\nzamonaviy texnologiyalarda",
     "hero.subtitle": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish.",
     "hero.cta_primary": "Qo'ng'iroqqa buyurtma",
     "hero.cta_secondary": "Katalogni ko'rish",
-    "hero.cta_thermal": "Issiqlik izolyatsiyasi",
+    "hero.cta_thermal": "Issiqlik izolyatsiya materiallari",
+    "hero.cta_thermal_desc": "Qurilish sohasi uchun energiya samarali materiallar",
     "hero.cta_hydroponics": "Gidroponika substratlari",
+    "hero.cta_hydroponics_desc": "Issiqxona majmualari va agrosanoat sektori uchun innovatsion yechimlar.",
     "hero.cta_view_catalog": "Katalogga o'tish",
     "hero.badge_fire": "Yong'inbardoshlik 1000°C gacha",
     "hero.badge_eco": "Ekologik tabiiy xomashyo",
@@ -211,7 +213,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "nav.blog": "Новости",
     "nav.docs": "Документация",
     "nav.contact": "Контакты",
-    "nav.apply": "Заказать звонок",
+    "nav.apply": "Оставить заявку",
 
     "modal.privacy": "Наш специалист свяжется с вами в течение 24 часов. Ваши данные защищены.",
 
@@ -227,7 +229,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "blog.cat_eco": "Экология",
 
     "hero.eyebrow": "БАЗАЛЬТОВЫЕ ТЕХНОЛОГИИ",
-    "hero.title": "Природный базальт. Современные решения.",
+    "hero.title": "Сила природы\nв современных технологиях",
     "hero.subtitle": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта.",
     "hero.cta_primary": "Заказать звонок",
     "hero.cta_secondary": "Смотреть каталог",
@@ -237,8 +239,10 @@ const dict: Record<Lang, Record<string, string>> = {
     "hero.scroll": "Прокрутите вниз",
     "hero.years_unit": "лет",
     "hero.badge_eco": "Экологичное природное сырьё",
-    "hero.cta_thermal": "Теплоизоляция",
+    "hero.cta_thermal": "Теплоизоляционные материалы",
+    "hero.cta_thermal_desc": "Энергоэффективные материалы для строительной отрасли",
     "hero.cta_hydroponics": "Гидропонные субстраты",
+    "hero.cta_hydroponics_desc": "Инновационные решения для тепличных комплексов и агропромышленного сектора.",
     "hero.cta_view_catalog": "Перейти в каталог",
 
     "stats.eyebrow": "В ЦИФРАХ",
@@ -407,7 +411,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "nav.blog": "News",
     "nav.docs": "Documentation",
     "nav.contact": "Contact",
-    "nav.apply": "Get a Quote",
+    "nav.apply": "Submit Request",
 
     "modal.privacy": "Our specialist will contact you within 24 hours. Your data is secure.",
 
@@ -423,12 +427,14 @@ const dict: Record<Lang, Record<string, string>> = {
     "blog.cat_eco": "Ecology",
 
     "hero.eyebrow": "BASALT TECHNOLOGIES",
-    "hero.title": "Natural Basalt. Modern Solutions.",
+    "hero.title": "The power of nature\nin modern technology",
     "hero.subtitle": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt.",
     "hero.cta_primary": "Request a Call",
     "hero.cta_secondary": "View Catalog",
-    "hero.cta_thermal": "Thermal Insulation",
+    "hero.cta_thermal": "Thermal Insulation Materials",
+    "hero.cta_thermal_desc": "Energy-efficient materials for the construction industry",
     "hero.cta_hydroponics": "Hydroponic Substrates",
+    "hero.cta_hydroponics_desc": "Innovative solutions for greenhouse complexes and the agro-industrial sector.",
     "hero.cta_view_catalog": "View catalog",
     "hero.badge_fire": "Fire Resistance up to 1000°C",
     "hero.badge_eco": "100% Natural Eco Raw Material",

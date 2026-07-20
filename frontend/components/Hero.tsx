@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowRight, Flame, Leaf, Hourglass, Factory, Sprout } from "lucide-react";
+import { ArrowRight, Factory, Sprout } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -134,112 +134,91 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-16 sm:pt-32 sm:pb-20"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-16 sm:pt-36 sm:pb-24"
       >
-        <div className="max-w-3xl">
-          {/* Title — solid white, no gradient (for readability) */}
-          <h1 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 text-balance text-shadow">
-            {title.split(" ").map((word, i) => (
+        <div className="max-w-4xl">
+          {/* Title — 2 lines, solid white with backing gradient for readability */}
+          <h1 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-8 sm:mb-10 text-balance text-shadow whitespace-pre-line leading-[1.05]">
+            {title.split("\n").map((line, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block mr-3 sm:mr-4"
+                transition={{ delay: 0.2 + i * 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="block"
               >
-                {word}
+                {line}
               </motion.span>
             ))}
           </h1>
 
-          {/* Subtitle */}
-          <motion.p
+          {/* Subtitle — semi-transparent dark backing pill for readability */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-pearl-100 text-base sm:text-lg md:text-xl max-w-2xl mb-8 sm:mb-12 leading-relaxed text-shadow-sm"
+            className="mb-10 sm:mb-14 max-w-2xl"
           >
-            {subtitle}
-          </motion.p>
+            <p className="inline-block text-pearl-50 text-lg sm:text-xl md:text-2xl leading-relaxed font-medium bg-onyx-950/55 backdrop-blur-md border border-pearl-100/10 rounded-2xl px-5 sm:px-7 py-4 sm:py-5 text-shadow-sm">
+              {subtitle}
+            </p>
+          </motion.div>
 
-          {/* Two big product CTAs — Теплоизоляция + Гидропоника */}
+          {/* Two big product CTAs — with descriptions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.6 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-16 max-w-2xl"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 max-w-4xl"
           >
-            <MagneticButton strength={0.15}>
+            <MagneticButton strength={0.12}>
               <Link
                 href="/products?cat=thermal"
-                className="group flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-gold-500/95 to-gold-600 hover:from-gold-400 hover:to-gold-500 border border-gold-400/50 transition-all duration-300 shadow-lg shadow-gold-500/25 hover:shadow-2xl hover:shadow-gold-500/40 w-full"
+                className="group block px-6 sm:px-8 py-6 sm:py-7 rounded-3xl bg-gradient-to-br from-gold-500/95 to-gold-600 hover:from-gold-400 hover:to-gold-500 border border-gold-400/50 transition-all duration-300 shadow-xl shadow-gold-500/30 hover:shadow-2xl hover:shadow-gold-500/45 w-full text-left"
               >
-                <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-pearl-100/15 flex items-center justify-center">
-                  <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-pearl-100" strokeWidth={2} />
+                <div className="flex items-start gap-3 sm:gap-4 mb-3">
+                  <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pearl-100/15 flex items-center justify-center">
+                    <Factory className="w-6 h-6 sm:w-7 sm:h-7 text-pearl-100" strokeWidth={2} />
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="text-pearl-100 font-bold text-lg sm:text-xl leading-tight">
+                      {t(lang, "hero.cta_thermal")}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 text-left min-w-0">
-                  <div className="text-pearl-100 font-semibold text-sm sm:text-base leading-tight">
-                    {t(lang, "hero.cta_thermal")}
-                  </div>
-                  <div className="text-pearl-100/80 text-xs sm:text-[13px] mt-0.5 flex items-center gap-1">
-                    {t(lang, "hero.cta_view_catalog")}
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-                  </div>
+                <p className="text-pearl-100/85 text-sm sm:text-[15px] leading-snug mb-4">
+                  {t(lang, "hero.cta_thermal_desc")}
+                </p>
+                <div className="text-pearl-100 font-semibold text-sm sm:text-base flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                  {t(lang, "hero.cta_view_catalog")}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
                 </div>
               </Link>
             </MagneticButton>
-            <MagneticButton strength={0.15}>
+            <MagneticButton strength={0.12}>
               <Link
                 href="/products?cat=hydroponics"
-                className="group flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-4 sm:py-5 rounded-2xl bg-onyx-900/70 backdrop-blur-xl border border-pearl-100/15 hover:border-pearl-100/30 hover:bg-onyx-900/90 transition-all duration-300 w-full"
+                className="group block px-6 sm:px-8 py-6 sm:py-7 rounded-3xl bg-onyx-950/70 backdrop-blur-xl border border-pearl-100/15 hover:border-forest-400/40 hover:bg-onyx-950/85 transition-all duration-300 w-full text-left"
               >
-                <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-forest-500/20 border border-forest-400/30 flex items-center justify-center">
-                  <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-forest-400" strokeWidth={2} />
+                <div className="flex items-start gap-3 sm:gap-4 mb-3">
+                  <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-forest-500/20 border border-forest-400/30 flex items-center justify-center">
+                    <Sprout className="w-6 h-6 sm:w-7 sm:h-7 text-forest-400" strokeWidth={2} />
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="text-pearl-100 font-bold text-lg sm:text-xl leading-tight">
+                      {t(lang, "hero.cta_hydroponics")}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 text-left min-w-0">
-                  <div className="text-pearl-100 font-semibold text-sm sm:text-base leading-tight">
-                    {t(lang, "hero.cta_hydroponics")}
-                  </div>
-                  <div className="text-pearl-300 text-xs sm:text-[13px] mt-0.5 flex items-center gap-1">
-                    {t(lang, "hero.cta_view_catalog")}
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-                  </div>
+                <p className="text-pearl-200 text-sm sm:text-[15px] leading-snug mb-4">
+                  {t(lang, "hero.cta_hydroponics_desc")}
+                </p>
+                <div className="text-pearl-100 font-semibold text-sm sm:text-base flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                  {t(lang, "hero.cta_view_catalog")}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
                 </div>
               </Link>
             </MagneticButton>
-          </motion.div>
-
-          {/* Specs cards — 3 badge (Огнестойкость, Природное сырьё, 50+ лет) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl"
-          >
-            {[
-              { icon: Flame, num: "1000", unit: "°C", label: t(lang, "hero.badge_fire") },
-              { icon: Leaf, num: "100", unit: "%", label: t(lang, "hero.badge_eco") },
-              { icon: Hourglass, num: "50+", unit: t(lang, "hero.years_unit"), label: t(lang, "hero.badge_durable") },
-            ].map((b, i) => {
-              const Icon = b.icon;
-              return (
-                <div
-                  key={i}
-                  className="bg-onyx-900/60 backdrop-blur-xl border border-pearl-100/10 rounded-2xl p-3 sm:p-5 group hover:border-gold-400/40 hover:bg-onyx-900/80 transition-all duration-300 cursor-default"
-                >
-                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold-400 shrink-0" strokeWidth={2} />
-                    <div className="text-[10px] sm:text-xs text-pearl-300 font-medium line-clamp-1">{b.label}</div>
-                  </div>
-                  <div className="flex items-baseline gap-1">
-                    <div className="h-display text-xl sm:text-2xl md:text-3xl text-pearl-100 group-hover:text-gradient-red transition-all">
-                      {b.num}
-                    </div>
-                    <div className="text-[10px] sm:text-xs text-pearl-300 font-medium">{b.unit}</div>
-                  </div>
-                </div>
-              );
-            })}
           </motion.div>
         </div>
       </motion.div>
