@@ -7,6 +7,15 @@ from app.models.product import Category, Product
 from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, ComparisonRow
 
 
+# Bu keylar mavjud bo'lsa ham majburiy yangilanadi (mijoz feedback'i asosida)
+# Buni saqlash — agar admin CMS'dan aynan shu blokni tahrirlasa, oldindan kelishilgan
+# yangilanish qaytmasligi uchun kalitni bu ro'yxatdan olib tashlash kerak.
+FORCED_UPDATE_KEYS = {
+    "hero.title",
+    "hero.subtitle",
+}
+
+
 DEFAULT_CONTENT = [
     # Hero
     {"key": "hero.eyebrow", "section": "hero", "label": "Hero — kichik label", "block_type": "multilang",
@@ -14,13 +23,13 @@ DEFAULT_CONTENT = [
                "ru": "БАЗАЛЬТОВЫЕ ТЕХНОЛОГИИ",
                "en": "BASALT TECHNOLOGIES"}},
     {"key": "hero.title", "section": "hero", "label": "Hero — sarlavha", "block_type": "multilang",
-     "value": {"uz": "Toshdan tug'ilgan kuch va himoya",
-               "ru": "Сила и защита, рождённые из камня",
-               "en": "Strength and protection born from stone"}},
+     "value": {"uz": "Tabiat kuchi\nzamonaviy texnologiyalarda",
+               "ru": "Сила природы\nв современных технологиях",
+               "en": "The power of nature\nin modern technology"}},
     {"key": "hero.subtitle", "section": "hero", "label": "Hero — qisqacha matn", "block_type": "multilang",
-     "value": {"uz": "Sendvich panellar, bazalt izolyatsiya va bazalt tola — sanoat va qurilish uchun professional yechimlar.",
-               "ru": "Сэндвич-панели, базальтовая изоляция и базальтовое волокно — профессиональные решения для промышленности и строительства.",
-               "en": "Sandwich panels, basalt insulation and basalt fiber — professional solutions for industry and construction."}},
+     "value": {"uz": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish.",
+               "ru": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта.",
+               "en": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt."}},
 
     # About
     {"key": "about.eyebrow", "section": "about", "label": "About — kichik label", "block_type": "multilang",
@@ -545,7 +554,11 @@ async def seed_initial_content(session: AsyncSession):
     # Content blocks
     for block_data in DEFAULT_CONTENT:
         res = await session.execute(select(ContentBlock).where(ContentBlock.key == block_data["key"]))
-        if res.scalar_one_or_none():
+        existing = res.scalar_one_or_none()
+        if existing:
+            # Majburiy yangilanadigan bloklar (mijoz feedback'iga muvofiq)
+            if block_data["key"] in FORCED_UPDATE_KEYS:
+                existing.value = block_data["value"]
             continue
         session.add(ContentBlock(**block_data))
 
