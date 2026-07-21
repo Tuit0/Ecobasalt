@@ -7,13 +7,11 @@ from app.models.product import Category, Product
 from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, ComparisonRow
 
 
-# Bu keylar mavjud bo'lsa ham majburiy yangilanadi (mijoz feedback'i asosida)
-# Buni saqlash — agar admin CMS'dan aynan shu blokni tahrirlasa, oldindan kelishilgan
-# yangilanish qaytmasligi uchun kalitni bu ro'yxatdan olib tashlash kerak.
-FORCED_UPDATE_KEYS = {
-    "hero.title",
-    "hero.subtitle",
-}
+# Bu ro'yxatga qo'shilgan keylar seeder ishga tushganda mavjud bo'lsa ham
+# majburiy yangi qiymat bilan yoziladi. Odatda bo'sh bo'ladi — admin panelidagi
+# tahrirlar saqlanib qolishi uchun. Faqat vaqtinchalik "hotfix" holatida ishlatiladi:
+# kerakli kalitni qo'shib deploy qiling → keyingi deploy'da qaytadan bo'shatib qo'ying.
+FORCED_UPDATE_KEYS: set[str] = set()
 
 
 DEFAULT_CONTENT = [
