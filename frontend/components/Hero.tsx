@@ -159,7 +159,7 @@ export default function Hero() {
             transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="mb-10 sm:mb-14 max-w-2xl"
           >
-            <p className="inline-block text-pearl-50 text-lg sm:text-xl md:text-2xl leading-relaxed font-medium bg-onyx-700/30 backdrop-blur-sm border border-pearl-100/8 rounded-2xl px-5 sm:px-7 py-4 sm:py-5 text-shadow-sm">
+            <p className="inline-block text-pearl-50 text-lg sm:text-xl md:text-2xl leading-relaxed font-medium bg-black/50 backdrop-blur-sm rounded-2xl px-5 sm:px-7 py-4 sm:py-5 text-shadow-sm shadow-xl shadow-black/30">
               {subtitle}
             </p>
           </motion.div>
