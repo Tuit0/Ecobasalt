@@ -59,8 +59,8 @@ const dict: Record<Lang, Record<string, string>> = {
     "about.b4": "Butun O‘zbekiston bo‘ylab yetkazib berish va montaj",
 
     "features.eyebrow": "AFZALLIKLARIMIZ",
-    "features.title": "Nega bazalt?",
-    "features.subtitle": "Bazalt — tabiat va zamonaviy texnologiyalarni birlashtirgan noyob material.",
+    "features.title": "Nega ECO BASALT?",
+    "features.subtitle": "Biz xavfsizlik, sifat, uzoq umr va yuqori ish xususiyatlarini birlashtirgan mahsulot yaratamiz.",
 
     "company_stats.eyebrow": "ECO BASALT RAQAMLARDA",
     "company_stats.title": "Bizning ishlab chiqarish",
@@ -257,8 +257,8 @@ const dict: Record<Lang, Record<string, string>> = {
     "about.b4": "Доставка и монтаж по всему Узбекистану",
 
     "features.eyebrow": "ПРЕИМУЩЕСТВА",
-    "features.title": "Почему выбирают базальт?",
-    "features.subtitle": "Природный базальт сочетает силу природы и современные технологии производства.",
+    "features.title": "Почему выбирают ECO BASALT?",
+    "features.subtitle": "Мы создаём продукцию, сочетающую безопасность, качество, долговечность и высокие эксплуатационные характеристики.",
 
     "company_stats.eyebrow": "ECO BASALT В ЦИФРАХ",
     "company_stats.title": "Наше производство",
@@ -455,8 +455,8 @@ const dict: Record<Lang, Record<string, string>> = {
     "about.b4": "Nationwide delivery and installation",
 
     "features.eyebrow": "ADVANTAGES",
-    "features.title": "Why choose basalt?",
-    "features.subtitle": "Natural basalt combines the strength of nature with modern manufacturing technology.",
+    "features.title": "Why choose ECO BASALT?",
+    "features.subtitle": "We create products that combine safety, quality, durability and high performance characteristics.",
 
     "company_stats.eyebrow": "ECO BASALT IN NUMBERS",
     "company_stats.title": "Our production",

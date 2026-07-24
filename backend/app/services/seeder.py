@@ -13,6 +13,11 @@ from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, Co
 # kerakli kalitni qo'shib deploy qiling → keyingi deploy'da qaytadan bo'shatib qo'ying.
 FORCED_UPDATE_KEYS: set[str] = set()
 
+# True bo'lsa: DEFAULT_FEATURES bilan Feature jadvali to'liq sinxronlashtiriladi
+# (mavjud kalitlar yangi qiymatga yoziladi, ro'yxatdagi yo'q bo'lganlar deaktiv qilinadi).
+# Deploy'dan so'ng bo'shatib qo'ying, aks holda admin tahrirlari qaytariladi.
+FORCE_SYNC_FEATURES: bool = True
+
 
 DEFAULT_CONTENT = [
     # Hero
@@ -266,35 +271,35 @@ DEFAULT_PROJECTS = [
 
 DEFAULT_FEATURES = [
     {"key": "fire", "icon": "Flame", "order": 1,
-     "title_uz": "Yong'inga chidamli", "title_ru": "Огнестойкость", "title_en": "Fire Resistant",
-     "description_uz": "EI 60 – EI 240 darajagacha yong'inga chidamlilik. 1000°C dan yuqori haroratga bardosh beradi.",
-     "description_ru": "Стойкость к огню до EI 60 – EI 240. Выдерживает температуры выше 1000°C.",
-     "description_en": "Fire resistance rated EI 60 – EI 240. Withstands temperatures above 1000°C."},
-    {"key": "eco", "icon": "Leaf", "order": 2,
+     "title_uz": "Yong'inbardoshlik", "title_ru": "Огнестойкость", "title_en": "Fire Resistance",
+     "description_uz": "Ekstremal haroratlar bilan sinovdan o'tgan xavfsizlik.",
+     "description_ru": "Безопасность, проверенная экстремальными температурами.",
+     "description_en": "Safety proven by extreme temperatures."},
+    {"key": "thermal", "icon": "Thermometer", "order": 2,
+     "title_uz": "Samarali issiqlik izolyatsiyasi", "title_ru": "Эффективная теплоизоляция", "title_en": "Effective Thermal Insulation",
+     "description_uz": "Issiqlik yo'qotishlarini kamaytiradi va binolarning energiya samaradorligini oshiradi.",
+     "description_ru": "Снижает теплопотери и повышает энергоэффективность объектов.",
+     "description_en": "Reduces heat loss and improves energy efficiency of buildings."},
+    {"key": "eco", "icon": "Leaf", "order": 3,
      "title_uz": "Ekologik toza", "title_ru": "Экологичность", "title_en": "Eco-Friendly",
-     "description_uz": "100% tabiiy bazalt toshidan. Zararli moddalardan xoli, qayta ishlanadi.",
-     "description_ru": "100% натуральный базальт. Без вредных веществ, перерабатывается.",
-     "description_en": "100% natural basalt rock. Free of harmful substances, recyclable."},
-    {"key": "strong", "icon": "Shield", "order": 3,
-     "title_uz": "Mustahkam tuzilma", "title_ru": "Прочная конструкция", "title_en": "Strong Structure",
-     "description_uz": "Po'lat qoplamali sendvich panellar — yuqori qattiqlik va mexanik bardoshlik.",
-     "description_ru": "Сэндвич-панели со стальным покрытием — высокая жёсткость.",
-     "description_en": "Steel-clad sandwich panels — high rigidity and durability."},
-    {"key": "thermal", "icon": "Snowflake", "order": 4,
-     "title_uz": "Issiqlik izolyatsiyasi", "title_ru": "Теплоизоляция", "title_en": "Thermal Insulation",
-     "description_uz": "λ = 0.035–0.040 W/m·K. Qishda issiq, yozda salqin — energiya tejash.",
-     "description_ru": "λ = 0.035–0.040 Вт/м·К. Тепло зимой, прохладно летом.",
-     "description_en": "λ = 0.035–0.040 W/m·K. Warm in winter, cool in summer."},
-    {"key": "acoustic", "icon": "Volume2", "order": 5,
+     "description_uz": "Tabiiy kelib chiqishi va ekologik xavfsizligi.",
+     "description_ru": "Природное происхождение и экологическая безопасность.",
+     "description_en": "Natural origin and environmental safety."},
+    {"key": "acoustic", "icon": "Volume2", "order": 4,
      "title_uz": "Ovoz yutish", "title_ru": "Звукопоглощение", "title_en": "Sound Absorption",
-     "description_uz": "Tovushni 45 dB gacha yutadi — sanoat va ofis binolari uchun ideal.",
-     "description_ru": "Поглощает шум до 45 дБ — идеально для зданий.",
-     "description_en": "Absorbs up to 45 dB of noise — ideal for buildings."},
-    {"key": "durable", "icon": "Hourglass", "order": 6,
-     "title_uz": "Uzoq xizmat", "title_ru": "Долговечность", "title_en": "Long Service Life",
-     "description_uz": "50+ yil xizmat muddati. Chirimaydi, zang bosmaydi.",
-     "description_ru": "Срок службы 50+ лет. Не гниёт, не ржавеет.",
-     "description_en": "50+ year service life. Doesn't rot or rust."},
+     "description_uz": "Xonalarning akustik qulayligini oshiradi.",
+     "description_ru": "Повышает акустический комфорт помещений.",
+     "description_en": "Improves acoustic comfort of spaces."},
+    {"key": "durable", "icon": "Hourglass", "order": 5,
+     "title_uz": "Uzoq umr", "title_ru": "Долговечность", "title_en": "Longevity",
+     "description_uz": "O'nlab yillar davomida ish xususiyatlarini saqlab qoladi.",
+     "description_ru": "Сохраняет эксплуатационные характеристики на протяжении десятилетий.",
+     "description_en": "Retains performance characteristics for decades."},
+    {"key": "european_tech", "icon": "Award", "order": 6,
+     "title_uz": "Yevropa ishlab chiqarish texnologiyalari", "title_ru": "Европейские технологии производства", "title_en": "European Manufacturing Technology",
+     "description_uz": "Italyan ishlab chiqarilgan zamonaviy uskunalar mahsulotning yuqori va barqaror sifatini ta'minlaydi.",
+     "description_ru": "Современное оборудование итальянского производства обеспечивает высокое и стабильное качество продукции.",
+     "description_en": "Modern Italian-made equipment ensures consistently high product quality."},
 ]
 
 
@@ -591,11 +596,29 @@ async def seed_initial_content(session: AsyncSession):
         session.add(Project(**proj_data))
 
     # Features
-    for feat in DEFAULT_FEATURES:
-        res = await session.execute(select(Feature).where(Feature.key == feat["key"]))
-        if res.scalar_one_or_none():
-            continue
-        session.add(Feature(**feat))
+    if FORCE_SYNC_FEATURES:
+        default_keys = {f["key"] for f in DEFAULT_FEATURES}
+        # 1) Upsert: DEFAULT_FEATURES ni yozib qo'yish
+        for feat in DEFAULT_FEATURES:
+            res = await session.execute(select(Feature).where(Feature.key == feat["key"]))
+            existing = res.scalar_one_or_none()
+            if existing:
+                for k, v in feat.items():
+                    setattr(existing, k, v)
+                existing.is_active = True
+            else:
+                session.add(Feature(**feat))
+        # 2) Ro'yxatdagi yo'q kalitlarni deaktiv qilish (o'chirmaymiz — admin qaytarishi mumkin)
+        res_all = await session.execute(select(Feature))
+        for f in res_all.scalars().all():
+            if f.key not in default_keys:
+                f.is_active = False
+    else:
+        for feat in DEFAULT_FEATURES:
+            res = await session.execute(select(Feature).where(Feature.key == feat["key"]))
+            if res.scalar_one_or_none():
+                continue
+            session.add(Feature(**feat))
 
     # FAQs (no unique constraint — use a soft check)
     res = await session.execute(select(FAQ.id).limit(1))

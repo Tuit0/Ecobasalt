@@ -33,16 +33,16 @@ const COLORS = [
   { bg: "from-rose-500/20 to-rose-500/5", border: "border-rose-500/30", icon: "text-rose-400" },
 ];
 
-// Fallback "Почему выбирают базальт" — agar admin panelida features yo'q bo'lsa
+// Fallback "Почему выбирают ECO BASALT" — 6 ta karta (mijoz feedback)
 const FALLBACK_FEATURES: Feature[] = [
   {
     id: -1, key: "fire", icon: "Flame", order: 1,
     title_uz: "Yong'inbardoshlik",
     title_ru: "Огнестойкость",
     title_en: "Fire Resistance",
-    description_uz: "Yuqori haroratlar ta'siriga chidamli — ekstremal isitish sharoitida ishonchli himoya.",
-    description_ru: "Обеспечивает надёжную защиту при воздействии высоких температур.",
-    description_en: "Reliable protection under extreme heat and open flame conditions.",
+    description_uz: "Ekstremal haroratlar bilan sinovdan o'tgan xavfsizlik.",
+    description_ru: "Безопасность, проверенная экстремальными температурами.",
+    description_en: "Safety proven by extreme temperatures.",
   },
   {
     id: -2, key: "thermal", icon: "Thermometer", order: 2,
@@ -51,7 +51,7 @@ const FALLBACK_FEATURES: Feature[] = [
     title_en: "Effective Thermal Insulation",
     description_uz: "Issiqlik yo'qotishlarini kamaytiradi va binolarning energiya samaradorligini oshiradi.",
     description_ru: "Снижает теплопотери и повышает энергоэффективность объектов.",
-    description_en: "Reduces heat loss and increases energy efficiency of buildings.",
+    description_en: "Reduces heat loss and improves energy efficiency of buildings.",
   },
   {
     id: -3, key: "eco", icon: "Leaf", order: 3,
@@ -64,12 +64,12 @@ const FALLBACK_FEATURES: Feature[] = [
   },
   {
     id: -4, key: "sound", icon: "Volume2", order: 4,
-    title_uz: "Ovoz izolyatsiyasi",
-    title_ru: "Звукоизоляция",
-    title_en: "Sound Insulation",
-    description_uz: "Xonalar ichidagi shovqin darajasini pasaytiradi va akustik qulaylikni oshiradi.",
-    description_ru: "Способствует снижению уровня шума и повышает акустический комфорт внутри помещений.",
-    description_en: "Reduces noise levels and improves acoustic comfort indoors.",
+    title_uz: "Ovoz yutish",
+    title_ru: "Звукопоглощение",
+    title_en: "Sound Absorption",
+    description_uz: "Xonalarning akustik qulayligini oshiradi.",
+    description_ru: "Повышает акустический комфорт помещений.",
+    description_en: "Improves acoustic comfort of spaces.",
   },
   {
     id: -5, key: "durable", icon: "Hourglass", order: 5,
@@ -79,6 +79,15 @@ const FALLBACK_FEATURES: Feature[] = [
     description_uz: "O'nlab yillar davomida ish xususiyatlarini saqlab qoladi.",
     description_ru: "Сохраняет эксплуатационные характеристики на протяжении десятилетий.",
     description_en: "Retains performance characteristics for decades.",
+  },
+  {
+    id: -6, key: "european_tech", icon: "Award", order: 6,
+    title_uz: "Yevropa ishlab chiqarish texnologiyalari",
+    title_ru: "Европейские технологии производства",
+    title_en: "European Manufacturing Technology",
+    description_uz: "Italyan ishlab chiqarilgan zamonaviy uskunalar mahsulotning yuqori va barqaror sifatini ta'minlaydi.",
+    description_ru: "Современное оборудование итальянского производства обеспечивает высокое и стабильное качество продукции.",
+    description_en: "Modern Italian-made equipment ensures consistently high product quality.",
   },
 ];
 
@@ -106,8 +115,7 @@ export default function Features() {
             {t(lang, "features.eyebrow")}
           </span>
           <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl mb-5 text-balance">
-            {t(lang, "features.title").split(" ")[0]}{" "}
-            <span className="text-gradient-red">{t(lang, "features.title").split(" ").slice(1).join(" ")}</span>
+            {t(lang, "features.title")}
           </h2>
           <p className="text-pearl-200 text-base sm:text-lg leading-relaxed">
             {t(lang, "features.subtitle")}
