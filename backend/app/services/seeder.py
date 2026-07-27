@@ -16,6 +16,7 @@ FORCED_UPDATE_KEYS: set[str] = set()
 # True bo'lsa: DEFAULT_FEATURES bilan Feature jadvali to'liq sinxronlashtiriladi
 # (mavjud kalitlar yangi qiymatga yoziladi, ro'yxatdagi yo'q bo'lganlar deaktiv qilinadi).
 # Deploy'dan so'ng bo'shatib qo'ying, aks holda admin tahrirlari qaytariladi.
+# HOZIR: True — chunki Features tartibi va tavsiflari yangilangan.
 FORCE_SYNC_FEATURES: bool = True
 
 

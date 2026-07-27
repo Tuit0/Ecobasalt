@@ -64,7 +64,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "company_stats.eyebrow": "ECO BASALT RAQAMLARDA",
     "company_stats.title": "Bizning ishlab chiqarish",
-    "company_stats.subtitle": "Zamonaviy ishlab chiqarish quvvatlari va tajribali jamoa — bir sohaning yetakchi loyihasi.",
+    "company_stats.subtitle": "ECO BASALT ishlab chiqarishning ko'lami va salohiyatini ko'rsatuvchi asosiy ko'rsatkichlar",
 
     "why.eyebrow": "NEGA ECO BASALT",
     "why.title": "Nega bizni tanlashadi",
@@ -262,7 +262,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "company_stats.eyebrow": "ECO BASALT В ЦИФРАХ",
     "company_stats.title": "Наше производство",
-    "company_stats.subtitle": "Современные производственные мощности и опытная команда — один из ведущих проектов отрасли.",
+    "company_stats.subtitle": "Ключевые показатели, демонстрирующие масштаб и потенциал производства ECO BASALT",
 
     "why.eyebrow": "ПОЧЕМУ ECO BASALT",
     "why.title": "Почему выбирают нас",
@@ -460,7 +460,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "company_stats.eyebrow": "ECO BASALT IN NUMBERS",
     "company_stats.title": "Our production",
-    "company_stats.subtitle": "Modern manufacturing capacity and an experienced team — one of the leading projects in the industry.",
+    "company_stats.subtitle": "Key indicators demonstrating the scale and potential of ECO BASALT production",
 
     "why.eyebrow": "WHY ECO BASALT",
     "why.title": "Why customers choose us",

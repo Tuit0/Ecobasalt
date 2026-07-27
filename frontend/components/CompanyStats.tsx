@@ -11,14 +11,17 @@ type Stat = {
   icon: any;
   key: string;
   value_uz: string; value_ru: string; value_en: string;
+  unit_uz?: string; unit_ru?: string; unit_en?: string;
   label_uz: string; label_ru: string; label_en: string;
 };
 
+// Number va unit alohida — birlik shriftini raqamdan ~15-20% kichik ko'rsatish uchun
 const DEFAULTS: Stat[] = [
   {
     icon: MapPin,
     key: "area",
-    value_uz: "7,8 ga", value_ru: "7,8 га", value_en: "7.8 ha",
+    value_uz: "7,8", value_ru: "7,8", value_en: "7.8",
+    unit_uz: "ga", unit_ru: "га", unit_en: "ha",
     label_uz: "Ishlab chiqarish maydoni",
     label_ru: "Территория производства",
     label_en: "Production area",
@@ -34,7 +37,8 @@ const DEFAULTS: Stat[] = [
   {
     icon: Factory,
     key: "capacity",
-    value_uz: "50 000 t", value_ru: "50 000 т", value_en: "50,000 t",
+    value_uz: "50 000", value_ru: "50 000", value_en: "50,000",
+    unit_uz: "t", unit_ru: "т", unit_en: "t",
     label_uz: "Yillik ishlab chiqarish quvvati",
     label_ru: "Годовая мощность производства",
     label_en: "Annual production capacity",
@@ -42,7 +46,8 @@ const DEFAULTS: Stat[] = [
   {
     icon: DollarSign,
     key: "investment",
-    value_uz: "—", value_ru: "—", value_en: "—",
+    value_uz: "68 000 000", value_ru: "68 000 000", value_en: "68,000,000",
+    unit_uz: "$", unit_ru: "$", unit_en: "$",
     label_uz: "Loyihaga investitsiya",
     label_ru: "Инвестиции в проект",
     label_en: "Project investment",
@@ -50,7 +55,7 @@ const DEFAULTS: Stat[] = [
   {
     icon: Boxes,
     key: "assortment",
-    value_uz: "—", value_ru: "—", value_en: "—",
+    value_uz: "Tez orada", value_ru: "Скоро", value_en: "Soon",
     label_uz: "Mahsulot kategoriyalari",
     label_ru: "Ассортимент продукции",
     label_en: "Product categories",
@@ -73,24 +78,27 @@ export default function CompanyStats() {
 
   if (!visible) return null;
 
-  // Har bir statistika uchun CMS override — masalan block "company_stats.area.value" bo'lsa
   const items = DEFAULTS.map((s) => ({
     ...s,
     value: pickLang(blocks[`company_stats.${s.key}.value`], lang) || pickLang(s, lang, "value"),
+    unit: (s.unit_uz || s.unit_ru || s.unit_en)
+      ? (pickLang(blocks[`company_stats.${s.key}.unit`], lang) || pickLang(s, lang, "unit"))
+      : "",
     label: pickLang(blocks[`company_stats.${s.key}.label`], lang) || pickLang(s, lang, "label"),
   }));
 
   return (
     <section id="company-stats" className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden border-y border-pearl-100/5">
-      <div className="orb orb-red w-[500px] h-[500px] top-0 left-1/2 -translate-x-1/2 opacity-25" />
+      <div className="orb orb-red w-[500px] h-[500px] top-0 -left-40 opacity-25" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header — left-aligned (mos ravishda Features bilan) */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mb-12 sm:mb-16 text-center mx-auto"
+          className="max-w-3xl mb-12 sm:mb-16"
         >
           <span className="badge-pill mb-5">
             {t(lang, "company_stats.eyebrow")}
@@ -119,8 +127,16 @@ export default function CompanyStats() {
                 <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold-500/20 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                   <Icon className="w-6 h-6 text-gold-400" strokeWidth={1.8} />
                 </div>
-                <div className="h-display text-3xl sm:text-4xl md:text-5xl text-pearl-100 mb-2 group-hover:text-gradient-red transition-all">
-                  {s.value}
+                {/* Raqam va birlik: birlik shrifti ~15-20% kichkina */}
+                <div className="mb-2 flex items-baseline justify-center gap-1 flex-wrap">
+                  <span className="h-display text-3xl sm:text-4xl md:text-5xl text-pearl-100 group-hover:text-gradient-red transition-all leading-none">
+                    {s.value}
+                  </span>
+                  {s.unit && (
+                    <span className="h-display text-2xl sm:text-[1.75rem] md:text-3xl text-pearl-100/85 group-hover:text-gradient-red transition-all leading-none">
+                      {s.unit}
+                    </span>
+                  )}
                 </div>
                 <div className="text-pearl-300 text-xs sm:text-sm leading-snug">
                   {s.label}
