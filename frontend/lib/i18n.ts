@@ -49,14 +49,10 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "stats.eyebrow": "RAQAMLARDA",
 
-    "about.eyebrow": "BIZ HAQIMIZDA",
-    "about.title": "O‘zbekistondagi yetakchi bazalt mahsulotlari ishlab chiqaruvchisi",
-    "about.body": "15 yildan ortiq tajribamiz bilan biz sanoat ob’ektlari, omborlar, ishlab chiqarish binolari va xususiy uy-joylar uchun yuqori sifatli sendvich panellar, bazalt izolyatsiya va bazalt tola taqdim etamiz. Bizning mahsulotlarimiz Yevropa standartlariga javob beradi.",
-    "about.years": "yillik tajriba",
-    "about.b1": "O‘z ishlab chiqarish zavodi va zamonaviy uskunalar",
-    "about.b2": "Yevropa va xalqaro sifat sertifikatlari",
-    "about.b3": "O‘lchovga ko‘ra individual buyurtmalar",
-    "about.b4": "Butun O‘zbekiston bo‘ylab yetkazib berish va montaj",
+    "about.eyebrow": "KOMPANIYA HAQIDA",
+    "about.title": "Sifat mustahkam asosdan boshlanadi",
+    "about.body1": "ECO BASALT — tabiiy bazalt asosidagi issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqaruvchi zamonaviy korxona. Kompaniya zamonaviy texnologiyalar, Yevropa uskunalari va ishlab chiqarishga professional yondashuvni birlashtirib, sifatli mahsulot chiqarish uchun ishonchli asos yaratmoqda.",
+    "about.body2": "Biz bozorning zamonaviy talablariga javob beradigan sifatli, ekologik toza va energiya samarali mahsulot ishlab chiqaramiz. Ishlab chiqarishni rivojlantirish, zamonaviy texnologiyalarni joriy etish va hamkorlar bilan uzoq muddatli hamkorlik ECO BASALT faoliyatining asosini tashkil etadi.",
 
     "features.eyebrow": "AFZALLIKLARIMIZ",
     "features.title": "Nega ECO BASALT?",
@@ -248,13 +244,9 @@ const dict: Record<Lang, Record<string, string>> = {
     "stats.eyebrow": "В ЦИФРАХ",
 
     "about.eyebrow": "О КОМПАНИИ",
-    "about.title": "Ведущий производитель базальтовой продукции в Узбекистане",
-    "about.body": "Более 15 лет мы поставляем высококачественные сэндвич-панели, базальтовую изоляцию и базальтовое волокно для промышленных объектов, складов, производственных зданий и частных домов. Наша продукция соответствует европейским стандартам.",
-    "about.years": "лет опыта",
-    "about.b1": "Собственное производство и современное оборудование",
-    "about.b2": "Европейские и международные сертификаты качества",
-    "about.b3": "Индивидуальные заказы по размерам",
-    "about.b4": "Доставка и монтаж по всему Узбекистану",
+    "about.title": "Качество начинается с надёжной основы",
+    "about.body1": "ECO BASALT — современный производитель теплоизоляционных материалов и гидропонных субстратов на основе природного базальта. Компания сочетает современные технологии, европейское оборудование и профессиональный подход к производству, создавая надёжную основу для выпуска качественной продукции.",
+    "about.body2": "Мы выпускаем качественную, экологичную и энергоэффективную продукцию, соответствующую современным требованиям рынка. Развитие производства, внедрение современных технологий и долгосрочное сотрудничество с партнёрами лежат в основе деятельности ECO BASALT.",
 
     "features.eyebrow": "ПРЕИМУЩЕСТВА",
     "features.title": "Почему выбирают ECO BASALT?",
@@ -446,13 +438,9 @@ const dict: Record<Lang, Record<string, string>> = {
     "stats.eyebrow": "BY THE NUMBERS",
 
     "about.eyebrow": "ABOUT US",
-    "about.title": "The leading basalt-products manufacturer in Uzbekistan",
-    "about.body": "With more than 15 years of experience, we deliver premium sandwich panels, basalt insulation and basalt fiber for industrial facilities, warehouses, production plants and private housing. Our products meet European quality standards.",
-    "about.years": "years of experience",
-    "about.b1": "In-house manufacturing with modern equipment",
-    "about.b2": "European and international quality certifications",
-    "about.b3": "Custom orders made to specification",
-    "about.b4": "Nationwide delivery and installation",
+    "about.title": "Quality starts with a solid foundation",
+    "about.body1": "ECO BASALT is a modern manufacturer of thermal insulation materials and hydroponic substrates based on natural basalt. The company combines modern technology, European equipment and a professional approach to production, creating a solid foundation for delivering quality products.",
+    "about.body2": "We produce quality, environmentally friendly and energy-efficient products that meet the modern demands of the market. Developing production, implementing modern technology and long-term cooperation with partners form the core of ECO BASALT's operations.",
 
     "features.eyebrow": "ADVANTAGES",
     "features.title": "Why choose ECO BASALT?",

@@ -11,8 +11,12 @@ from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, Co
 # majburiy yangi qiymat bilan yoziladi. Odatda bo'sh bo'ladi — admin panelidagi
 # tahrirlar saqlanib qolishi uchun. Faqat vaqtinchalik "hotfix" holatida ishlatiladi:
 # kerakli kalitni qo'shib deploy qiling → keyingi deploy'da qaytadan bo'shatib qo'ying.
-# HOZIR: mijoz feedback bo'yicha hero.subtitle oxiridagi nuqtani olib tashlash uchun majburiy.
-FORCED_UPDATE_KEYS: set[str] = {"hero.subtitle"}
+# HOZIR: mijoz feedback bo'yicha hero.subtitle va about matnlarini yangilash uchun majburiy.
+FORCED_UPDATE_KEYS: set[str] = {
+    "hero.subtitle",
+    "about.eyebrow",
+    "about.title",
+}
 
 # True bo'lsa: DEFAULT_FEATURES bilan Feature jadvali to'liq sinxronlashtiriladi
 # (mavjud kalitlar yangi qiymatga yoziladi, ro'yxatdagi yo'q bo'lganlar deaktiv qilinadi).
@@ -38,15 +42,20 @@ DEFAULT_CONTENT = [
 
     # About
     {"key": "about.eyebrow", "section": "about", "label": "About — kichik label", "block_type": "multilang",
-     "value": {"uz": "BIZ HAQIMIZDA", "ru": "О КОМПАНИИ", "en": "ABOUT US"}},
+     "value": {"uz": "KOMPANIYA HAQIDA", "ru": "О КОМПАНИИ", "en": "ABOUT US"}},
     {"key": "about.title", "section": "about", "label": "About — sarlavha", "block_type": "multilang",
-     "value": {"uz": "O'zbekistondagi yetakchi bazalt mahsulotlari ishlab chiqaruvchisi",
-               "ru": "Ведущий производитель базальтовой продукции в Узбекистане",
-               "en": "The leading basalt-products manufacturer in Uzbekistan"}},
-    {"key": "about.body", "section": "about", "label": "About — asosiy matn", "block_type": "multilang",
-     "value": {"uz": "15 yildan ortiq tajribamiz bilan biz sanoat ob'ektlari, omborlar, ishlab chiqarish binolari va xususiy uy-joylar uchun yuqori sifatli sendvich panellar, bazalt izolyatsiya va bazalt tola taqdim etamiz. Bizning mahsulotlarimiz Yevropa standartlariga javob beradi.",
-               "ru": "Более 15 лет мы поставляем высококачественные сэндвич-панели, базальтовую изоляцию и базальтовое волокно для промышленных объектов, складов, производственных зданий и частных домов. Наша продукция соответствует европейским стандартам.",
-               "en": "With more than 15 years of experience, we deliver premium sandwich panels, basalt insulation and basalt fiber for industrial facilities, warehouses, production plants and private housing. Our products meet European quality standards."}},
+     "value": {"uz": "Sifat mustahkam asosdan boshlanadi",
+               "ru": "Качество начинается с надёжной основы",
+               "en": "Quality starts with a solid foundation"}},
+    {"key": "about.body1", "section": "about", "label": "About — 1-abzats", "block_type": "multilang",
+     "value": {"uz": "ECO BASALT — tabiiy bazalt asosidagi issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqaruvchi zamonaviy korxona. Kompaniya zamonaviy texnologiyalar, Yevropa uskunalari va ishlab chiqarishga professional yondashuvni birlashtirib, sifatli mahsulot chiqarish uchun ishonchli asos yaratmoqda.",
+               "ru": "ECO BASALT — современный производитель теплоизоляционных материалов и гидропонных субстратов на основе природного базальта. Компания сочетает современные технологии, европейское оборудование и профессиональный подход к производству, создавая надёжную основу для выпуска качественной продукции.",
+               "en": "ECO BASALT is a modern manufacturer of thermal insulation materials and hydroponic substrates based on natural basalt. The company combines modern technology, European equipment and a professional approach to production, creating a solid foundation for delivering quality products."}},
+    {"key": "about.body2", "section": "about", "label": "About — 2-abzats", "block_type": "multilang",
+     "value": {"uz": "Biz bozorning zamonaviy talablariga javob beradigan sifatli, ekologik toza va energiya samarali mahsulot ishlab chiqaramiz. Ishlab chiqarishni rivojlantirish, zamonaviy texnologiyalarni joriy etish va hamkorlar bilan uzoq muddatli hamkorlik ECO BASALT faoliyatining asosini tashkil etadi.",
+               "ru": "Мы выпускаем качественную, экологичную и энергоэффективную продукцию, соответствующую современным требованиям рынка. Развитие производства, внедрение современных технологий и долгосрочное сотрудничество с партнёрами лежат в основе деятельности ECO BASALT.",
+               "en": "We produce quality, environmentally friendly and energy-efficient products that meet the modern demands of the market. Developing production, implementing modern technology and long-term cooperation with partners form the core of ECO BASALT's operations."}},
+    {"key": "about.image", "section": "about", "label": "About — korxona rasmi (URL)", "block_type": "text", "value": ""},
 
     # Stats
     {"key": "stats.years", "section": "stats", "label": "Statistika — Yillar (raqam)", "block_type": "text", "value": "15"},
