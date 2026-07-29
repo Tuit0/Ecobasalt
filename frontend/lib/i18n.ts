@@ -32,13 +32,13 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "hero.eyebrow": "BASALT TEXNOLOGIYALARI",
     "hero.title": "Tabiat kuchi\nzamonaviy texnologiyalarda",
-    "hero.subtitle": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish.",
+    "hero.subtitle": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish",
     "hero.cta_primary": "Qo'ng'iroqqa buyurtma",
     "hero.cta_secondary": "Katalogni ko'rish",
     "hero.cta_thermal": "Issiqlik izolyatsiya materiallari",
     "hero.cta_thermal_desc": "Qurilish sohasi uchun energiya samarali materiallar",
     "hero.cta_hydroponics": "Gidroponika substratlari",
-    "hero.cta_hydroponics_desc": "Issiqxona majmualari va agrosanoat sektori uchun innovatsion yechimlar.",
+    "hero.cta_hydroponics_desc": "Issiqxona majmualari va agrosanoat sektori uchun innovatsion yechimlar",
     "hero.cta_view_catalog": "Katalogga o'tish",
     "hero.badge_fire": "Yong'inbardoshlik 1000°C gacha",
     "hero.badge_eco": "Ekologik tabiiy xomashyo",
@@ -60,7 +60,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "features.eyebrow": "AFZALLIKLARIMIZ",
     "features.title": "Nega ECO BASALT?",
-    "features.subtitle": "Biz xavfsizlik, sifat, uzoq umr va yuqori ish xususiyatlarini birlashtirgan mahsulot yaratamiz.",
+    "features.subtitle": "Biz xavfsizlik, sifat, uzoq umr\nva yuqori ish xususiyatlarini birlashtirgan mahsulot yaratamiz",
 
     "company_stats.eyebrow": "ECO BASALT RAQAMLARDA",
     "company_stats.title": "Bizning ishlab chiqarish",
@@ -230,7 +230,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "hero.eyebrow": "БАЗАЛЬТОВЫЕ ТЕХНОЛОГИИ",
     "hero.title": "Сила природы\nв современных технологиях",
-    "hero.subtitle": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта.",
+    "hero.subtitle": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта",
     "hero.cta_primary": "Заказать звонок",
     "hero.cta_secondary": "Смотреть каталог",
     "hero.badge_fire": "Огнестойкость до 1000°C",
@@ -242,7 +242,7 @@ const dict: Record<Lang, Record<string, string>> = {
     "hero.cta_thermal": "Теплоизоляционные материалы",
     "hero.cta_thermal_desc": "Энергоэффективные материалы для строительной отрасли",
     "hero.cta_hydroponics": "Гидропонные субстраты",
-    "hero.cta_hydroponics_desc": "Инновационные решения для тепличных комплексов и агропромышленного сектора.",
+    "hero.cta_hydroponics_desc": "Инновационные решения для тепличных комплексов и агропромышленного сектора",
     "hero.cta_view_catalog": "Перейти в каталог",
 
     "stats.eyebrow": "В ЦИФРАХ",
@@ -258,7 +258,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "features.eyebrow": "ПРЕИМУЩЕСТВА",
     "features.title": "Почему выбирают ECO BASALT?",
-    "features.subtitle": "Мы создаём продукцию, сочетающую безопасность, качество, долговечность и высокие эксплуатационные характеристики.",
+    "features.subtitle": "Мы создаём продукцию, сочетающую безопасность, качество, долговечность\nи высокие эксплуатационные характеристики",
 
     "company_stats.eyebrow": "ECO BASALT В ЦИФРАХ",
     "company_stats.title": "Наше производство",
@@ -428,13 +428,13 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "hero.eyebrow": "BASALT TECHNOLOGIES",
     "hero.title": "The power of nature\nin modern technology",
-    "hero.subtitle": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt.",
+    "hero.subtitle": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt",
     "hero.cta_primary": "Request a Call",
     "hero.cta_secondary": "View Catalog",
     "hero.cta_thermal": "Thermal Insulation Materials",
     "hero.cta_thermal_desc": "Energy-efficient materials for the construction industry",
     "hero.cta_hydroponics": "Hydroponic Substrates",
-    "hero.cta_hydroponics_desc": "Innovative solutions for greenhouse complexes and the agro-industrial sector.",
+    "hero.cta_hydroponics_desc": "Innovative solutions for greenhouse complexes and the agro-industrial sector",
     "hero.cta_view_catalog": "View catalog",
     "hero.badge_fire": "Fire Resistance up to 1000°C",
     "hero.badge_eco": "100% Natural Eco Raw Material",
@@ -456,7 +456,7 @@ const dict: Record<Lang, Record<string, string>> = {
 
     "features.eyebrow": "ADVANTAGES",
     "features.title": "Why choose ECO BASALT?",
-    "features.subtitle": "We create products that combine safety, quality, durability and high performance characteristics.",
+    "features.subtitle": "We create products that combine safety, quality, durability\nand high performance characteristics",
 
     "company_stats.eyebrow": "ECO BASALT IN NUMBERS",
     "company_stats.title": "Our production",

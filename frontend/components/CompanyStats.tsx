@@ -98,16 +98,16 @@ export default function CompanyStats() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mb-12 sm:mb-16"
+          className="max-w-5xl mb-10 sm:mb-14"
         >
           <span className="badge-pill mb-5">
             {t(lang, "company_stats.eyebrow")}
           </span>
-          <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl mb-5 text-balance">
+          <h2 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-5">
             {t(lang, "company_stats.title")}
           </h2>
-          <p className="text-pearl-200 text-base sm:text-lg leading-relaxed">
-            {t(lang, "company_stats.subtitle")}
+          <p className="text-pearl-200 text-base sm:text-lg leading-relaxed max-w-3xl">
+            {t(lang, "company_stats.subtitle").replace(/ECO BASALT/g, "ECO BASALT")}
           </p>
         </motion.div>
 
@@ -127,10 +127,10 @@ export default function CompanyStats() {
                 <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold-500/20 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                   <Icon className="w-6 h-6 text-gold-400" strokeWidth={1.8} />
                 </div>
-                {/* Raqam va birlik: birlik shrifti ~15-20% kichkina */}
-                <div className="mb-2 flex items-baseline justify-center gap-1 flex-wrap">
-                  <span className="h-display text-3xl sm:text-4xl md:text-5xl text-pearl-100 group-hover:text-gradient-red transition-all leading-none">
-                    {s.value}
+                {/* Raqam va birlik: birlik shrifti ~15-20% kichkina, NBSP wrap-siz */}
+                <div className="mb-2 flex items-baseline justify-center gap-2 flex-wrap">
+                  <span className="h-display text-3xl sm:text-4xl md:text-5xl text-pearl-100 group-hover:text-gradient-red transition-all leading-none whitespace-nowrap">
+                    {s.value.replace(/ /g, " ")}
                   </span>
                   {s.unit && (
                     <span className="h-display text-2xl sm:text-[1.75rem] md:text-3xl text-pearl-100/85 group-hover:text-gradient-red transition-all leading-none">

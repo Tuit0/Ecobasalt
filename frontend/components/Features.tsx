@@ -109,15 +109,15 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mb-12 sm:mb-16"
+          className="max-w-5xl mb-10 sm:mb-14"
         >
           <span className="badge-pill mb-5">
             {t(lang, "features.eyebrow")}
           </span>
-          <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl mb-5 text-balance">
+          <h2 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-5 lg:whitespace-nowrap">
             {t(lang, "features.title")}
           </h2>
-          <p className="text-pearl-200 text-base sm:text-lg leading-relaxed">
+          <p className="text-pearl-200 text-base sm:text-lg leading-relaxed max-w-2xl whitespace-pre-line">
             {t(lang, "features.subtitle")}
           </p>
         </motion.div>

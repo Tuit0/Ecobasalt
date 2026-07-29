@@ -11,7 +11,8 @@ from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, Co
 # majburiy yangi qiymat bilan yoziladi. Odatda bo'sh bo'ladi — admin panelidagi
 # tahrirlar saqlanib qolishi uchun. Faqat vaqtinchalik "hotfix" holatida ishlatiladi:
 # kerakli kalitni qo'shib deploy qiling → keyingi deploy'da qaytadan bo'shatib qo'ying.
-FORCED_UPDATE_KEYS: set[str] = set()
+# HOZIR: mijoz feedback bo'yicha hero.subtitle oxiridagi nuqtani olib tashlash uchun majburiy.
+FORCED_UPDATE_KEYS: set[str] = {"hero.subtitle"}
 
 # True bo'lsa: DEFAULT_FEATURES bilan Feature jadvali to'liq sinxronlashtiriladi
 # (mavjud kalitlar yangi qiymatga yoziladi, ro'yxatdagi yo'q bo'lganlar deaktiv qilinadi).
@@ -31,9 +32,9 @@ DEFAULT_CONTENT = [
                "ru": "Сила природы\nв современных технологиях",
                "en": "The power of nature\nin modern technology"}},
     {"key": "hero.subtitle", "section": "hero", "label": "Hero — qisqacha matn", "block_type": "multilang",
-     "value": {"uz": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish.",
-               "ru": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта.",
-               "en": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt."}},
+     "value": {"uz": "Tabiiy bazalt asosida issiqlik izolyatsiya materiallari va gidroponika substratlarini ishlab chiqarish",
+               "ru": "Производство теплоизоляционных материалов и гидропонных субстратов на основе природного базальта",
+               "en": "Manufacturing thermal insulation materials and hydroponic substrates based on natural basalt"}},
 
     # About
     {"key": "about.eyebrow", "section": "about", "label": "About — kichik label", "block_type": "multilang",

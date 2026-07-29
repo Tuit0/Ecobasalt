@@ -21,10 +21,10 @@ export default function FinalCTA() {
     : "Ready to cooperate?";
 
   const subtitle = lang === "uz"
-    ? "Kerakli ma'lumotni olish va hamkorlik shartlarini muhokama qilish uchun biz bilan bog'laning"
+    ? "Kerakli ma'lumotni olish\nva hamkorlik shartlarini muhokama qilish uchun biz bilan bog'laning"
     : lang === "ru"
-    ? "Свяжитесь с нами, чтобы получить необходимую информацию и обсудить условия сотрудничества"
-    : "Contact us to get the information you need and discuss cooperation terms";
+    ? "Свяжитесь с нами, чтобы получить необходимую информацию\nи обсудить условия сотрудничества"
+    : "Contact us to get the information you need\nand discuss cooperation terms";
 
   const perks = lang === "uz" ? [
     "Mahsulot tanlash",
@@ -75,7 +75,7 @@ export default function FinalCTA() {
           </h2>
 
           {/* Subtitle */}
-          <p className="text-pearl-200 text-base sm:text-lg md:text-xl mb-10 sm:mb-12 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-pearl-200 text-base sm:text-lg md:text-xl mb-10 sm:mb-12 leading-relaxed max-w-2xl mx-auto whitespace-pre-line">
             {subtitle}
           </p>
 
