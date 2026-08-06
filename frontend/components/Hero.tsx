@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowRight, Factory, Sprout } from "lucide-react";
+import { ArrowRight, Factory, Sprout, Layers3 } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -164,61 +164,46 @@ export default function Hero() {
             </p>
           </motion.div>
 
-          {/* Two big product CTAs — with descriptions */}
+          {/* Three product CTAs — oq shaffof stil, bir xil ko'rinish */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 max-w-4xl"
+            className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 max-w-5xl"
           >
-            <MagneticButton strength={0.12}>
-              <Link
-                href="/products?cat=thermal"
-                className="group block px-6 sm:px-8 py-6 sm:py-7 rounded-3xl bg-gradient-to-br from-gold-500/95 to-gold-600 hover:from-gold-400 hover:to-gold-500 border border-gold-400/50 transition-all duration-300 shadow-xl shadow-gold-500/30 hover:shadow-2xl hover:shadow-gold-500/45 w-full text-left"
-              >
-                <div className="flex items-start gap-3 sm:gap-4 mb-3">
-                  <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pearl-100/15 flex items-center justify-center">
-                    <Factory className="w-6 h-6 sm:w-7 sm:h-7 text-pearl-100" strokeWidth={2} />
-                  </div>
-                  <div className="flex-1 min-w-0 pt-1">
-                    <div className="text-pearl-100 font-bold text-lg sm:text-xl leading-tight">
-                      {t(lang, "hero.cta_thermal")}
+            {[
+              { href: "/products?cat=thermal",     Icon: Factory, title: t(lang, "hero.cta_thermal"),     desc: t(lang, "hero.cta_thermal_desc") },
+              { href: "/products?cat=hydroponics", Icon: Sprout,  title: t(lang, "hero.cta_hydroponics"), desc: t(lang, "hero.cta_hydroponics_desc") },
+              { href: "/products?cat=panels",      Icon: Layers3, title: t(lang, "hero.cta_panels"),      desc: t(lang, "hero.cta_panels_desc") },
+            ].map((c, i) => {
+              const Icon = c.Icon;
+              return (
+                <MagneticButton key={i} strength={0.1}>
+                  <Link
+                    href={c.href}
+                    className="group block px-5 sm:px-6 py-5 sm:py-6 rounded-3xl bg-pearl-100/8 hover:bg-pearl-100/14 border border-pearl-100/18 hover:border-pearl-100/35 transition-all duration-300 w-full text-left h-full"
+                  >
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-pearl-100/12 border border-pearl-100/20 flex items-center justify-center group-hover:bg-pearl-100/20 group-hover:scale-105 transition-all">
+                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-pearl-50" strokeWidth={1.8} />
+                      </div>
+                      <div className="flex-1 min-w-0 pt-0.5">
+                        <div className="text-pearl-50 font-bold text-base sm:text-lg leading-tight">
+                          {c.title}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <p className="text-pearl-100/85 text-sm sm:text-[15px] leading-snug mb-4">
-                  {t(lang, "hero.cta_thermal_desc")}
-                </p>
-                <div className="text-pearl-100 font-semibold text-sm sm:text-base flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  {t(lang, "hero.cta_view_catalog")}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-                </div>
-              </Link>
-            </MagneticButton>
-            <MagneticButton strength={0.12}>
-              <Link
-                href="/products?cat=hydroponics"
-                className="group block px-6 sm:px-8 py-6 sm:py-7 rounded-3xl bg-onyx-950/70 backdrop-blur-xl border border-pearl-100/15 hover:border-forest-400/40 hover:bg-onyx-950/85 transition-all duration-300 w-full text-left"
-              >
-                <div className="flex items-start gap-3 sm:gap-4 mb-3">
-                  <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-forest-500/20 border border-forest-400/30 flex items-center justify-center">
-                    <Sprout className="w-6 h-6 sm:w-7 sm:h-7 text-forest-400" strokeWidth={2} />
-                  </div>
-                  <div className="flex-1 min-w-0 pt-1">
-                    <div className="text-pearl-100 font-bold text-lg sm:text-xl leading-tight">
-                      {t(lang, "hero.cta_hydroponics")}
+                    <p className="text-pearl-200 text-xs sm:text-sm leading-snug mb-4 min-h-[2.5rem]">
+                      {c.desc}
+                    </p>
+                    <div className="text-pearl-100 font-semibold text-xs sm:text-sm flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                      {t(lang, "hero.cta_view_catalog")}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
                     </div>
-                  </div>
-                </div>
-                <p className="text-pearl-200 text-sm sm:text-[15px] leading-snug mb-4">
-                  {t(lang, "hero.cta_hydroponics_desc")}
-                </p>
-                <div className="text-pearl-100 font-semibold text-sm sm:text-base flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  {t(lang, "hero.cta_view_catalog")}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-                </div>
-              </Link>
-            </MagneticButton>
+                  </Link>
+                </MagneticButton>
+              );
+            })}
           </motion.div>
         </div>
       </motion.div>

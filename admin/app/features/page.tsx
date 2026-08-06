@@ -25,6 +25,7 @@ const EMPTY: Feature = {
 };
 
 const ICONS = [
+  "FlameKindling", "ThermometerSun", "TreePine", "AudioWaveform", "Infinity", "BadgeCheck",
   "Flame", "Leaf", "Shield", "Snowflake", "Volume2", "Hourglass",
   "Sparkles", "Award", "Zap", "Lock", "Globe", "Thermometer", "Star",
 ];

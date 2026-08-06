@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   Flame, Leaf, Shield, Snowflake, Volume2, Hourglass,
   Sparkles, Award, Zap, Lock, Globe, Thermometer,
+  FlameKindling, ThermometerSun, AudioWaveform, Infinity, BadgeCheck, TreePine,
 } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
@@ -22,6 +23,7 @@ type Feature = {
 const ICONS: Record<string, any> = {
   Flame, Leaf, Shield, Snowflake, Volume2, Hourglass,
   Sparkles, Award, Zap, Lock, Globe, Thermometer,
+  FlameKindling, ThermometerSun, AudioWaveform, Infinity, BadgeCheck, TreePine,
 };
 
 const COLORS = [
@@ -36,7 +38,7 @@ const COLORS = [
 // Fallback "Почему выбирают ECO BASALT" — 6 ta karta (mijoz feedback tartibi)
 const FALLBACK_FEATURES: Feature[] = [
   {
-    id: -1, key: "fire", icon: "Flame", order: 1,
+    id: -1, key: "fire", icon: "FlameKindling", order: 1,
     title_uz: "Yong'inbardoshlik",
     title_ru: "Огнестойкость",
     title_en: "Fire Resistance",
@@ -45,7 +47,7 @@ const FALLBACK_FEATURES: Feature[] = [
     description_en: "Safety proven by extreme temperatures",
   },
   {
-    id: -2, key: "thermal", icon: "Thermometer", order: 2,
+    id: -2, key: "thermal", icon: "ThermometerSun", order: 2,
     title_uz: "Samarali issiqlik izolyatsiyasi",
     title_ru: "Эффективная теплоизоляция",
     title_en: "Effective Thermal Insulation",
@@ -54,7 +56,7 @@ const FALLBACK_FEATURES: Feature[] = [
     description_en: "Reduces heat loss and improves energy efficiency of buildings",
   },
   {
-    id: -3, key: "durable", icon: "Hourglass", order: 3,
+    id: -3, key: "durable", icon: "Infinity", order: 3,
     title_uz: "Uzoq umr",
     title_ru: "Долговечность",
     title_en: "Longevity",
@@ -63,7 +65,7 @@ const FALLBACK_FEATURES: Feature[] = [
     description_en: "Retains performance characteristics for decades",
   },
   {
-    id: -4, key: "european_tech", icon: "Award", order: 4,
+    id: -4, key: "european_tech", icon: "BadgeCheck", order: 4,
     title_uz: "Yevropa ishlab chiqarish texnologiyalari",
     title_ru: "Европейские технологии производства",
     title_en: "European Manufacturing Technology",
@@ -72,7 +74,7 @@ const FALLBACK_FEATURES: Feature[] = [
     description_en: "Modern Italian-made equipment ensures consistently high product quality",
   },
   {
-    id: -5, key: "eco", icon: "Leaf", order: 5,
+    id: -5, key: "eco", icon: "TreePine", order: 5,
     title_uz: "Ekologik toza",
     title_ru: "Экологичность",
     title_en: "Eco-Friendly",
@@ -81,7 +83,7 @@ const FALLBACK_FEATURES: Feature[] = [
     description_en: "Natural origin and environmental safety",
   },
   {
-    id: -6, key: "acoustic", icon: "Volume2", order: 6,
+    id: -6, key: "acoustic", icon: "AudioWaveform", order: 6,
     title_uz: "Ovoz yutish",
     title_ru: "Звукопоглощение",
     title_en: "Sound Absorption",
@@ -145,19 +147,29 @@ export default function Features() {
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ delay: (i % 3) * 0.08, duration: 0.6 }}
                   whileHover={{ y: -8 }}
-                  className="feature-card p-7 sm:p-8 group"
+                  className="feature-card p-7 sm:p-8 group relative overflow-hidden"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.bg} border ${c.border} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
-                    <Icon className={`w-6 h-6 ${c.icon}`} strokeWidth={1.8} />
+                  {/* Yarim shaffof fon obyekt — ikonka orqasidagi soft blur */}
+                  <div
+                    aria-hidden
+                    className={`absolute -top-8 -left-8 w-32 h-32 rounded-full bg-gradient-to-br ${c.bg} blur-2xl opacity-60 group-hover:opacity-90 transition-opacity duration-700 pointer-events-none`}
+                  />
+
+                  <div className="relative">
+                    {/* Ikon: kattaroq (18→20), 3D glass effekt */}
+                    <div className={`relative w-20 h-20 rounded-2xl bg-gradient-to-br ${c.bg} border ${c.border} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-black/20`}>
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pearl-100/10 to-transparent pointer-events-none" />
+                      <Icon className={`w-9 h-9 ${c.icon} relative`} strokeWidth={1.6} />
+                    </div>
+
+                    <h3 className="h-display text-pearl-100 text-xl sm:text-2xl mb-3 group-hover:text-gradient-red transition-all">
+                      {pickLang(f, lang, "title")}
+                    </h3>
+
+                    <p className="text-pearl-200 text-sm sm:text-base leading-relaxed">
+                      {pickLang(f, lang, "description")}
+                    </p>
                   </div>
-
-                  <h3 className="h-display text-pearl-100 text-xl sm:text-2xl mb-3 group-hover:text-gradient-red transition-all">
-                    {pickLang(f, lang, "title")}
-                  </h3>
-
-                  <p className="text-pearl-200 text-sm sm:text-base leading-relaxed">
-                    {pickLang(f, lang, "description")}
-                  </p>
                 </motion.div>
               );
             })}

@@ -1,7 +1,7 @@
 "use client";
 import useSWR from "swr";
 import Link from "next/link";
-import { Facebook, Instagram, Send as Telegram, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
@@ -17,56 +17,39 @@ export default function Footer() {
 
   const phone = pickLang(blocks["contact.phone"], lang) || "+998 55 510 26 88";
   const email = pickLang(blocks["contact.email"], lang) || "info@uzecobasalt.uz";
-  const tg = pickLang(blocks["contact.telegram"], lang) || "https://t.me/eco_basalt";
-  const ig = pickLang(blocks["contact.instagram"], lang) || "https://instagram.com/eco.basalt";
-  const fb = pickLang(blocks["contact.facebook"], lang) || "#";
-  const yt = pickLang(blocks["contact.youtube"], lang) || "#";
 
-  const socials = [
-    { href: tg, Icon: Telegram, color: "hover:bg-[#229ED9]/20 hover:border-[#229ED9]/50 hover:text-[#229ED9]" },
-    { href: ig, Icon: Instagram, color: "hover:bg-[#e6683c]/20 hover:border-[#e6683c]/50 hover:text-[#e6683c]" },
-    { href: fb, Icon: Facebook, color: "hover:bg-[#1877f2]/20 hover:border-[#1877f2]/50 hover:text-[#1877f2]" },
-    { href: yt, Icon: Youtube, color: "hover:bg-[#ff0000]/20 hover:border-[#ff0000]/50 hover:text-[#ff0000]" },
-  ].filter((s) => s.href !== "#");
+  // Sayt ishlab chiquvchi IT-kompaniya nomi (admin CMS'dan `contact.it_company` orqali o'zgartirish mumkin)
+  const itCompanyName = pickLang(blocks["contact.it_company"], lang) || "Grepit";
+  const itCompanyUrl = pickLang(blocks["contact.it_company_url"], lang) || "https://grepit.uz";
 
   // Manzil — kompaniya haqiqiy manzili (3 qatorda)
   const addressLines = lang === "uz"
-    ? ["O'zbekiston, Namangan viloyati,", "Chust tumani, Chust sh.,", "Gulzor ko'chasi, 247-uy"]
+    ? ["O'zbekiston, Namangan viloyati", "Chust tumani, Chust sh.", "Gulzor ko'chasi, 247"]
     : lang === "ru"
-    ? ["Узбекистан, Наманганская область,", "Чустский район, г. Чуст,", "улица Гульзор, дом 247"]
-    : ["Uzbekistan, Namangan Region,", "Chust District, Chust,", "247 Gulzor Street"];
+    ? ["Узбекистан, Наманганская обл.", "Чустский р-н, г. Чуст", "ул. Гулзор, 247"]
+    : ["Uzbekistan, Namangan Region", "Chust District, Chust", "Gulzor St., 247"];
 
   return (
     <footer className="bg-onyx-950 pt-16 sm:pt-20 pb-8 border-t border-pearl-100/5 relative overflow-hidden">
       <div className="absolute inset-0 gradient-mesh opacity-30" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 mb-12">
-          {/* Brand — simplified logo (no tagline, no description, socials directly under) */}
-          <div className="col-span-2 md:col-span-5">
-            <Link href="/" className="flex items-center gap-3 mb-6 group">
-              <Logo size={52} className="group-hover:rotate-12 transition-transform duration-500" />
-              <div className="font-bold text-gold-400 text-2xl tracking-tight">ECO BASALT</div>
-            </Link>
-
-            {socials.length > 0 && (
-              <div className="flex gap-2">
-                {socials.map((s, i) => {
-                  const Icon = s.Icon;
-                  return (
-                    <a
-                      key={i}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-10 h-10 rounded-full bg-pearl-100/5 border border-pearl-100/10 flex items-center justify-center text-pearl-200 transition-all duration-300 ${s.color}`}
-                    >
-                      <Icon className="w-4 h-4" strokeWidth={1.8} />
-                    </a>
-                  );
-                })}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 mb-12 items-start">
+          {/* Brand — kattaroq logo, o'ng ustunlar textiga nisbatan tik markazga joylashgan */}
+          <div className="md:col-span-4 flex justify-center md:self-center">
+            <Link href="/" className="flex flex-col items-center gap-4 group">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full ring-2 ring-pearl-100/25 group-hover:ring-pearl-100/45 transition-all" />
+                <Logo size={80} className="group-hover:rotate-12 transition-transform duration-500" />
               </div>
-            )}
+              <div
+                className="font-bold text-gold-400 text-3xl tracking-tight"
+                style={{ textShadow: "0 0 24px rgba(169, 29, 42, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
+              >
+                ECO BASALT
+              </div>
+            </Link>
+            {/* Social ikonlar (Telegram/Instagram/YouTube) vaqtincha yashirilgan */}
           </div>
 
           {/* Products */}
@@ -107,21 +90,25 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contacts — new address (3 lines) */}
-          <div className="md:col-span-2">
+          {/* Contacts — tekislangan, manzil 3 qatorda */}
+          <div className="md:col-span-3">
             <div className="text-pearl-100 text-sm font-semibold mb-5">{t(lang, "footer.contacts")}</div>
             <ul className="space-y-3 text-pearl-200 text-sm">
-              <li><a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-gold-400 transition-colors flex items-start gap-2">
-                <Phone className="w-3.5 h-3.5 mt-0.5 shrink-0" strokeWidth={2} />
-                <span>{phone}</span>
-              </a></li>
-              <li><a href={`mailto:${email}`} className="hover:text-gold-400 transition-colors flex items-start gap-2">
-                <Mail className="w-3.5 h-3.5 mt-0.5 shrink-0" strokeWidth={2} />
-                <span className="break-all">{email}</span>
-              </a></li>
-              <li className="flex items-start gap-2 text-pearl-200">
-                <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0" strokeWidth={2} />
-                <span>
+              <li>
+                <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-gold-400 transition-colors flex items-center gap-2.5">
+                  <Phone className="w-4 h-4 text-pearl-300 shrink-0" strokeWidth={2} />
+                  <span>{phone}</span>
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${email}`} className="hover:text-gold-400 transition-colors flex items-center gap-2.5">
+                  <Mail className="w-4 h-4 text-pearl-300 shrink-0" strokeWidth={2} />
+                  <span className="break-all">{email}</span>
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5 text-pearl-200">
+                <MapPin className="w-4 h-4 text-pearl-300 mt-0.5 shrink-0" strokeWidth={2} />
+                <span className="leading-relaxed">
                   {addressLines.map((line, i) => (
                     <span key={i} className="block">{line}</span>
                   ))}
@@ -133,7 +120,19 @@ export default function Footer() {
 
         <div className="pt-6 border-t border-pearl-100/5 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-pearl-300">
           <div>© {new Date().getFullYear()} ECO BASALT — {t(lang, "footer.rights")}</div>
-          <div className="font-medium">Made in Uzbekistan 🇺🇿</div>
+          <div className="font-medium flex items-center gap-1.5">
+            <span>Made in Uzbekistan 🇺🇿</span>
+            <span className="text-pearl-300/60">·</span>
+            <span>{lang === "ru" ? "Разработано" : lang === "en" ? "Built by" : "Ishlab chiqildi"}</span>
+            <a
+              href={itCompanyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold-400 hover:text-gold-300 transition-colors font-semibold"
+            >
+              {itCompanyName}
+            </a>
+          </div>
         </div>
       </div>
     </footer>

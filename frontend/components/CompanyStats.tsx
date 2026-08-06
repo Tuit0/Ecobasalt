@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import useSWR from "swr";
-import { MapPin, Users, Factory, Package, Layers, Sprout, DollarSign, Boxes } from "lucide-react";
+import { MapPinned, UsersRound, Factory, Package, Layers, Sprout, CircleDollarSign, Boxes } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -18,16 +18,16 @@ type Stat = {
 // Number va unit alohida — birlik shriftini raqamdan ~15-20% kichik ko'rsatish uchun
 const DEFAULTS: Stat[] = [
   {
-    icon: MapPin,
+    icon: MapPinned,
     key: "area",
-    value_uz: "7,8", value_ru: "7,8", value_en: "7.8",
+    value_uz: "10", value_ru: "10", value_en: "10",
     unit_uz: "ga", unit_ru: "га", unit_en: "ha",
     label_uz: "Ishlab chiqarish maydoni",
     label_ru: "Территория производства",
     label_en: "Production area",
   },
   {
-    icon: Users,
+    icon: UsersRound,
     key: "jobs",
     value_uz: "300", value_ru: "300", value_en: "300",
     label_uz: "Ish o'rinlari",
@@ -44,7 +44,7 @@ const DEFAULTS: Stat[] = [
     label_en: "Annual production capacity",
   },
   {
-    icon: DollarSign,
+    icon: CircleDollarSign,
     key: "investment",
     value_uz: "68 000 000", value_ru: "68 000 000", value_en: "68,000,000",
     unit_uz: "$", unit_ru: "$", unit_en: "$",
@@ -63,7 +63,7 @@ const DEFAULTS: Stat[] = [
   {
     icon: Layers,
     key: "directions",
-    value_uz: "2", value_ru: "2", value_en: "2",
+    value_uz: "3", value_ru: "3", value_en: "3",
     label_uz: "Ishlab chiqarish yo'nalishi",
     label_ru: "Направления производства",
     label_en: "Production directions",
@@ -122,10 +122,17 @@ export default function CompanyStats() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: i * 0.08, duration: 0.6 }}
                 whileHover={{ y: -6 }}
-                className="group bg-onyx-800/40 backdrop-blur-xl border border-pearl-100/10 hover:border-gold-400/40 rounded-3xl p-6 sm:p-8 text-center transition-all duration-500"
+                className="group relative overflow-hidden bg-onyx-800/40 backdrop-blur-xl border border-pearl-100/10 hover:border-gold-400/40 rounded-3xl p-6 sm:p-8 text-center transition-all duration-500"
               >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gold-500/20 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                  <Icon className="w-6 h-6 text-gold-400" strokeWidth={1.8} />
+                {/* Yarim shaffof fon obyekt */}
+                <div
+                  aria-hidden
+                  className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-gold-500/8 blur-3xl opacity-70 group-hover:opacity-100 transition-opacity pointer-events-none"
+                />
+                {/* Ikon: kattalashtirilgan, glass effekt */}
+                <div className="relative w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-gold-500/25 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-black/20">
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pearl-100/10 to-transparent pointer-events-none" />
+                  <Icon className="w-9 h-9 text-gold-400 relative" strokeWidth={1.6} />
                 </div>
                 {/* Raqam va birlik: birlik shrifti ~15-20% kichkina, NBSP wrap-siz */}
                 <div className="mb-2 flex items-baseline justify-center gap-2 flex-wrap">

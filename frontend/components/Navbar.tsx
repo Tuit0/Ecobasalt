@@ -47,25 +47,33 @@ export default function Navbar() {
         scrolled || pathname !== "/" ? "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl" : "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl"
       }`}
     >
-      <div className="bg-onyx-900/70 backdrop-blur-xl border border-pearl-100/10 rounded-full px-4 sm:px-6 shadow-2xl shadow-black/30">
-        <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo — simplified, no tagline, ECO BASALT inline red */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <Logo size={34} className="sm:w-10 sm:h-10 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
-            <div className="font-bold text-gold-400 text-base sm:text-lg leading-none tracking-tight">ECO BASALT</div>
+      <div className="bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-8 shadow-2xl shadow-black/40">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo — kattaroq, oq subtle ring bilan */}
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full ring-1 ring-pearl-100/20 group-hover:ring-pearl-100/40 transition-all" />
+              <Logo size={42} className="sm:w-12 sm:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+            </div>
+            <div
+              className="font-bold text-gold-400 text-lg sm:text-xl leading-none tracking-tight"
+              style={{ textShadow: "0 0 20px rgba(169, 29, 42, 0.35), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
+            >
+              ECO BASALT
+            </div>
           </Link>
 
-          {/* Center nav — evenly spaced */}
-          <nav className="hidden lg:flex items-center gap-0.5 mx-auto">
+          {/* Center nav — bir xil oraliqlar, kattaroq shrift */}
+          <nav className="hidden lg:flex items-center gap-1 mx-auto">
             {navItems.map((it) => {
               const active = isActive(it.href);
               return (
                 <Link
                   key={it.href}
                   href={it.href}
-                  className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 text-center ${
+                  className={`relative px-5 py-2.5 text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
                     active
-                      ? "text-pearl-100 bg-pearl-100/8"
+                      ? "text-pearl-100 bg-pearl-100/10"
                       : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
                   }`}
                 >
@@ -73,7 +81,7 @@ export default function Navbar() {
                   {active && (
                     <motion.span
                       layoutId="nav-active-dot"
-                      className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-400"
+                      className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-gold-400"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -83,16 +91,16 @@ export default function Navbar() {
           </nav>
 
           {/* Right */}
-          <div className="hidden lg:flex items-center gap-2 shrink-0">
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
             {/* Lang dropdown */}
             <div className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
                 onBlur={() => setTimeout(() => setLangOpen(false), 150)}
-                className="flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5 transition-colors"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-[15px] font-medium text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5 transition-colors"
               >
                 {langLabels[lang]}
-                <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? "rotate-180" : ""}`} strokeWidth={2.5} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${langOpen ? "rotate-180" : ""}`} strokeWidth={2.5} />
               </button>
               <AnimatePresence>
                 {langOpen && (
@@ -119,7 +127,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            <button onClick={() => showModal()} className="btn-solid-gold !py-2 !px-5 !text-xs">
+            <button onClick={() => showModal()} className="btn-solid-gold !py-2.5 !px-6 !text-sm">
               {t(lang, "nav.apply")}
             </button>
           </div>
