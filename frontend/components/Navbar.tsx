@@ -43,103 +43,107 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ${
-        scrolled || pathname !== "/" ? "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl" : "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl"
-      }`}
+      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl`}
     >
-      <div className="bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-10 shadow-2xl shadow-black/40">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo — kattaroq, oq subtle ring bilan */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full ring-1 ring-pearl-100/20 group-hover:ring-pearl-100/40 transition-all" />
-              <Logo size={42} className="sm:w-12 sm:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
-            </div>
-            <div
-              className="font-bold text-gold-400 text-lg sm:text-xl leading-none tracking-tight"
-              style={{ textShadow: "0 0 20px rgba(169, 29, 42, 0.35), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
-            >
-              ECO BASALT
-            </div>
-          </Link>
-
-          {/* Center nav — bir xil oraliqlar, kattaroq shrift */}
-          <nav className="hidden lg:flex items-center gap-1 mx-auto">
-            {navItems.map((it) => {
-              const active = isActive(it.href);
-              return (
-                <Link
-                  key={it.href}
-                  href={it.href}
-                  className={`relative px-5 py-2.5 text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
-                    active
-                      ? "text-pearl-100 bg-pearl-100/10"
-                      : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
-                  }`}
-                >
-                  {it.label}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-active-dot"
-                      className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-gold-400"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0">
-            {/* Lang dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setLangOpen(!langOpen)}
-                onBlur={() => setTimeout(() => setLangOpen(false), 150)}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-[15px] font-medium text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5 transition-colors"
+      {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-8 shadow-2xl shadow-black/40">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Logo — kattaroq, oq subtle ring bilan */}
+            <Link href="/" className="flex items-center gap-3 group shrink-0">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full ring-1 ring-pearl-100/20 group-hover:ring-pearl-100/40 transition-all" />
+                <Logo size={42} className="sm:w-12 sm:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+              </div>
+              <div
+                className="font-bold text-gold-400 text-lg sm:text-xl leading-none tracking-tight"
+                style={{ textShadow: "0 0 20px rgba(169, 29, 42, 0.35), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
               >
-                {langLabels[lang]}
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${langOpen ? "rotate-180" : ""}`} strokeWidth={2.5} />
-              </button>
-              <AnimatePresence>
-                {langOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-full mt-2 bg-onyx-900/95 backdrop-blur-xl border border-pearl-100/10 rounded-2xl overflow-hidden min-w-[90px] shadow-2xl"
+                ECO BASALT
+              </div>
+            </Link>
+
+            {/* Center nav — bir xil oraliqlar, kattaroq shrift */}
+            <nav className="hidden lg:flex items-center gap-1 mx-auto">
+              {navItems.map((it) => {
+                const active = isActive(it.href);
+                return (
+                  <Link
+                    key={it.href}
+                    href={it.href}
+                    className={`relative px-5 py-2.5 text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
+                      active
+                        ? "text-pearl-100 bg-pearl-100/10"
+                        : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
+                    }`}
                   >
-                    {(["uz", "ru", "en"] as Lang[]).map((l) => (
-                      <button
-                        key={l}
-                        onClick={() => { setLang(l); setLangOpen(false); }}
-                        className={`block w-full text-left px-4 py-2.5 text-sm font-medium ${
-                          l === lang ? "bg-gold-400 text-pearl-100" : "text-pearl-200 hover:bg-pearl-100/5"
-                        }`}
-                      >
-                        {langLabels[l]}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    {it.label}
+                    {active && (
+                      <motion.span
+                        layoutId="nav-active-dot"
+                        className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-gold-400"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right (pill ichida faqat lang dropdown qoladi) */}
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
+              <div className="relative">
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  onBlur={() => setTimeout(() => setLangOpen(false), 150)}
+                  className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-[15px] font-medium text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5 transition-colors"
+                >
+                  {langLabels[lang]}
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${langOpen ? "rotate-180" : ""}`} strokeWidth={2.5} />
+                </button>
+                <AnimatePresence>
+                  {langOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 top-full mt-2 bg-onyx-900/95 backdrop-blur-xl border border-pearl-100/10 rounded-2xl overflow-hidden min-w-[90px] shadow-2xl"
+                    >
+                      {(["uz", "ru", "en"] as Lang[]).map((l) => (
+                        <button
+                          key={l}
+                          onClick={() => { setLang(l); setLangOpen(false); }}
+                          className={`block w-full text-left px-4 py-2.5 text-sm font-medium ${
+                            l === lang ? "bg-gold-400 text-pearl-100" : "text-pearl-200 hover:bg-pearl-100/5"
+                          }`}
+                        >
+                          {langLabels[l]}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
 
-            <button onClick={() => showModal()} className="btn-solid-gold !py-2.5 !px-6 !text-sm">
-              {t(lang, "nav.apply")}
+            <button
+              className="lg:hidden text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5 transition-colors"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
             </button>
           </div>
-
-          <button
-            className="lg:hidden text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5 transition-colors"
-            onClick={() => setOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
         </div>
+
+        {/* CTA button — pill'dan TASHQARIDA, alohida element (Linear/Vercel pattern) */}
+        <button
+          onClick={() => showModal()}
+          className="hidden lg:inline-flex btn-solid-gold !py-3.5 !px-6 !text-sm shrink-0 h-16 sm:h-20 !rounded-full"
+        >
+          {t(lang, "nav.apply")}
+        </button>
       </div>
 
       {/* Mobile menu */}
