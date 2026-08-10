@@ -47,7 +47,7 @@ export default function Navbar() {
         scrolled || pathname !== "/" ? "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl" : "w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl"
       }`}
     >
-      <div className="bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full pl-5 sm:pl-8 pr-4 sm:pr-6 shadow-2xl shadow-black/40">
+      <div className="bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-10 shadow-2xl shadow-black/40">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo — kattaroq, oq subtle ring bilan */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
