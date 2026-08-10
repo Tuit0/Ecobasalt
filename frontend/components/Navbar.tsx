@@ -46,7 +46,7 @@ export default function Navbar() {
       className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl`}
     >
       {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-3 sm:gap-4">
         <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-8 shadow-2xl shadow-black/40">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo — kattaroq, oq subtle ring bilan */}
@@ -140,7 +140,7 @@ export default function Navbar() {
         {/* CTA button — pill'dan TASHQARIDA, alohida element (Linear/Vercel pattern) */}
         <button
           onClick={() => showModal()}
-          className="hidden lg:inline-flex btn-solid-gold !py-3.5 !px-6 !text-sm shrink-0 h-16 sm:h-20 !rounded-full"
+          className="hidden lg:inline-flex btn-solid-gold !py-3 !px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap"
         >
           {t(lang, "nav.apply")}
         </button>
