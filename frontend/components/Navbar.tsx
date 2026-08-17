@@ -43,11 +43,11 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl`}
+      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-7xl`}
     >
       {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
       <div className="flex items-center gap-3 sm:gap-4">
-        <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-8 shadow-2xl shadow-black/40">
+        <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-6 xl:px-8 shadow-2xl shadow-black/40">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo — kattaroq, oq subtle ring bilan */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
@@ -71,7 +71,7 @@ export default function Navbar() {
                   <Link
                     key={it.href}
                     href={it.href}
-                    className={`relative px-5 py-2.5 text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
+                    className={`relative px-3.5 xl:px-4 py-2.5 text-sm xl:text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
                       active
                         ? "text-pearl-100 bg-pearl-100/10"
                         : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
@@ -140,7 +140,7 @@ export default function Navbar() {
         {/* CTA button — pill'dan TASHQARIDA, alohida element (Linear/Vercel pattern) */}
         <button
           onClick={() => showModal()}
-          className="hidden lg:inline-flex btn-solid-gold !py-3 !px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap"
+          className="hidden lg:inline-flex btn-solid-gold !py-3 !px-5 xl:!px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap"
         >
           {t(lang, "nav.apply")}
         </button>
