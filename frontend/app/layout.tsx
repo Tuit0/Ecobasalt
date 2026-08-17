@@ -1,5 +1,12 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0c0a09',
+};
 import { LangProvider } from '@/lib/lang-context';
 import { ApplicationModalProvider } from '@/lib/application-modal';
 import { ChatProvider } from '@/lib/chat-context';

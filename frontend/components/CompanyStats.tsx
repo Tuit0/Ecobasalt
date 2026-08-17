@@ -88,7 +88,7 @@ export default function CompanyStats() {
   }));
 
   return (
-    <section id="company-stats" className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden border-y border-pearl-100/5">
+    <section id="company-stats" className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-950 relative overflow-hidden border-y border-pearl-100/5">
       <div className="orb orb-red w-[500px] h-[500px] top-0 -left-40 opacity-25" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -122,7 +122,7 @@ export default function CompanyStats() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: i * 0.08, duration: 0.6 }}
                 whileHover={{ y: -6 }}
-                className="group relative overflow-hidden bg-onyx-800/40 backdrop-blur-xl border border-pearl-100/10 hover:border-gold-400/40 rounded-3xl p-6 sm:p-8 text-center transition-all duration-500"
+                className="group relative overflow-hidden bg-onyx-800/40 backdrop-blur-xl border border-pearl-100/10 hover:border-gold-400/40 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center transition-all duration-500"
               >
                 {/* Yarim shaffof fon obyekt */}
                 <div
@@ -130,22 +130,22 @@ export default function CompanyStats() {
                   className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-gold-500/8 blur-3xl opacity-70 group-hover:opacity-100 transition-opacity pointer-events-none"
                 />
                 {/* Ikon: kattalashtirilgan, glass effekt */}
-                <div className="relative w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-gold-500/25 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-black/20">
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 lg:mb-5 rounded-2xl bg-gradient-to-br from-gold-500/25 to-gold-600/5 border border-gold-400/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-black/20">
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pearl-100/10 to-transparent pointer-events-none" />
-                  <Icon className="w-9 h-9 text-gold-400 relative" strokeWidth={1.6} />
+                  <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-9 lg:h-9 text-gold-400 relative" strokeWidth={1.6} />
                 </div>
                 {/* Raqam va birlik: birlik shrifti ~15-20% kichkina, NBSP wrap-siz */}
                 <div className="mb-2 flex items-baseline justify-center gap-2 flex-wrap">
-                  <span className="h-display text-3xl sm:text-4xl md:text-5xl text-pearl-100 group-hover:text-gradient-red transition-all leading-none whitespace-nowrap">
+                  <span className="h-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-pearl-100 group-hover:text-gradient-red transition-all leading-none whitespace-nowrap">
                     {s.value.replace(/ /g, " ")}
                   </span>
                   {s.unit && (
-                    <span className="h-display text-2xl sm:text-[1.75rem] md:text-3xl text-pearl-100/85 group-hover:text-gradient-red transition-all leading-none">
+                    <span className="h-display text-xl sm:text-2xl md:text-[1.75rem] lg:text-3xl text-pearl-100/85 group-hover:text-gradient-red transition-all leading-none">
                       {s.unit}
                     </span>
                   )}
                 </div>
-                <div className="text-pearl-300 text-xs sm:text-sm leading-snug">
+                <div className="text-pearl-300 text-[11px] sm:text-xs lg:text-sm leading-snug">
                   {s.label}
                 </div>
               </motion.div>

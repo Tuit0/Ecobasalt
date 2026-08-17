@@ -100,7 +100,7 @@ export default function ChatWidget() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 30, scale: 0.95 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-24 right-6 z-50 w-[400px] max-w-[calc(100vw-3rem)] h-[600px] max-h-[calc(100vh-9rem)] flex flex-col overflow-hidden rounded-3xl shadow-2xl shadow-black/50"
+          className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-3rem)] h-[600px] max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-9rem)] flex flex-col overflow-hidden rounded-3xl shadow-2xl shadow-black/50"
         >
           {/* Glass background */}
           <div className="absolute inset-0 bg-onyx-900/95 backdrop-blur-2xl border border-pearl-100/10 rounded-3xl" />

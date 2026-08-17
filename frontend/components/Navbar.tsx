@@ -48,15 +48,15 @@ export default function Navbar() {
       {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
       <div className="flex items-center gap-3 sm:gap-4">
         <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-6 xl:px-8 shadow-2xl shadow-black/40">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-14 sm:h-16 xl:h-20">
             {/* Logo — kattaroq, oq subtle ring bilan */}
-            <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full ring-1 ring-pearl-100/20 group-hover:ring-pearl-100/40 transition-all" />
-                <Logo size={42} className="sm:w-12 sm:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+                <Logo size={36} className="sm:w-11 sm:h-11 xl:w-12 xl:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
               </div>
               <div
-                className="font-bold text-gold-400 text-lg sm:text-xl leading-none tracking-tight"
+                className="font-bold text-gold-400 text-base sm:text-lg xl:text-xl leading-none tracking-tight"
                 style={{ textShadow: "0 0 20px rgba(169, 29, 42, 0.35), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
               >
                 ECO BASALT

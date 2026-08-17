@@ -64,7 +64,7 @@ export default function ApplicationModal() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-onyx-950/80 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-onyx-950/80 backdrop-blur-md"
           onClick={hide}
         >
           <motion.div
@@ -79,7 +79,7 @@ export default function ApplicationModal() {
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
 
             {/* Header */}
-            <div className="sticky top-0 bg-onyx-900/90 backdrop-blur-2xl border-b border-pearl-100/8 p-6 sm:p-7 flex items-start justify-between rounded-t-3xl z-10">
+            <div className="sticky top-0 bg-onyx-900/90 backdrop-blur-2xl border-b border-pearl-100/8 p-4 sm:p-6 lg:p-7 flex items-start justify-between rounded-t-3xl z-10">
               <div>
                 <span className="badge-pill mb-3">
                   <Sparkles className="w-3 h-3" strokeWidth={2} />
@@ -97,7 +97,7 @@ export default function ApplicationModal() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 sm:p-7 lg:p-8 space-y-5">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5">
               <div>
                 <label className="text-xs font-semibold text-pearl-300 mb-2 block">
                   {t(lang, "form.name")} *

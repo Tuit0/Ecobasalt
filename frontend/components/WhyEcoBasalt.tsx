@@ -66,7 +66,7 @@ export default function WhyEcoBasalt() {
   if (!visible) return null;
 
   return (
-    <section id="why-eco-basalt" className="py-20 sm:py-28 lg:py-32 bg-onyx-900 relative overflow-hidden">
+    <section id="why-eco-basalt" className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-900 relative overflow-hidden">
       <div className="absolute inset-0 gradient-mesh opacity-40" />
       <div className="orb orb-warm w-[600px] h-[600px] -top-40 -left-40 opacity-30" />
 

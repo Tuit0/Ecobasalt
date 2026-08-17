@@ -43,7 +43,7 @@ export default function FinalCTA() {
   const buttonLabel = lang === "uz" ? "Ariza qoldirish" : lang === "ru" ? "Оставить заявку" : "Submit request";
 
   return (
-    <section className="py-20 sm:py-28 lg:py-32 bg-onyx-950 relative overflow-hidden">
+    <section className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-950 relative overflow-hidden">
       {/* Bg image with red overlay */}
       <div className="absolute inset-0">
         <img
@@ -70,21 +70,21 @@ export default function FinalCTA() {
           className="max-w-4xl mx-auto text-center"
         >
           {/* Title — white, no gradient */}
-          <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 text-balance leading-tight">
+          <h2 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 sm:mb-6 lg:mb-8 text-balance leading-tight">
             {title}
           </h2>
 
           {/* Subtitle */}
-          <p className="text-pearl-200 text-base sm:text-lg md:text-xl mb-10 sm:mb-12 leading-relaxed max-w-2xl mx-auto whitespace-pre-line">
+          <p className="text-pearl-200 text-sm sm:text-base md:text-lg lg:text-xl mb-8 sm:mb-10 lg:mb-12 leading-relaxed max-w-2xl mx-auto whitespace-pre-line">
             {subtitle}
           </p>
 
           {/* Single centered CTA button */}
-          <div className="flex justify-center mb-10 sm:mb-12">
+          <div className="flex justify-center mb-8 sm:mb-10 lg:mb-12">
             <MagneticButton strength={0.3}>
-              <button onClick={() => showModal()} className="btn-solid-gold !text-base !py-4 !px-9 group">
+              <button onClick={() => showModal()} className="btn-solid-gold !text-sm sm:!text-base !py-3.5 sm:!py-4 !px-7 sm:!px-9 group">
                 {buttonLabel}
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </button>
             </MagneticButton>
           </div>
@@ -95,7 +95,7 @@ export default function FinalCTA() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3 text-pearl-200 text-sm sm:text-base"
+            className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 lg:gap-x-10 gap-y-2 sm:gap-y-3 text-pearl-200 text-xs sm:text-sm lg:text-base px-4"
           >
             {perks.map((p, i) => (
               <div key={i} className="flex items-center gap-2">

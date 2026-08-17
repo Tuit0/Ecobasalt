@@ -67,6 +67,24 @@ body {
   overflow-x: hidden;
   letter-spacing: -0.014em;
   font-feature-settings: "ss01", "cv11";  /* Inter premium variants */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal scroll from any absolute-positioned decorations */
+main, footer, header, section {
+  max-width: 100vw;
+}
+
+/* Better touch targets on mobile */
+@media (max-width: 640px) {
+  button, a[role="button"] {
+    min-height: 44px;  /* iOS accessibility minimum */
+  }
 }
 
 /* Industrial Display Typography — Inter Tight, premium engineering feel */

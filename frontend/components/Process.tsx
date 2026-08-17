@@ -69,7 +69,7 @@ export default function Process() {
   if (!visible) return null;
 
   return (
-    <section id="process" className="py-20 sm:py-28 lg:py-32 relative bg-onyx-950 overflow-hidden">
+    <section id="process" className="py-14 sm:py-20 lg:py-28 xl:py-32 relative bg-onyx-950 overflow-hidden">
       {/* Animated background mesh */}
       <div className="absolute inset-0 gradient-mesh opacity-60" />
       <div className="orb orb-red w-[600px] h-[600px] -top-40 -right-40 opacity-40" />

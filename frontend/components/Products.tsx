@@ -39,7 +39,7 @@ export default function Products() {
   if (!visible) return null;
 
   return (
-    <section id="products" className="py-20 sm:py-28 lg:py-32 bg-onyx-950">
+    <section id="products" className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">

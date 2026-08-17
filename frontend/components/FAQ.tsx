@@ -26,7 +26,7 @@ export default function FAQ() {
   if (!visible) return null;
 
   return (
-    <section id="faq" className="py-20 sm:py-28 lg:py-32 bg-onyx-900 relative overflow-hidden">
+    <section id="faq" className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-900 relative overflow-hidden">
       <div className="orb orb-warm w-[500px] h-[500px] -left-40 top-1/3 opacity-30" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

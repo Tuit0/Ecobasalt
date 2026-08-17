@@ -73,7 +73,7 @@ export default function Industries() {
   if (!visible) return null;
 
   return (
-    <section className="py-20 sm:py-28 lg:py-32 bg-onyx-900 relative overflow-hidden">
+    <section className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-900 relative overflow-hidden">
       <div className="absolute inset-0 gradient-mesh opacity-40" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -134,11 +134,11 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-16 sm:pt-36 sm:pb-24"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-24"
       >
         <div className="max-w-4xl">
           {/* Title — 2 lines, solid white with backing gradient for readability */}
-          <h1 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-8 sm:mb-10 text-balance text-shadow whitespace-pre-line leading-[1.05]">
+          <h1 className="h-display text-pearl-100 text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 lg:mb-10 text-balance text-shadow whitespace-pre-line leading-[1.05]">
             {title.split("\n").map((line, i) => (
               <motion.span
                 key={i}
@@ -157,9 +157,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-10 sm:mb-14 max-w-2xl"
+            className="mb-8 sm:mb-12 lg:mb-14 max-w-2xl"
           >
-            <p className="inline-block text-pearl-50 text-lg sm:text-xl md:text-2xl leading-relaxed font-medium bg-gradient-to-b from-onyx-400/45 via-onyx-500/50 to-onyx-500/45 rounded-2xl px-5 sm:px-7 py-4 sm:py-5 text-shadow">
+            <p className="inline-block text-pearl-50 text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed font-medium bg-gradient-to-b from-onyx-400/45 via-onyx-500/50 to-onyx-500/45 rounded-2xl px-4 sm:px-6 lg:px-7 py-3 sm:py-4 lg:py-5 text-shadow">
               {subtitle}
             </p>
           </motion.div>
@@ -169,7 +169,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0, duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 max-w-5xl"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-5xl"
           >
             {[
               { href: "/products?cat=thermal",     Icon: Factory, title: t(lang, "hero.cta_thermal"),     desc: t(lang, "hero.cta_thermal_desc") },

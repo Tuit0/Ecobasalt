@@ -30,13 +30,13 @@ export default function Footer() {
     : ["Uzbekistan, Namangan Region", "Chust District, Chust", "Gulzor St., 247"];
 
   return (
-    <footer className="bg-onyx-950 pt-16 sm:pt-20 pb-8 border-t border-pearl-100/5 relative overflow-hidden">
+    <footer className="bg-onyx-950 pt-12 sm:pt-16 lg:pt-20 pb-6 sm:pb-8 border-t border-pearl-100/5 relative overflow-hidden">
       <div className="absolute inset-0 gradient-mesh opacity-30" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 mb-12 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 mb-8 sm:mb-12 items-start">
           {/* Brand — kattaroq logo, o'ng ustunlar textiga nisbatan tik markazga joylashgan */}
-          <div className="md:col-span-4 flex justify-center md:self-center">
+          <div className="sm:col-span-2 md:col-span-4 flex justify-center md:self-center">
             <Link href="/" className="flex flex-col items-center gap-4 group">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full ring-2 ring-pearl-100/25 group-hover:ring-pearl-100/45 transition-all" />
@@ -118,9 +118,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-pearl-100/5 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-pearl-300">
+        <div className="pt-6 border-t border-pearl-100/5 flex flex-col md:flex-row justify-between items-center gap-3 text-[11px] sm:text-xs text-pearl-300 text-center md:text-left">
           <div>© {new Date().getFullYear()} ECO BASALT — {t(lang, "footer.rights")}</div>
-          <div className="font-medium flex items-center gap-1.5">
+          <div className="font-medium flex items-center gap-1.5 flex-wrap justify-center">
             <span>Made in Uzbekistan 🇺🇿</span>
             <span className="text-pearl-300/60">·</span>
             <span>{lang === "ru" ? "Разработано" : lang === "en" ? "Built by" : "Ishlab chiqildi"}</span>
