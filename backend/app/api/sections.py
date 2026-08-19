@@ -42,6 +42,7 @@ KNOWN_SECTIONS = [
     "about",
     "company_stats",
     "why_eco_basalt",
+    "directions",
 ]
 
 

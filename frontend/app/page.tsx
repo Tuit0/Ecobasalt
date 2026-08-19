@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import Directions from "@/components/Directions";
 import TrustBar from "@/components/TrustBar";
 import Features from "@/components/Features";
 import CompanyStats from "@/components/CompanyStats";
@@ -10,6 +11,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <Directions />
       <TrustBar />
       <Features />
       <CompanyStats />

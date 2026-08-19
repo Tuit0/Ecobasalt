@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowRight, Factory, Sprout, Layers3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -120,15 +120,11 @@ export default function Hero() {
           </motion.div>
         )}
 
-        {/* Cinematic overlay — 3 qatlamli scrim (yorug' rasmda ham matn o'qish uchun) */}
-        {/* 1. Umumiy dark tint */}
-        <div className="absolute inset-0 bg-onyx-950/25" />
-        {/* 2. Chapdan o'ngga gradient — content chap tomonda joylashgan, chap tomon quyuqroq */}
-        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950/75 via-onyx-950/35 to-transparent" />
-        {/* 3. Pastki cinematic scrim */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 lg:h-1/2 bg-gradient-to-b from-transparent via-onyx-950/60 to-onyx-950" />
-        {/* 4. Tepa (navbar) qismi darker */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-onyx-950/60 to-transparent" />
+        {/* Cinematic overlay — MINIMAL: rasm dominant qoladi */}
+        {/* Faqat pastki 60% da yumshoq gradient — kontent joyi */}
+        <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-b from-transparent via-onyx-950/50 to-onyx-950/95" />
+        {/* Nozik tepa darken — faqat navbar joyi */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-onyx-950/40 to-transparent" />
       </div>
 
       {/* Subtle accent orbs */}
@@ -140,17 +136,31 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="max-w-7xl w-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16"
+        className="max-w-7xl w-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-28 pb-14 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24"
       >
-        <div className="max-w-4xl">
-          {/* Title — 2 lines, solid white with backing gradient for readability */}
-          <h1 className="h-display text-pearl-100 text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-7xl mb-4 sm:mb-6 lg:mb-8 text-balance text-shadow whitespace-pre-line leading-[1.05]">
+        <div className="max-w-3xl">
+          {/* Eyebrow — kichkina qizil label, luxury feel */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.8 }}
+            className="mb-5 sm:mb-6"
+          >
+            <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-gold-400">
+              <span className="w-8 h-px bg-gold-400" />
+              ECO BASALT
+            </span>
+          </motion.div>
+
+          {/* Title — clean, elegant, no gradient boxes */}
+          <h1 className="h-display text-pearl-50 text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-[76px] mb-5 sm:mb-6 lg:mb-7 text-balance whitespace-pre-line leading-[1.02] tracking-tight"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 4px 40px rgba(0,0,0,0.4)" }}>
             {title.split("\n").map((line, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.3 + i * 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="block"
               >
                 {line}
@@ -158,58 +168,41 @@ export default function Hero() {
             ))}
           </h1>
 
-          {/* Subtitle — semi-transparent dark backing pill for readability */}
-          <motion.div
+          {/* Subtitle — clean text, no box, subtle shadow */}
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 sm:mb-8 lg:mb-10 max-w-2xl"
+            transition={{ delay: 0.85, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-pearl-100 text-base sm:text-lg lg:text-xl leading-relaxed max-w-xl mb-8 sm:mb-10 lg:mb-12 font-normal"
+            style={{ textShadow: "0 1px 12px rgba(0,0,0,0.9), 0 2px 24px rgba(0,0,0,0.6)" }}
           >
-            <p className="inline-block text-pearl-50 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-medium bg-gradient-to-b from-onyx-400/45 via-onyx-500/50 to-onyx-500/45 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-shadow">
-              {subtitle}
-            </p>
-          </motion.div>
+            {subtitle}
+          </motion.p>
 
-          {/* Three product CTAs — oq shaffof stil, bir xil ko'rinish */}
+          {/* Single primary CTA — Tesla/Apple stili */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0, duration: 0.6 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-5xl"
+            transition={{ delay: 1.05, duration: 0.6 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
           >
-            {[
-              { href: "/products?cat=thermal",     Icon: Factory, title: t(lang, "hero.cta_thermal"),     desc: t(lang, "hero.cta_thermal_desc") },
-              { href: "/products?cat=hydroponics", Icon: Sprout,  title: t(lang, "hero.cta_hydroponics"), desc: t(lang, "hero.cta_hydroponics_desc") },
-              { href: "/products?cat=panels",      Icon: Layers3, title: t(lang, "hero.cta_panels"),      desc: t(lang, "hero.cta_panels_desc") },
-            ].map((c, i) => {
-              const Icon = c.Icon;
-              return (
-                <MagneticButton key={i} strength={0.1}>
-                  <Link
-                    href={c.href}
-                    className="group block px-5 sm:px-6 py-5 sm:py-6 rounded-3xl bg-pearl-100/8 hover:bg-pearl-100/14 border border-pearl-100/18 hover:border-pearl-100/35 transition-all duration-300 w-full text-left h-full"
-                  >
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-pearl-100/12 border border-pearl-100/20 flex items-center justify-center group-hover:bg-pearl-100/20 group-hover:scale-105 transition-all">
-                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-pearl-50" strokeWidth={1.8} />
-                      </div>
-                      <div className="flex-1 min-w-0 pt-0.5">
-                        <div className="text-pearl-50 font-bold text-base sm:text-lg leading-tight">
-                          {c.title}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-pearl-200 text-xs sm:text-sm leading-snug mb-4 min-h-[2.5rem]">
-                      {c.desc}
-                    </p>
-                    <div className="text-pearl-100 font-semibold text-xs sm:text-sm flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                      {t(lang, "hero.cta_view_catalog")}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
-                    </div>
-                  </Link>
-                </MagneticButton>
-              );
-            })}
+            <MagneticButton strength={0.2}>
+              <Link
+                href="/products"
+                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-4 sm:py-4 rounded-full bg-pearl-50 hover:bg-pearl-100 text-onyx-900 font-semibold text-sm sm:text-base transition-all duration-300 shadow-xl shadow-black/40 hover:shadow-2xl hover:shadow-black/60 whitespace-nowrap"
+              >
+                {t(lang, "hero.cta_secondary")}
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1.5 transition-transform" strokeWidth={2.5} />
+              </Link>
+            </MagneticButton>
+            <MagneticButton strength={0.2}>
+              <button
+                onClick={() => showModal()}
+                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-4 sm:py-4 rounded-full bg-transparent hover:bg-pearl-100/10 text-pearl-50 font-semibold text-sm sm:text-base border border-pearl-100/40 hover:border-pearl-100/70 transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
+              >
+                {t(lang, "hero.cta_primary")}
+              </button>
+            </MagneticButton>
           </motion.div>
         </div>
       </motion.div>
