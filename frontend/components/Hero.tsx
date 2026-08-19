@@ -120,9 +120,15 @@ export default function Hero() {
           </motion.div>
         )}
 
-        {/* Cinematic overlay — content ostiga qora scrim, tepada navbar uchun subtle darken */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 lg:h-1/3 bg-gradient-to-b from-transparent via-onyx-950/70 to-onyx-950" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-onyx-950/50 to-transparent" />
+        {/* Cinematic overlay — 3 qatlamli scrim (yorug' rasmda ham matn o'qish uchun) */}
+        {/* 1. Umumiy dark tint */}
+        <div className="absolute inset-0 bg-onyx-950/25" />
+        {/* 2. Chapdan o'ngga gradient — content chap tomonda joylashgan, chap tomon quyuqroq */}
+        <div className="absolute inset-0 bg-gradient-to-r from-onyx-950/75 via-onyx-950/35 to-transparent" />
+        {/* 3. Pastki cinematic scrim */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 lg:h-1/2 bg-gradient-to-b from-transparent via-onyx-950/60 to-onyx-950" />
+        {/* 4. Tepa (navbar) qismi darker */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-onyx-950/60 to-transparent" />
       </div>
 
       {/* Subtle accent orbs */}
@@ -134,7 +140,7 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 w-full"
+        className="max-w-7xl w-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16"
       >
         <div className="max-w-4xl">
           {/* Title — 2 lines, solid white with backing gradient for readability */}
