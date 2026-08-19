@@ -76,7 +76,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden bg-onyx-900"
+      className="relative hero-fullscreen min-h-[560px] flex items-end lg:items-center overflow-hidden bg-onyx-900"
     >
       {/* Background image carousel — cross-fade + slow zoom-in (no reverse) */}
       <div className="absolute inset-0">
@@ -120,9 +120,9 @@ export default function Hero() {
           </motion.div>
         )}
 
-        {/* Minimal overlay — faqat pastki vignette (Navbar va keyingi bo'lim bilan smooth o'tish) */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-onyx-950" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-onyx-950/40 to-transparent" />
+        {/* Cinematic overlay — content ostiga qora scrim, tepada navbar uchun subtle darken */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 lg:h-1/3 bg-gradient-to-b from-transparent via-onyx-950/70 to-onyx-950" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-onyx-950/50 to-transparent" />
       </div>
 
       {/* Subtle accent orbs */}
@@ -134,7 +134,7 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-24"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-24 pb-10 sm:pt-28 sm:pb-14 lg:pt-32 lg:pb-20 w-full"
       >
         <div className="max-w-4xl">
           {/* Title — 2 lines, solid white with backing gradient for readability */}
@@ -227,12 +227,12 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — faqat lg+ da (mobile'da content bilan overlap qilmasin) */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-pearl-300 z-10"
+        className="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-pearl-300 z-10"
       >
         <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t(lang, "hero.scroll")}</span>
         <motion.div
