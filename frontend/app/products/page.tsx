@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Products from "@/components/Products";
 import Comparison from "@/components/Comparison";
 
@@ -14,7 +15,9 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <div className="pt-20">
-      <Products />
+      <Suspense fallback={<div className="min-h-screen" />}>
+        <Products />
+      </Suspense>
       <Comparison />
     </div>
   );

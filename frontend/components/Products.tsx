@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Package, Sparkles } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
@@ -27,9 +28,33 @@ type Product = {
 export default function Products() {
   const { lang } = useLang();
   const visible = useSectionVisible("products");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const { data: categories = [] } = useSWR<Category[]>("/api/products/categories", fetcher);
   const { data: products = [] } = useSWR<Product[]>("/api/products", fetcher);
-  const [active, setActive] = useState<string>("all");
+
+  // URL'dan `?cat=` ni o'qish (masalan /products?cat=thermal)
+  const urlCat = searchParams?.get("cat") || "all";
+  const [active, setActive] = useState<string>(urlCat);
+
+  // URL o'zgarganda state ham yangilanadi (navbar tab click)
+  useEffect(() => {
+    setActive(urlCat);
+  }, [urlCat]);
+
+  // Filter buttonini bosganda URL ham yangilanadi
+  const handleFilter = (slug: string) => {
+    setActive(slug);
+    const params = new URLSearchParams(searchParams?.toString());
+    if (slug === "all") {
+      params.delete("cat");
+    } else {
+      params.set("cat", slug);
+    }
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : (pathname || "/products"), { scroll: false });
+  };
 
   const filtered = active === "all" ? products : products.filter((p) => {
     const cat = categories.find((c) => c.slug === active);
@@ -70,7 +95,7 @@ export default function Products() {
         {/* Filter chips */}
         <div className="flex flex-wrap gap-2 mb-10 sm:mb-12">
           <button
-            onClick={() => setActive("all")}
+            onClick={() => handleFilter("all")}
             className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap ${
               active === "all"
                 ? "bg-gold-400 text-pearl-100"
@@ -82,7 +107,7 @@ export default function Products() {
           {categories.map((c) => (
             <button
               key={c.slug}
-              onClick={() => setActive(c.slug)}
+              onClick={() => handleFilter(c.slug)}
               className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap ${
                 active === c.slug
                   ? "bg-gold-400 text-pearl-100"

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import useSWR, { mutate } from "swr";
-import { Save, Loader2, Edit2 } from "lucide-react";
+import { Save, Loader2, Edit2, Upload, Image as ImageIcon, X } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import { fetcher, api } from "@/lib/api";
+import { fetcher, api, uploadFile } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
 
@@ -42,7 +42,7 @@ function ContentInner() {
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-mono text-brand-400 mb-1">{b.key}</div>
                     <div className="text-slate-300 text-sm">
-                      <BlockPreview value={b.value} />
+                      <BlockPreview value={b.value} blockType={b.block_type} blockKey={b.key} />
                     </div>
                   </div>
                   <button onClick={() => setEditing(b)} className="btn-secondary !py-1.5 !px-3 flex-shrink-0">
@@ -61,8 +61,20 @@ function ContentInner() {
   );
 }
 
-function BlockPreview({ value }: { value: any }) {
-  if (value == null) return <span className="text-slate-600 italic">—</span>;
+function BlockPreview({ value, blockType, blockKey }: { value: any; blockType?: string; blockKey?: string }) {
+  const isImage = blockType === "image" || (blockKey && /(image|bg_image|photo|logo|banner)$/i.test(blockKey));
+  if (value == null || value === "") {
+    if (isImage) return <span className="text-slate-600 italic text-xs">(rasm yuklanmagan)</span>;
+    return <span className="text-slate-600 italic">—</span>;
+  }
+  if (isImage && typeof value === "string") {
+    return (
+      <div className="flex items-center gap-3">
+        <img src={value} alt="" className="w-16 h-16 object-cover rounded-lg border border-slate-800" />
+        <span className="text-slate-400 text-xs truncate max-w-md">{value}</span>
+      </div>
+    );
+  }
   if (typeof value === "string") return <>{value.length > 200 ? value.slice(0, 200) + "..." : value}</>;
   if (typeof value === "number") return <>{value}</>;
   if (typeof value === "object" && (value.uz || value.ru || value.en)) {
@@ -75,10 +87,12 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
   const { lang } = useLang();
   const [value, setValue] = useState<any>(block.value);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => { setValue(block.value); }, [block]);
 
-  const isMultilang = block.block_type === "multilang" || (block.value && typeof block.value === "object" && (block.value.uz != null || block.value.ru != null || block.value.en != null));
+  const isImage = block.block_type === "image" || /(image|bg_image|photo|logo|banner)$/i.test(block.key);
+  const isMultilang = !isImage && (block.block_type === "multilang" || (block.value && typeof block.value === "object" && (block.value.uz != null || block.value.ru != null || block.value.en != null)));
 
   const save = async () => {
     setSaving(true);
@@ -96,16 +110,65 @@ function EditModal({ block, onClose }: { block: Block; onClose: () => void }) {
     }
   };
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const res = await uploadFile(file);
+      setValue(res.url);
+    } catch (err) {
+      alert(t(lang, "common.error") + ": " + (err as Error).message);
+    }
+    setUploading(false);
+    e.target.value = "";
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
       <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-slate-800">
           <div className="text-xs font-mono text-brand-400">{block.key}</div>
           <h3 className="text-xl font-semibold text-white mt-1">{t(lang, "content.edit_block")}</h3>
-          <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{block.section} · {block.block_type}</div>
+          <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{block.section} · {isImage ? "image" : block.block_type}</div>
         </div>
         <div className="p-6 space-y-4">
-          {isMultilang ? (
+          {isImage ? (
+            <div>
+              <label className="label">Rasm (URL yoki fayl yuklash)</label>
+              {value && typeof value === "string" && value !== "" && (
+                <div className="mb-3 relative inline-block">
+                  <img src={value} alt="" className="max-w-full max-h-64 rounded-lg border border-slate-800" />
+                  <button
+                    onClick={() => setValue("")}
+                    className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg"
+                    title="Rasmni olib tashlash"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row gap-3 mb-3">
+                <label className="btn-secondary cursor-pointer inline-flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  {uploading ? t(lang, "common.uploading") : (value ? "Almashtirish" : "Fayl yuklash")}
+                  <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+                </label>
+              </div>
+              <label className="label mt-4">yoki URL kiriting</label>
+              <input
+                type="url"
+                className="input font-mono text-xs"
+                placeholder="https://... yoki /media/..."
+                value={typeof value === "string" ? value : ""}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              <p className="text-xs text-slate-500 mt-2">
+                <ImageIcon className="w-3 h-3 inline mr-1" />
+                JPG, PNG, WebP · 1920×1080 tavsiya etiladi
+              </p>
+            </div>
+          ) : isMultilang ? (
             <>
               {(["uz", "ru", "en"] as const).map((l) => (
                 <div key={l}>

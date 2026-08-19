@@ -47,7 +47,11 @@ export default function Navbar() {
     >
       {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
       <div className="flex items-center gap-3 sm:gap-4">
-        <div className="flex-1 min-w-0 bg-onyx-900/75 backdrop-blur-xl border border-pearl-100/12 rounded-full px-5 sm:px-6 xl:px-8 shadow-2xl shadow-black/40">
+        <div className={`flex-1 min-w-0 rounded-full px-5 sm:px-6 xl:px-8 backdrop-blur-md transition-all duration-500 ${
+          scrolled || pathname !== "/"
+            ? "bg-onyx-900/70 border border-pearl-100/10 shadow-2xl shadow-black/40"
+            : "bg-onyx-900/25 border border-pearl-100/8 shadow-lg shadow-black/20"
+        }`}>
           <div className="flex items-center justify-between h-14 sm:h-16 xl:h-20">
             {/* Logo — kattaroq, oq subtle ring bilan */}
             <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
@@ -140,7 +144,9 @@ export default function Navbar() {
         {/* CTA button — pill'dan TASHQARIDA, alohida element (Linear/Vercel pattern) */}
         <button
           onClick={() => showModal()}
-          className="hidden lg:inline-flex btn-solid-gold !py-3 !px-5 xl:!px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap"
+          className={`hidden lg:inline-flex btn-solid-gold !py-3 !px-5 xl:!px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap transition-all duration-500 ${
+            scrolled || pathname !== "/" ? "!shadow-2xl !shadow-gold-500/30" : "!shadow-xl !shadow-black/30"
+          }`}
         >
           {t(lang, "nav.apply")}
         </button>

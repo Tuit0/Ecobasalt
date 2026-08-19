@@ -55,7 +55,10 @@ DEFAULT_CONTENT = [
      "value": {"uz": "Biz bozorning zamonaviy talablariga javob beradigan sifatli, ekologik toza va energiya samarali mahsulot ishlab chiqaramiz. Ishlab chiqarishni rivojlantirish, zamonaviy texnologiyalarni joriy etish va hamkorlar bilan uzoq muddatli hamkorlik ECO BASALT faoliyatining asosini tashkil etadi.",
                "ru": "Мы выпускаем качественную, экологичную и энергоэффективную продукцию, соответствующую современным требованиям рынка. Развитие производства, внедрение современных технологий и долгосрочное сотрудничество с партнёрами лежат в основе деятельности ECO BASALT.",
                "en": "We produce quality, environmentally friendly and energy-efficient products that meet the modern demands of the market. Developing production, implementing modern technology and long-term cooperation with partners form the core of ECO BASALT's operations."}},
-    {"key": "about.image", "section": "about", "label": "About — korxona rasmi (URL)", "block_type": "text", "value": ""},
+    {"key": "about.image", "section": "about", "label": "About — korxona rasmi (URL)", "block_type": "image", "value": ""},
+
+    # FinalCTA (pastdagi "Готовы к сотрудничеству?" bloki)
+    {"key": "final_cta.bg_image", "section": "final_cta", "label": "FinalCTA — orqa fon rasmi (URL)", "block_type": "image", "value": ""},
 
     # Stats
     {"key": "stats.years", "section": "stats", "label": "Statistika — Yillar (raqam)", "block_type": "text", "value": "15"},

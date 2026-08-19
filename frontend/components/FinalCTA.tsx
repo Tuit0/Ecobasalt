@@ -1,16 +1,23 @@
 "use client";
+import useSWR from "swr";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { useApplicationModal } from "@/lib/application-modal";
 import { useSectionVisible } from "@/lib/section-visibility";
+import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import MagneticButton from "./MagneticButton";
 import CursorGradient from "./CursorGradient";
+
+const DEFAULT_BG = "https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1920&q=85&auto=format&fit=crop";
 
 export default function FinalCTA() {
   const { lang } = useLang();
   const visible = useSectionVisible("final_cta");
   const { show: showModal } = useApplicationModal();
+  const { data } = useSWR("/api/content/blocks?section=final_cta", fetcher);
+  const blocks = blocksToMap(data || []);
+  const bgImage = pickLang(blocks["final_cta.bg_image"], lang) || DEFAULT_BG;
 
   if (!visible) return null;
 
@@ -47,7 +54,7 @@ export default function FinalCTA() {
       {/* Bg image with red overlay */}
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1920&q=85&auto=format&fit=crop"
+          src={bgImage}
           alt=""
           className="w-full h-full object-cover opacity-25"
         />
