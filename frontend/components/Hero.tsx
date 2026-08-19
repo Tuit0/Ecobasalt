@@ -76,7 +76,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="home"
-      className="relative hero-fullscreen min-h-[560px] flex items-end lg:items-center overflow-hidden bg-onyx-900"
+      className="relative hero-fullscreen min-h-[600px] flex items-end overflow-hidden bg-onyx-900"
     >
       {/* Background image carousel — cross-fade + slow zoom-in (no reverse) */}
       <div className="absolute inset-0">
@@ -134,11 +134,11 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-24 pb-10 sm:pt-28 sm:pb-14 lg:pt-32 lg:pb-20 w-full"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 w-full"
       >
         <div className="max-w-4xl">
           {/* Title — 2 lines, solid white with backing gradient for readability */}
-          <h1 className="h-display text-pearl-100 text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 lg:mb-10 text-balance text-shadow whitespace-pre-line leading-[1.05]">
+          <h1 className="h-display text-pearl-100 text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-7xl mb-4 sm:mb-6 lg:mb-8 text-balance text-shadow whitespace-pre-line leading-[1.05]">
             {title.split("\n").map((line, i) => (
               <motion.span
                 key={i}
@@ -157,9 +157,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-8 sm:mb-12 lg:mb-14 max-w-2xl"
+            className="mb-6 sm:mb-8 lg:mb-10 max-w-2xl"
           >
-            <p className="inline-block text-pearl-50 text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed font-medium bg-gradient-to-b from-onyx-400/45 via-onyx-500/50 to-onyx-500/45 rounded-2xl px-4 sm:px-6 lg:px-7 py-3 sm:py-4 lg:py-5 text-shadow">
+            <p className="inline-block text-pearl-50 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-medium bg-gradient-to-b from-onyx-400/45 via-onyx-500/50 to-onyx-500/45 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-shadow">
               {subtitle}
             </p>
           </motion.div>
@@ -227,20 +227,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator — faqat lg+ da (mobile'da content bilan overlap qilmasin) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 0.6 }}
-        className="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-pearl-300 z-10"
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t(lang, "hero.scroll")}</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="w-px h-8 bg-gold-400"
-        />
-      </motion.div>
+      {/* Scroll indicator olib tashlandi — content 3 CTA karta bilan allaqachon jonli, indicator ortiqcha */}
     </section>
   );
 }
