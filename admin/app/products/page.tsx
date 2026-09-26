@@ -30,6 +30,12 @@ type Product = {
   short_uz: string;
   short_ru: string;
   short_en: string;
+  advantages_uz: string[];
+  advantages_ru: string[];
+  advantages_en: string[];
+  applications_uz: string[];
+  applications_ru: string[];
+  applications_en: string[];
   cover_image: string;
   gallery: string[];
   specs: Record<string, string>;
@@ -52,6 +58,12 @@ const EMPTY_PRODUCT: Partial<Product> = {
   short_uz: "",
   short_ru: "",
   short_en: "",
+  advantages_uz: [],
+  advantages_ru: [],
+  advantages_en: [],
+  applications_uz: [],
+  applications_ru: [],
+  applications_en: [],
   cover_image: "",
   gallery: [],
   specs: {},
@@ -73,8 +85,16 @@ export default function ProductsPage() {
   async function saveProduct() {
     if (!editing) return;
     const isNew = !editing.id;
+    // Afzalliklar / qo'llanish sohasi: bo'sh qatorlarni tashlab yuboramiz
+    const lists: Record<string, string[]> = {};
+    for (const f of ["advantages", "applications"])
+      for (const l of ["uz", "ru", "en"]) {
+        const k = `${f}_${l}`;
+        lists[k] = (((editing as any)[k] || []) as string[]).map((x) => x.trim()).filter(Boolean);
+      }
     const payload = {
       ...editing,
+      ...lists,
       specs: editing.specs || {},
       gallery: editing.gallery || [],
     };
@@ -363,6 +383,20 @@ function ProductEditModal({
               onChange={(e) => onChange({ ...value, [`description_${lang}`]: e.target.value })}
             />
           </div>
+
+          {(["advantages", "applications"] as const).map((field) => (
+            <div key={field}>
+              <label className="text-sm text-zinc-400 mb-1 block">
+                {t(uiLang, `products.${field}`)} ({lang}) — <span className="text-zinc-500">{t(uiLang, "products.one_per_line")}</span>
+              </label>
+              <textarea
+                className="input"
+                rows={5}
+                value={((value as any)[`${field}_${lang}`] || []).join("\n")}
+                onChange={(e) => onChange({ ...value, [`${field}_${lang}`]: e.target.value.split("\n") })}
+              />
+            </div>
+          ))}
 
           <div>
             <label className="text-sm text-zinc-400 mb-2 block">{t(uiLang, "common.image")}</label>

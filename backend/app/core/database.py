@@ -53,6 +53,16 @@ async def init_db():
                 await conn.exec_driver_sql("ALTER TABLE projects ADD COLUMN slug VARCHAR(160)")
                 log.info("✅ Migration: projects.slug column qo'shildi")
 
+            # products: afzalliklar va qo'llanish sohasi (ko'p tilli ro'yxatlar)
+            res = await conn.exec_driver_sql("PRAGMA table_info(products)")
+            cols = [row[1] for row in res.fetchall()]
+            for field in ("advantages", "applications"):
+                for lng in ("uz", "ru", "en"):
+                    col = f"{field}_{lng}"
+                    if col not in cols:
+                        await conn.exec_driver_sql(f"ALTER TABLE products ADD COLUMN {col} JSON")
+                        log.info(f"✅ Migration: products.{col} column qo'shildi")
+
     log.info("✅ Database tayyor")
 
     # Default admin va boshlang'ich kontent

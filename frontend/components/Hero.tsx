@@ -4,13 +4,12 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { fetcher, blocksToMap, pickLang } from "@/lib/api";
 import { t } from "@/lib/i18n";
-import { useApplicationModal } from "@/lib/application-modal";
 import CursorGradient from "./CursorGradient";
-import MagneticButton from "./MagneticButton";
+import { ThermalIcon, HydroponicsIcon, PanelsIcon } from "./BrandIcons";
 
 type HeroSlide = {
   id: number;
@@ -21,13 +20,17 @@ type HeroSlide = {
 
 export default function Hero() {
   const { lang } = useLang();
-  const { show: showModal } = useApplicationModal();
   const { data } = useSWR("/api/content/blocks?section=hero", fetcher);
   const blocks = blocksToMap(data || []);
 
   const title = pickLang(blocks["hero.title"], lang) || t(lang, "hero.title");
   const subtitle = pickLang(blocks["hero.subtitle"], lang) || t(lang, "hero.subtitle");
-  const eyebrow = pickLang(blocks["hero.eyebrow"], lang) || t(lang, "hero.eyebrow");
+
+  const directions = [
+    { href: "/products?cat=thermal", Icon: ThermalIcon, title: t(lang, "hero.cta_thermal"), desc: t(lang, "hero.cta_thermal_desc") },
+    { href: "/products?cat=hydroponics", Icon: HydroponicsIcon, title: t(lang, "hero.cta_hydroponics"), desc: t(lang, "hero.cta_hydroponics_desc") },
+    { href: "/products?cat=panels", Icon: PanelsIcon, title: t(lang, "hero.cta_panels"), desc: t(lang, "hero.cta_panels_desc") },
+  ];
 
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
@@ -76,7 +79,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="home"
-      className="relative hero-fullscreen min-h-[600px] flex items-end overflow-hidden bg-onyx-900"
+      className="relative min-h-svh flex items-end overflow-hidden bg-onyx-900"
     >
       {/* Background image carousel — cross-fade + slow zoom-in (no reverse) */}
       <div className="absolute inset-0">
@@ -136,79 +139,81 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity }}
-        className="max-w-7xl w-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-28 pb-14 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24"
+        className="max-w-[1500px] w-full mx-auto px-5 sm:px-8 lg:px-12 relative z-10 pt-28 pb-10 sm:pt-32 sm:pb-12 lg:pt-36 lg:pb-14"
       >
-        <div className="max-w-3xl">
-          {/* Eyebrow — kichkina qizil label, luxury feel */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.8 }}
-            className="mb-5 sm:mb-6"
-          >
-            <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-gold-400">
-              <span className="w-8 h-px bg-gold-400" />
-              ECO BASALT
-            </span>
-          </motion.div>
+        {/* Slogan + qisqa matn — kulrang shaffof plashka ichida */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.8 }}
+          className="w-fit max-w-full rounded-3xl border border-pearl-100/15 bg-gradient-to-b from-onyx-400/40 via-onyx-500/45 to-onyx-500/40 backdrop-blur-sm px-5 py-5 sm:px-8 sm:py-7 lg:px-10 lg:py-8 shadow-2xl shadow-black/30 mb-6 sm:mb-8"
+        >
+          <span className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-gold-300 mb-4">
+            <span className="w-8 h-px bg-gold-300" />
+            ECO BASALT
+          </span>
 
-          {/* Title — clean, elegant, no gradient boxes */}
-          <h1 className="h-display text-pearl-50 text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-[76px] mb-5 sm:mb-6 lg:mb-7 text-balance whitespace-pre-line leading-[1.02] tracking-tight"
-              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 4px 40px rgba(0,0,0,0.4)" }}>
+          <h1 className="h-display text-pearl-50 text-[34px] xs:text-4xl sm:text-5xl lg:text-6xl xl:text-[68px] mb-4 sm:mb-5 leading-[1.05] tracking-tight"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.45)" }}>
             {title.split("\n").map((line, i) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                className="block"
+                className="block md:whitespace-nowrap"
               >
                 {line}
               </motion.span>
             ))}
           </h1>
 
-          {/* Subtitle — clean text, no box, subtle shadow */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-pearl-100 text-base sm:text-lg lg:text-xl leading-relaxed max-w-xl mb-8 sm:mb-10 lg:mb-12 font-normal"
-            style={{ textShadow: "0 1px 12px rgba(0,0,0,0.9), 0 2px 24px rgba(0,0,0,0.6)" }}
+            transition={{ delay: 0.75, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-pearl-50 text-base sm:text-lg lg:text-xl xl:text-[clamp(17px,1.38vw,22px)] leading-snug font-medium xl:whitespace-nowrap"
+            style={{ textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}
           >
             {subtitle}
           </motion.p>
+        </motion.div>
 
-          {/* Single primary CTA — Tesla/Apple stili */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.05, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4"
-          >
-            <MagneticButton strength={0.2}>
-              <Link
-                href="/products"
-                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-4 sm:py-4 rounded-full bg-pearl-50 hover:bg-pearl-100 text-onyx-900 font-semibold text-sm sm:text-base transition-all duration-300 shadow-xl shadow-black/40 hover:shadow-2xl hover:shadow-black/60 whitespace-nowrap"
+        {/* 3 yo'nalish kartochkasi — shior ostida */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+          {directions.map((c, i) => {
+            const Icon = c.Icon;
+            return (
+              <motion.div
+                key={c.href}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.95 + i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               >
-                {t(lang, "hero.cta_secondary")}
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1.5 transition-transform" strokeWidth={2.5} />
-              </Link>
-            </MagneticButton>
-            <MagneticButton strength={0.2}>
-              <button
-                onClick={() => showModal()}
-                className="group inline-flex items-center gap-2 px-7 sm:px-8 py-4 sm:py-4 rounded-full bg-transparent hover:bg-pearl-100/10 text-pearl-50 font-semibold text-sm sm:text-base border border-pearl-100/40 hover:border-pearl-100/70 transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
-              >
-                {t(lang, "hero.cta_primary")}
-              </button>
-            </MagneticButton>
-          </motion.div>
+                <Link
+                  href={c.href}
+                  className="group flex md:flex-col gap-4 md:gap-5 h-full p-4 sm:p-5 lg:p-6 rounded-3xl bg-onyx-950/55 hover:bg-onyx-950/75 border border-pearl-100/15 hover:border-gold-400/50 backdrop-blur-md transition-all duration-500"
+                >
+                  <div className="relative shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-gradient-to-br from-gold-400/25 via-onyx-800/80 to-onyx-900 border border-gold-400/30 flex items-center justify-center shadow-lg shadow-gold-900/40 group-hover:scale-105 transition-transform duration-500">
+                    <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-pearl-50" />
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col">
+                    <h3 className="h-display text-pearl-50 text-lg lg:text-xl leading-tight mb-1.5">{c.title}</h3>
+                    <p className="text-pearl-200 text-sm leading-snug mb-3 line-clamp-2">{c.desc}</p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 text-pearl-100 group-hover:text-gold-300 font-semibold text-sm transition-colors">
+                      {t(lang, "hero.cta_view_catalog")}
+                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2.5} />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
 
       {/* Slide indicator — bottom right (hidden on small) */}
-      <div className="absolute bottom-8 right-6 sm:right-8 hidden sm:flex flex-col items-end gap-2 z-10">
+      <div className="absolute top-28 lg:top-32 right-6 sm:right-8 hidden sm:flex flex-col items-end gap-2 z-10">
         <div className="flex items-center gap-2">
           {slides.map((_, i) => (
             <button
@@ -226,7 +231,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator olib tashlandi — content 3 CTA karta bilan allaqachon jonli, indicator ortiqcha */}
     </section>
   );
 }

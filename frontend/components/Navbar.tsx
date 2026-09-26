@@ -30,6 +30,7 @@ export default function Navbar() {
   const navItems = [
     { href: "/products?cat=thermal", label: t(lang, "nav.thermal") },
     { href: "/products?cat=hydroponics", label: t(lang, "nav.hydroponics") },
+    { href: "/products?cat=panels", label: t(lang, "nav.panels") },
     { href: "/about", label: t(lang, "nav.about") },
     { href: "/downloads", label: t(lang, "nav.docs") },
     { href: "/blog", label: t(lang, "nav.blog") },
@@ -43,22 +44,19 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-7xl`}
+      className={`fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] xl:w-[calc(100%-3rem)] max-w-[1600px]`}
     >
       {/* Root flex: pill (chapda) + CTA button (o'ngda, alohida) */}
       <div className="flex items-center gap-3 sm:gap-4">
-        <div className={`flex-1 min-w-0 rounded-full px-5 sm:px-6 xl:px-8 backdrop-blur-md transition-all duration-500 ${
+        <div className={`flex-1 min-w-0 rounded-full px-5 sm:px-6 2xl:px-8 backdrop-blur-md transition-all duration-500 ${
           scrolled || pathname !== "/"
-            ? "bg-onyx-900/70 border border-pearl-100/10 shadow-2xl shadow-black/40"
-            : "bg-onyx-900/25 border border-pearl-100/8 shadow-lg shadow-black/20"
+            ? "bg-onyx-900/70 border border-onyx-500/60 shadow-2xl shadow-black/40"
+            : "bg-onyx-900/25 border border-onyx-400/35 shadow-lg shadow-black/20"
         }`}>
           <div className="flex items-center justify-between h-14 sm:h-16 xl:h-20">
-            {/* Logo — kattaroq, oq subtle ring bilan */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full ring-1 ring-pearl-100/20 group-hover:ring-pearl-100/40 transition-all" />
-                <Logo size={36} className="sm:w-11 sm:h-11 xl:w-12 xl:h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
-              </div>
+            {/* Logo — ramkasiz, kattaroq */}
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0 2xl:mr-4">
+              <Logo size={44} className="sm:w-12 sm:h-12 xl:w-14 xl:h-14 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
               <div
                 className="font-bold text-gold-400 text-base sm:text-lg xl:text-xl leading-none tracking-tight"
                 style={{ textShadow: "0 0 20px rgba(169, 29, 42, 0.35), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
@@ -68,14 +66,14 @@ export default function Navbar() {
             </Link>
 
             {/* Center nav — bir xil oraliqlar, kattaroq shrift */}
-            <nav className="hidden lg:flex items-center gap-1 mx-auto">
+            <nav className="hidden xl:flex items-center 2xl:gap-1 mx-auto">
               {navItems.map((it) => {
                 const active = isActive(it.href);
                 return (
                   <Link
                     key={it.href}
                     href={it.href}
-                    className={`relative px-3.5 xl:px-4 py-2.5 text-sm xl:text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
+                    className={`relative px-2 2xl:px-4 py-2.5 text-[13px] 2xl:text-[15px] font-medium rounded-full transition-all duration-300 text-center whitespace-nowrap ${
                       active
                         ? "text-pearl-100 bg-pearl-100/10"
                         : "text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/5"
@@ -95,7 +93,7 @@ export default function Navbar() {
             </nav>
 
             {/* Right (pill ichida faqat lang dropdown qoladi) */}
-            <div className="hidden lg:flex items-center gap-3 shrink-0">
+            <div className="hidden xl:flex items-center gap-3 shrink-0">
               <div className="relative">
                 <button
                   onClick={() => setLangOpen(!langOpen)}
@@ -132,7 +130,7 @@ export default function Navbar() {
             </div>
 
             <button
-              className="lg:hidden text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5 transition-colors"
+              className="xl:hidden text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5 transition-colors"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >
@@ -142,14 +140,17 @@ export default function Navbar() {
         </div>
 
         {/* CTA button — pill'dan TASHQARIDA, alohida element (Linear/Vercel pattern) */}
-        <button
-          onClick={() => showModal()}
-          className={`hidden lg:inline-flex btn-solid-gold !py-3 !px-5 xl:!px-6 !text-sm shrink-0 !rounded-full whitespace-nowrap transition-all duration-500 ${
-            scrolled || pathname !== "/" ? "!shadow-2xl !shadow-gold-500/30" : "!shadow-xl !shadow-black/30"
-          }`}
-        >
-          {t(lang, "nav.apply")}
-        </button>
+        {/* .btn-solid-gold `display` ni qayta yozadi — shuning uchun wrapper orqali yashiriladi */}
+        <div className="hidden xl:block shrink-0">
+          <button
+            onClick={() => showModal()}
+            className={`btn-solid-gold !py-3 !px-4 2xl:!px-6 !text-sm !rounded-full whitespace-nowrap transition-all duration-500 ${
+              scrolled || pathname !== "/" ? "!shadow-2xl !shadow-gold-500/30" : "!shadow-xl !shadow-black/30"
+            }`}
+          >
+            {t(lang, "nav.apply")}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -160,11 +161,11 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 bg-onyx-950/95 backdrop-blur-xl lg:hidden"
+            className="fixed inset-0 z-50 bg-onyx-950/95 backdrop-blur-xl xl:hidden"
           >
             <div className="flex items-center justify-between h-16 px-5 border-b border-pearl-100/5">
               <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-                <Logo size={34} />
+                <Logo size={40} />
                 <div className="font-bold text-gold-400 tracking-tight">ECO BASALT</div>
               </Link>
               <button onClick={() => setOpen(false)} className="text-pearl-100 p-2 rounded-full hover:bg-pearl-100/5">

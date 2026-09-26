@@ -2,46 +2,68 @@
 import useSWR from "swr";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, Phone, Download, Sparkles, ArrowUpRight } from "lucide-react";
-import { fetcher, pickLang } from "@/lib/api";
+import { ArrowLeft, Check, ArrowUpRight, Send } from "lucide-react";
+import { fetcher, pickLang, Lang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
 import { useApplicationModal } from "@/lib/application-modal";
-import { productImage } from "@/lib/sample-images";
 import Gallery from "./Gallery";
+import ProductImage from "./ProductImage";
+import { DIRECTION_ICONS, DirectionSlug } from "./BrandIcons";
 
+type Category = { id: number; slug: string; name_uz: string; name_ru: string; name_en: string };
 type Product = {
   id: number;
   slug: string;
   category_id: number;
   name_uz: string; name_ru: string; name_en: string;
-  short_uz: string; short_ru: string; short_en: string;
-  description_uz: string; description_ru: string; description_en: string;
-  cover_image?: string;
+  short_uz?: string; short_ru?: string; short_en?: string;
+  description_uz?: string; description_ru?: string; description_en?: string;
+  advantages_uz?: string[]; advantages_ru?: string[]; advantages_en?: string[];
+  applications_uz?: string[]; applications_ru?: string[]; applications_en?: string[];
+  cover_image?: string | null;
   gallery?: string[];
-  specs?: Record<string, string>;
-  price_from?: number;
-  price_currency?: string;
-  is_featured?: boolean;
+};
+
+// Tanlangan tildagi ro'yxat, bo'sh bo'lsa — rus/o'zbek tiliga qaytadi
+function pickList(p: Product, lang: Lang, field: "advantages" | "applications"): string[] {
+  for (const l of [lang, "ru", "uz"] as Lang[]) {
+    const v = (p as any)[`${field}_${l}`];
+    if (Array.isArray(v) && v.length) return v;
+  }
+  return [];
+}
+
+const L = {
+  about: { uz: "Mahsulot haqida", ru: "О продукции", en: "About the product" },
+  advantages: { uz: "Asosiy afzalliklar", ru: "Основные преимущества", en: "Key advantages" },
+  applications: { uz: "Qo'llanish sohasi", ru: "Область применения", en: "Applications" },
+  apply: { uz: "Ariza qoldirish", ru: "Оставить заявку", en: "Submit a request" },
+  ctaText: {
+    uz: "Mutaxassisimiz siz bilan bog'lanib, loyihangiz uchun optimal yechimni taklif qiladi.",
+    ru: "Наш специалист свяжется с вами и предложит оптимальное решение для вашего объекта.",
+    en: "Our specialist will contact you and suggest the best solution for your project.",
+  },
+  related: { uz: "Ushbu yo'nalishdagi boshqa mahsulotlar", ru: "Другая продукция направления", en: "More in this category" },
 };
 
 export default function ProductDetail({ slug }: { slug: string }) {
   const { lang } = useLang();
   const { show: showModal } = useApplicationModal();
-  const { data: product, error } = useSWR<Product>(`/api/products/${slug}`, fetcher);
-  const { data: related = [] } = useSWR<Product[]>(
-    product ? `/api/products?category_id=${product.category_id}` : null,
-    fetcher
-  );
+  const { data: product, error } = useSWR<Product>(`/api/products/${slug}`, fetcher, {
+    revalidateOnFocus: false,
+  });
+  const { data: categories = [] } = useSWR<Category[]>("/api/products/categories", fetcher);
+  const { data: all = [] } = useSWR<Product[]>(product ? "/api/products" : null, fetcher);
 
-  if (error) {
+  if (error || (product && !(product as any).slug)) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         <div className="h-display text-pearl-100 text-6xl mb-4 text-gradient-red">404</div>
         <p className="text-pearl-200 mb-8">{t(lang, "products.empty")}</p>
         <Link href="/products" className="btn-gold inline-flex">
           <ArrowLeft className="w-4 h-4 mr-2" strokeWidth={2} />
-          {t(lang, "nav.products")}
+          {t(lang, "products.title")}
         </Link>
       </div>
     );
@@ -51,8 +73,8 @@ export default function ProductDetail({ slug }: { slug: string }) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-7"><div className="skeleton aspect-[4/3]" /></div>
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-6"><div className="skeleton aspect-[4/3]" /></div>
+          <div className="lg:col-span-6 space-y-4">
             <div className="skeleton h-12 w-3/4" />
             <div className="skeleton h-6 w-full" />
             <div className="skeleton h-6 w-2/3" />
@@ -62,188 +84,158 @@ export default function ProductDetail({ slug }: { slug: string }) {
     );
   }
 
-  const otherProducts = related.filter((r) => r.id !== product.id).slice(0, 3);
+  const category = categories.find((c) => c.id === product.category_id);
+  const catSlug = category?.slug as DirectionSlug | undefined;
+  const CatIcon = catSlug && DIRECTION_ICONS[catSlug];
+  const name = pickLang(product, lang, "name");
+  const about = pickLang(product, lang, "description") || pickLang(product, lang, "short");
+  const advantages = pickList(product, lang, "advantages");
+  const applications = pickList(product, lang, "applications");
+  const related = all.filter((r) => r.category_id === product.category_id && r.id !== product.id).slice(0, 2);
+  const images = [product.cover_image, ...(product.gallery || [])].filter(Boolean) as string[];
+  const apply = () => showModal(product.slug, undefined);
 
   return (
-    <section className="py-12 sm:py-16 bg-onyx-900 relative">
+    <section className="py-12 sm:py-16 bg-onyx-900 relative overflow-hidden">
       <div className="orb orb-warm w-[400px] h-[400px] top-20 -left-40 opacity-30" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Breadcrumb */}
         <Link
-          href="/products"
+          href={catSlug ? `/products?cat=${catSlug}` : "/products"}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pearl-100/5 border border-pearl-100/10 text-pearl-200 hover:text-pearl-100 hover:bg-pearl-100/10 text-sm font-medium mb-8 sm:mb-10 transition-all duration-300 backdrop-blur-sm"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
-          {t(lang, "nav.products")}
+          {category ? pickLang(category, lang, "name") : t(lang, "products.title")}
         </Link>
 
-        {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 mb-12 sm:mb-20">
-          {/* Image */}
+        {/* 1. Rasm + nom + qisqa tavsif + ariza */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 sm:mb-16 items-start">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 relative"
+            className="lg:col-span-6"
           >
-            {/* Gallery — multiple images with lightbox */}
-            <Gallery
-              images={
-                product.gallery && product.gallery.length > 0
-                  ? [productImage(product.slug, product.cover_image), ...product.gallery]
-                  : [productImage(product.slug, product.cover_image)]
-              }
-              alt={pickLang(product, lang, "name")}
-            />
-            {product.is_featured && (
-              <div className="absolute top-5 left-5 z-10 badge-pill bg-onyx-950/70 backdrop-blur-xl border-gold-400/40 text-gold-400 pointer-events-none">
-                <Sparkles className="w-3 h-3" strokeWidth={2} />
-                <span>Featured</span>
-              </div>
+            {images.length > 0 ? (
+              <Gallery images={images} alt={name} />
+            ) : (
+              <ProductImage alt={name} category={catSlug} className="aspect-[4/3] rounded-3xl border border-pearl-100/10" />
             )}
           </motion.div>
 
-          {/* Info */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="lg:col-span-5"
+            className="lg:col-span-6"
           >
-            <span className="badge-pill mb-5">{t(lang, "products.eyebrow")}</span>
-
-            <h1 className="h-display text-pearl-100 text-3xl sm:text-4xl md:text-5xl mb-5 text-balance leading-tight">
-              {pickLang(product, lang, "name")}
-            </h1>
-
-            <p className="text-pearl-200 text-base sm:text-lg leading-relaxed mb-8">
-              {pickLang(product, lang, "short")}
-            </p>
-
-            {/* Price card */}
-            {product.price_from && (
-              <div className="feature-card p-5 mb-8 border-l-2 border-l-gold-400/60">
-                <div className="text-xs text-pearl-300 mb-2 font-semibold">
-                  {t(lang, "calc.per_m2")}
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-xs text-pearl-300">from</span>
-                  <span className="h-display text-3xl sm:text-4xl text-gradient-red">${product.price_from}</span>
-                  <span className="text-sm text-pearl-300">{product.price_currency}</span>
-                </div>
-              </div>
+            {category && (
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-400/10 border border-gold-400/30 text-gold-300 text-xs font-semibold tracking-wide mb-5">
+                {CatIcon && <CatIcon className="w-4 h-4" />}
+                {pickLang(category, lang, "name")}
+              </span>
             )}
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              <button onClick={() => showModal(product.slug, undefined)} className="btn-solid-gold flex-1 group">
-                <Phone className="w-4 h-4 mr-2" strokeWidth={2.5} />
-                {t(lang, "calc.cta")}
-              </button>
-              <button className="btn-gold flex-1 group">
-                <Download className="w-4 h-4 mr-2" strokeWidth={2} />
-                PDF
-              </button>
-            </div>
+            <h1 className="h-display text-pearl-50 text-3xl sm:text-4xl md:text-5xl mb-6 text-balance leading-tight">
+              {name}
+            </h1>
 
-            {/* Quick features */}
-            <ul className="space-y-3 pt-6 border-t border-pearl-100/8">
-              {[t(lang, "about.b1"), t(lang, "about.b2"), t(lang, "about.b3")].map((b, i) => (
-                <li key={i} className="flex items-start gap-3 text-pearl-200 text-sm">
-                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-emerald-400" strokeWidth={3} />
-                  </div>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+            {about && (
+              <>
+                <h2 className="text-xs font-bold text-gold-300 mb-3 uppercase tracking-[0.2em]">{L.about[lang]}</h2>
+                <p className="text-pearl-200 text-base sm:text-lg leading-relaxed mb-8 whitespace-pre-line">{about}</p>
+              </>
+            )}
+
+            <button onClick={apply} className="btn-solid-gold group !px-8">
+              <Send className="w-4 h-4 mr-2" strokeWidth={2.5} />
+              {L.apply[lang]}
+            </button>
           </motion.div>
         </div>
 
-        {/* Description + Specs */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 mb-12 sm:mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-7"
-          >
-            <h2 className="h-display text-pearl-100 text-2xl sm:text-3xl mb-5">
-              {t(lang, "about.eyebrow")}
-            </h2>
-            <div className="divider-soft mb-6" />
-            <p className="text-pearl-200 text-base sm:text-lg leading-relaxed whitespace-pre-line">
-              {pickLang(product, lang, "description")}
-            </p>
-          </motion.div>
-
-          {product.specs && Object.keys(product.specs).length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:col-span-5"
-            >
-              <div className="feature-card p-6 sm:p-7">
-                <h3 className="text-xs font-bold text-gold-400 mb-5 uppercase tracking-wider">
-                  Specifications
-                </h3>
-                <dl className="space-y-3">
-                  {Object.entries(product.specs).map(([k, v], i) => (
-                    <motion.div
-                      key={k}
-                      initial={{ opacity: 0, x: 10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex justify-between items-center py-2.5 border-b border-pearl-100/5 last:border-b-0"
-                    >
-                      <dt className="text-xs text-pearl-300 font-medium uppercase tracking-wide">{k}</dt>
-                      <dd className="text-pearl-100 text-sm font-bold tabular">{v}</dd>
-                    </motion.div>
+        {/* 2. Afzalliklar + qo'llanish sohasi */}
+        {(advantages.length > 0 || applications.length > 0) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-12 sm:mb-16">
+            {advantages.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="feature-card p-6 sm:p-8"
+              >
+                <h2 className="h-display text-pearl-50 text-xl sm:text-2xl mb-6">{L.advantages[lang]}</h2>
+                <ul className="space-y-3.5">
+                  {advantages.map((a, i) => (
+                    <li key={i} className="flex items-start gap-3 text-pearl-100 text-[15px] leading-snug">
+                      <span className="w-6 h-6 rounded-full bg-gold-400/15 border border-gold-400/40 flex items-center justify-center shrink-0">
+                        <Check className="w-3.5 h-3.5 text-gold-300" strokeWidth={3} />
+                      </span>
+                      <span className="pt-0.5">{a}</span>
+                    </li>
                   ))}
-                </dl>
-              </div>
-            </motion.div>
-          )}
+                </ul>
+              </motion.div>
+            )}
+
+            {applications.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="feature-card p-6 sm:p-8"
+              >
+                <h2 className="h-display text-pearl-50 text-xl sm:text-2xl mb-6">{L.applications[lang]}</h2>
+                <ul className="space-y-3.5">
+                  {applications.map((a, i) => (
+                    <li key={i} className="flex items-start gap-3 text-pearl-100 text-[15px] leading-snug">
+                      <span className="font-mono text-xs text-gold-300 w-6 pt-1 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="pt-0.5">{a}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </div>
+        )}
+
+        {/* 3. Ariza banneri */}
+        <div className="rounded-3xl border border-gold-400/25 bg-gradient-to-r from-gold-400/15 via-onyx-800/60 to-onyx-800/40 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-12 sm:mb-16">
+          <div>
+            <div className="h-display text-pearl-50 text-xl sm:text-2xl mb-1.5">{name}</div>
+            <p className="text-pearl-200 text-sm sm:text-base max-w-2xl">{L.ctaText[lang]}</p>
+          </div>
+          <button onClick={apply} className="btn-solid-gold shrink-0 !px-8">
+            {L.apply[lang]}
+          </button>
         </div>
 
-        {/* Related products */}
-        {otherProducts.length > 0 && (
+        {/* Shu yo'nalishdagi boshqa mahsulotlar */}
+        {related.length > 0 && (
           <div>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="h-display text-pearl-100 text-2xl sm:text-3xl">
-                {lang === "uz" ? "O'xshash mahsulotlar" : lang === "ru" ? "Похожие продукты" : "Related products"}
-              </h2>
-              <Link href="/products" className="link-modern text-gold-400 text-sm font-semibold">
-                {lang === "uz" ? "Hammasi" : lang === "ru" ? "Все" : "View all"}
-                <ArrowUpRight className="w-4 h-4" strokeWidth={2.5} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {otherProducts.map((p) => (
+            <h2 className="h-display text-pearl-100 text-2xl sm:text-3xl mb-6 sm:mb-8">{L.related[lang]}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl">
+              {related.map((p) => (
                 <Link
                   key={p.id}
                   href={`/products/${p.slug}`}
-                  className="group block overflow-hidden rounded-3xl bg-onyx-800/40 border border-pearl-100/5 hover:border-gold-400/40 transition-all duration-500 backdrop-blur-sm hover:-translate-y-1"
+                  className="group flex items-center gap-4 p-3 rounded-3xl bg-onyx-800/40 border border-pearl-100/5 hover:border-gold-400/40 transition-all duration-500"
                 >
-                  <div className="aspect-[4/3] overflow-hidden bg-onyx-700 relative">
-                    <img
-                      src={productImage(p.slug, p.cover_image)}
-                      alt=""
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="h-display text-pearl-100 text-lg mb-2 group-hover:text-gradient-red transition-all line-clamp-1">
-                      {pickLang(p, lang, "name")}
-                    </h3>
-                    <p className="text-pearl-200 text-sm line-clamp-2">
-                      {pickLang(p, lang, "short")}
-                    </p>
+                  <ProductImage
+                    src={p.cover_image}
+                    alt={pickLang(p, lang, "name")}
+                    category={catSlug}
+                    className="w-28 h-24 sm:w-32 sm:h-28 rounded-2xl shrink-0 [&_svg]:!w-10 [&_svg]:!h-10 [&>span]:hidden"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="h-display text-pearl-100 text-lg leading-tight mb-2">{pickLang(p, lang, "name")}</h3>
+                    <span className="inline-flex items-center gap-1 text-gold-300 text-sm font-semibold">
+                      {lang === "uz" ? "Batafsil" : lang === "ru" ? "Подробнее" : "Learn more"}
+                      <ArrowUpRight className="w-4 h-4" strokeWidth={2.5} />
+                    </span>
                   </div>
                 </Link>
               ))}

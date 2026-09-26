@@ -42,6 +42,14 @@ class Product(Base):
     description_ru = Column(Text)
     description_en = Column(Text)
 
+    # Asosiy afzalliklar va qo'llanish sohasi — har bir til uchun satrlar ro'yxati
+    advantages_uz = Column(JSON, default=list)
+    advantages_ru = Column(JSON, default=list)
+    advantages_en = Column(JSON, default=list)
+    applications_uz = Column(JSON, default=list)
+    applications_ru = Column(JSON, default=list)
+    applications_en = Column(JSON, default=list)
+
     # Texnik xususiyatlar JSON formatida
     # Misol: {"qalinligi_mm": 100, "zichlik_kg_m3": 120, "yong'inga_chidamlilik": "EI 90"}
     specs = Column(JSON, default=dict)

@@ -1,7 +1,7 @@
 """Boshlang'ich kontent — birinchi ishga tushganda yuklanadi (ECO BASALT)"""
 from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from app.models.content import ContentBlock, HeroSlide, Project
 from app.models.product import Category, Product
 from app.models.cms import BlogPost, FAQ, Feature, Client, CalculatorProduct, ComparisonRow
@@ -100,133 +100,138 @@ DEFAULT_CONTENT = [
 ]
 
 
+# Katalog (mijoz feedback #04): 3 yo'nalish × 2 mahsulot.
+# Slug'lar frontend havolalari bilan mos: /products?cat=thermal|hydroponics|panels
 DEFAULT_CATEGORIES = [
-    {"slug": "sandwich-panels", "name_uz": "Sendvich panellar", "name_ru": "Сэндвич-панели", "name_en": "Sandwich panels",
-     "description_uz": "Devor va tom uchun sendvich panellar — bazalt tola yadrosi bilan.",
-     "description_ru": "Сэндвич-панели для стен и кровли — с базальтовым волокном.",
-     "description_en": "Wall and roof sandwich panels — with basalt fiber core.",
-     "icon": "Layers", "order": 1},
-    {"slug": "rockwool-insulation", "name_uz": "Bazalt izolyatsiya", "name_ru": "Базальтовая изоляция", "name_en": "Basalt insulation",
-     "description_uz": "Quvur, devor va shaxta uchun bazalt tola izolyatsiyasi.",
-     "description_ru": "Базальтовая изоляция для труб, стен и шахт.",
-     "description_en": "Basalt fiber insulation for pipes, walls and shafts.",
-     "icon": "Flame", "order": 2},
-    {"slug": "basalt-fiber", "name_uz": "Bazalt tola", "name_ru": "Базальтовое волокно", "name_en": "Basalt fiber",
-     "description_uz": "Texnik to'qimachilik va kompozitlar uchun bazalt tola.",
-     "description_ru": "Базальтовое волокно для технического текстиля и композитов.",
-     "description_en": "Basalt fiber for technical textiles and composites.",
-     "icon": "Atom", "order": 3},
-    {"slug": "accessories", "name_uz": "Aksessuarlar", "name_ru": "Аксессуары", "name_en": "Accessories",
-     "description_uz": "O'rnatish uchun vintlar, profillar va yordamchi materiallar.",
-     "description_ru": "Винты, профили и вспомогательные материалы для монтажа.",
-     "description_en": "Screws, profiles and accessories for installation.",
-     "icon": "Wrench", "order": 4},
+    {"slug": "thermal", "name_uz": "Issiqlik izolyatsiyasi", "name_ru": "Теплоизоляция", "name_en": "Thermal insulation",
+     "description_uz": "Bazalt asosidagi issiqlik izolyatsiya materiallari.",
+     "description_ru": "Теплоизоляционные материалы на основе базальта.",
+     "description_en": "Basalt-based thermal insulation materials.",
+     "icon": "thermal", "order": 1},
+    {"slug": "hydroponics", "name_uz": "Gidroponika", "name_ru": "Гидропоника", "name_en": "Hydroponics",
+     "description_uz": "Issiqxonalar uchun tosh paxtadan gidroponik substratlar.",
+     "description_ru": "Гидропонные субстраты из каменной ваты для тепличных комплексов.",
+     "description_en": "Stone wool hydroponic substrates for greenhouses.",
+     "icon": "hydroponics", "order": 2},
+    {"slug": "panels", "name_uz": "Sendvich panellar", "name_ru": "Сэндвич-панели", "name_en": "Sandwich panels",
+     "description_uz": "Devor va tom uchun sendvich panellar.",
+     "description_ru": "Стеновые и кровельные сэндвич-панели.",
+     "description_en": "Wall and roof sandwich panels.",
+     "icon": "panels", "order": 3},
 ]
 
 
 DEFAULT_PRODUCTS = [
-    # Sandwich Panels (3 ta)
+    # ── Issiqlik izolyatsiyasi ──
     {
-        "slug": "roof-sandwich-panel", "category_slug": "sandwich-panels",
-        "name_uz": "Tom sendvich panel (RAL 5005)", "name_ru": "Кровельная сэндвич-панель (RAL 5005)", "name_en": "Roof sandwich panel (RAL 5005)",
-        "short_uz": "Bazalt tola yadroli ko'k tomli panel",
-        "short_ru": "Кровельная панель с базальтовым волокном",
-        "short_en": "Roof panel with basalt fiber core",
-        "description_uz": "Sanoat va omborlar uchun tomli sendvich panel. Beshta to'lqinli profil, ko'k rang.",
-        "description_ru": "Кровельная сэндвич-панель для промышленности и складов. Пятиволновой профиль.",
-        "description_en": "Roof sandwich panel for industry and warehouses. Five-wave profile.",
-        "specs": {"qalinligi": "50-200mm", "EI": "240", "λ": "0.035 W/m·K", "kenglik": "1000mm"},
-        "is_featured": True, "price_from": 25, "price_currency": "USD/m²", "order": 1
+        "slug": "basalt-thermal-slabs", "category_slug": "thermal", "order": 1,
+        "name_uz": "Bazalt issiqlik izolyatsiya plitalari",
+        "name_ru": "Базальтовые теплоизоляционные плиты",
+        "name_en": "Basalt thermal insulation slabs",
+        "short_uz": "Tabiiy bazalt asosidagi issiqlik va tovush izolyatsiyasi plitalari",
+        "short_ru": "Плиты для тепло- и звукоизоляции на основе природного базальта",
+        "short_en": "Thermal and acoustic insulation slabs made from natural basalt",
+        "description_uz": "ECO BASALT bazalt issiqlik izolyatsiya plitalari — tabiiy bazalt asosida ishlab chiqarilgan zamonaviy issiqlik izolyatsiya materiali bo'lib, qurilish konstruksiyalarini samarali issiqlik va tovushdan himoyalash uchun mo'ljallangan. Mahsulot yuqori ekspluatatsion xususiyatlari, ishonchliligi bilan ajralib turadi va qurilish sohasining zamonaviy talablariga javob beradi.",
+        "description_ru": "Базальтовые теплоизоляционные плиты ECO BASALT — современный теплоизоляционный материал на основе природного базальта, предназначенный для эффективной тепло- и звукоизоляции строительных конструкций. Продукция отличается высокими эксплуатационными характеристиками, надёжностью и соответствует современным требованиям строительной отрасли.",
+        "description_en": "ECO BASALT basalt thermal insulation slabs are a modern insulation material made from natural basalt, designed for effective thermal and acoustic insulation of building structures. The product offers high performance and reliability and meets current construction industry requirements.",
+        "advantages_uz": ["Yuqori issiqlik izolyatsiyasi samaradorligi", "Ekologik va yong'in xavfsizligi", "Samarali tovush yutish", "Xizmat muddati kamida 50 yil", "Bug' o'tkazuvchanlik", "Gidrofoblik"],
+        "advantages_ru": ["Высокая теплоизоляционная эффективность", "Экологическая и пожарная безопасность", "Эффективное звукопоглощение", "Срок службы не менее 50 лет", "Паропроницаемость", "Гидрофобность"],
+        "advantages_en": ["High thermal insulation performance", "Environmental and fire safety", "Effective sound absorption", "Service life of at least 50 years", "Vapour permeability", "Water repellency"],
+        "applications_uz": ["Fasad tizimlari", "Devorlarni tashqi va ichki isitish", "Nishabli va tekis tomlar", "Qavatlararo yopmalar", "Ichki to'siqlar va to'suvchi konstruksiyalar", "Turar-joy, tijorat va sanoat inshootlari"],
+        "applications_ru": ["Фасадные системы", "Наружное и внутреннее утепление стен", "Скатные и плоские кровли", "Межэтажные перекрытия", "Внутренние перегородки и ограждающие конструкции", "Жилые, коммерческие и промышленные сооружения"],
+        "applications_en": ["Facade systems", "External and internal wall insulation", "Pitched and flat roofs", "Floor slabs", "Internal partitions and enclosing structures", "Residential, commercial and industrial buildings"],
     },
     {
-        "slug": "wall-sandwich-panel", "category_slug": "sandwich-panels",
-        "name_uz": "Devor sendvich panel", "name_ru": "Стеновая сэндвич-панель", "name_en": "Wall sandwich panel",
-        "short_uz": "Yashirin biriktirgichli devor paneli",
-        "short_ru": "Стеновая панель со скрытым креплением",
-        "short_en": "Wall panel with hidden fastening",
-        "description_uz": "Sovuq saqlash xonalari va sanoat ob'ektlari uchun. Yashirin biriktirish.",
-        "description_ru": "Для холодильных камер и промышленных объектов. Скрытое крепление.",
-        "description_en": "For cold storage and industrial facilities. Hidden fastening.",
-        "specs": {"qalinligi": "50-250mm", "EI": "240", "λ": "0.034 W/m·K", "kenglik": "1190mm"},
-        "is_featured": True, "price_from": 28, "price_currency": "USD/m²", "order": 2
+        "slug": "basalt-lamella-mats", "category_slug": "thermal", "order": 2,
+        "name_uz": "Bazalt lamel matlar",
+        "name_ru": "Базальтовые ламельные маты",
+        "name_en": "Basalt lamella mats",
+        "short_uz": "Tolalari vertikal joylashgan tosh paxta matlari",
+        "short_ru": "Маты из каменной ваты с вертикальным расположением волокон",
+        "short_en": "Stone wool mats with vertically oriented fibres",
+        "description_uz": "ECO BASALT bazalt lamel matlari tolalari vertikal joylashgan tosh paxta tasmalaridan tayyorlanadi, bu materialga yuqori mustahkamlik, egiluvchanlik va deformatsiyaga chidamlilik beradi. Mahsulot qurilish konstruksiyalari, sanoat uskunalari va muhandislik tizimlarini samarali issiqlik va tovushdan himoyalash uchun mo'ljallangan.",
+        "description_ru": "Базальтовые ламельные маты ECO BASALT изготавливаются из полос каменной ваты с вертикальным расположением волокон, что обеспечивает материалу высокую прочность, гибкость и устойчивость к деформациям. Продукция предназначена для эффективной тепло- и звукоизоляции строительных конструкций, промышленного оборудования и инженерных систем.",
+        "description_en": "ECO BASALT basalt lamella mats are made from strips of stone wool with vertically oriented fibres, giving the material high strength, flexibility and resistance to deformation. The product is designed for effective thermal and acoustic insulation of building structures, industrial equipment and engineering systems.",
+        "advantages_uz": ["Yuqori issiqlik izolyatsiyasi samaradorligi", "Yuqori mustahkamlik va egiluvchanlik", "Mexanik ta'sirlarga chidamlilik", "Egri sirtlarga qulay o'rnatish", "Konstruksiyalarni harorat o'zgarishi va korroziyadan himoyalash", "Bug' o'tkazuvchanlik"],
+        "advantages_ru": ["Высокая теплоизоляционная эффективность", "Высокая прочность и гибкость", "Устойчивость к механическим воздействиям", "Удобство монтажа на криволинейных поверхностях", "Защита конструкций от перепадов температур и коррозии", "Паропроницаемость"],
+        "advantages_en": ["High thermal insulation performance", "High strength and flexibility", "Resistance to mechanical impact", "Easy installation on curved surfaces", "Protects structures from temperature changes and corrosion", "Vapour permeability"],
+        "applications_uz": ["Havo o'tkazgichlar va ventilyatsiya tizimlari", "Quvurlar va muhandislik kommunikatsiyalari", "Rezervuarlar va texnologik idishlar", "Sanoat uskunalari", "Egri sirtlar", "Fasad tizimlari"],
+        "applications_ru": ["Воздуховоды и вентиляционные системы", "Трубопроводы и инженерные коммуникации", "Резервуары и технологические ёмкости", "Промышленное оборудование", "Криволинейные поверхности", "Фасадные системы"],
+        "applications_en": ["Air ducts and ventilation systems", "Pipelines and utility networks", "Tanks and process vessels", "Industrial equipment", "Curved surfaces", "Facade systems"],
+    },
+    # ── Sendvich panellar ──
+    {
+        "slug": "wall-sandwich-panels", "category_slug": "panels", "order": 3,
+        "name_uz": "Devor sendvich panellari",
+        "name_ru": "Стеновые сэндвич-панели",
+        "name_en": "Wall sandwich panels",
+        "short_uz": "Tashqi devorlarni tez barpo etish uchun ko'p qatlamli panellar",
+        "short_ru": "Многослойные панели для быстрого возведения наружных стен",
+        "short_en": "Multilayer panels for fast construction of external walls",
+        "description_uz": "ECO BASALT devor sendvich panellari — sanoat, tijorat, ombor va qishloq xo'jaligi ob'ektlarining tashqi devorlarini tez barpo etish uchun mo'ljallangan zamonaviy ko'p qatlamli qurilish panellari. Panellar mustahkamlik, samarali issiqlik izolyatsiyasi va chiroyli tashqi ko'rinishni birlashtirib, qurilish konstruksiyalarining ishonchliligi va uzoq muddat xizmat qilishini ta'minlaydi.",
+        "description_ru": "Стеновые сэндвич-панели ECO BASALT — современные многослойные строительные панели, предназначенные для быстрого возведения наружных стен промышленных, коммерческих, складских и сельскохозяйственных объектов. Панели сочетают прочность, эффективную теплоизоляцию и эстетичный внешний вид, обеспечивая надёжность и долговечность строительных конструкций.",
+        "description_en": "ECO BASALT wall sandwich panels are modern multilayer building panels designed for fast construction of external walls of industrial, commercial, warehouse and agricultural facilities. The panels combine strength, effective thermal insulation and an attractive appearance, ensuring reliable and durable structures.",
+        "advantages_uz": ["Energiya samaradorligi", "Konstruksiyaning ishonchliligi va mustahkamligi", "Yuqori montaj tezligi", "Atmosfera ta'sirlariga chidamlilik", "Mexanik yuklamalarga chidamlilik", "Zamonaviy tashqi ko'rinish"],
+        "advantages_ru": ["Энергоэффективность", "Надёжность и прочность конструкции", "Высокая скорость монтажа", "Устойчивость к атмосферным воздействиям", "Устойчивость к механическим нагрузкам", "Современный внешний вид"],
+        "advantages_en": ["Energy efficiency", "Reliable and strong structure", "Fast installation", "Weather resistance", "Resistance to mechanical loads", "Modern appearance"],
+        "applications_uz": ["Ishlab chiqarish binolari", "Ombor majmualari", "Logistika markazlari", "Savdo binolari", "Qishloq xo'jaligi majmualari", "Ma'muriy binolar"],
+        "applications_ru": ["Производственные здания", "Складские комплексы", "Логистические центры", "Торговые помещения", "Сельскохозяйственные комплексы", "Административные здания"],
+        "applications_en": ["Production buildings", "Warehouse complexes", "Logistics centres", "Retail premises", "Agricultural complexes", "Administrative buildings"],
     },
     {
-        "slug": "fridge-sandwich-panel", "category_slug": "sandwich-panels",
-        "name_uz": "Soviqxona paneli (250mm)", "name_ru": "Холодильная панель (250мм)", "name_en": "Cold storage panel (250mm)",
-        "short_uz": "Past haroratlar uchun maxsus panel",
-        "short_ru": "Специальная панель для низких температур",
-        "short_en": "Specialised panel for low temperatures",
-        "description_uz": "-25°C dan +50°C gacha. Soviqxona, muzlatkich, oziq-ovqat ombori.",
-        "description_ru": "От -25°C до +50°C. Холодильники, морозильники, пищевые склады.",
-        "description_en": "From -25°C to +50°C. Refrigerators, freezers, food storage.",
-        "specs": {"qalinligi": "150-250mm", "EI": "240", "harorat": "-25...+50°C", "λ": "0.033"},
-        "is_featured": True, "price_from": 42, "price_currency": "USD/m²", "order": 3
+        "slug": "roof-sandwich-panels", "category_slug": "panels", "order": 4,
+        "name_uz": "Tom sendvich panellari",
+        "name_ru": "Кровельные сэндвич-панели",
+        "name_en": "Roof sandwich panels",
+        "short_uz": "Mustahkam va energiya tejamkor tomlar uchun ko'p qatlamli panellar",
+        "short_ru": "Многослойные панели для прочных и энергоэффективных кровель",
+        "short_en": "Multilayer panels for strong, energy-efficient roofs",
+        "description_uz": "ECO BASALT tom sendvich panellari — mustahkam, energiya tejamkor va uzoq muddat xizmat qiladigan tom konstruksiyalarini yaratish uchun ishlab chiqilgan zamonaviy ko'p qatlamli panellar. Samarali issiqlik izolyatsiyasi va tashqi ta'sirlarga chidamliligi tufayli panellar binoni ishonchli himoya qiladi va qulay ekspluatatsiya sharoitlarini ta'minlaydi.",
+        "description_ru": "Кровельные сэндвич-панели ECO BASALT — современные многослойные панели, разработанные для создания прочных, энергоэффективных и долговечных кровельных конструкций. Благодаря эффективной теплоизоляции и устойчивости к внешним воздействиям панели обеспечивают надёжную защиту здания и комфортные условия эксплуатации.",
+        "description_en": "ECO BASALT roof sandwich panels are modern multilayer panels developed for strong, energy-efficient and durable roof structures. Thanks to effective thermal insulation and resistance to external impacts, the panels reliably protect the building and provide comfortable operating conditions.",
+        "advantages_uz": ["Tom konstruksiyasining mustahkamligi", "Yuqori yuk ko'tarish qobiliyati", "Birikmalarning germetikligi", "Atmosfera ta'sirlariga chidamlilik", "Yil davomida montaj qilish imkoniyati"],
+        "advantages_ru": ["Прочность кровельной конструкции", "Высокая несущая способность", "Герметичность соединений", "Устойчивость к атмосферным воздействиям", "Всесезонный монтаж"],
+        "advantages_en": ["Strong roof structure", "High load-bearing capacity", "Sealed joints", "Weather resistance", "Year-round installation"],
+        "applications_uz": ["Yangi tomlarni qurish", "Tomlarni almashtirish va rekonstruksiya qilish", "Sanoat, tijorat va qishloq xo'jaligi ob'ektlari"],
+        "applications_ru": ["Устройство новых кровель", "Замена и реконструкция кровель", "Промышленные, коммерческие и сельскохозяйственные объекты"],
+        "applications_en": ["New roof construction", "Roof replacement and reconstruction", "Industrial, commercial and agricultural facilities"],
     },
-
-    # Rockwool Insulation (2 ta)
+    # ── Gidroponika ──
     {
-        "slug": "pipe-insulation-cylinder", "category_slug": "rockwool-insulation",
-        "name_uz": "Quvur izolyatsiya silindrlari", "name_ru": "Цилиндры для изоляции труб", "name_en": "Pipe insulation cylinders",
-        "short_uz": "Silindr shaklidagi quvur izolyatsiyasi",
-        "short_ru": "Цилиндры для изоляции труб",
-        "short_en": "Cylindrical pipe insulation",
-        "description_uz": "Issiqlik va sovuq quvurlari uchun bazalt silindrlar.",
-        "description_ru": "Базальтовые цилиндры для тепловых и холодных труб.",
-        "description_en": "Basalt cylinders for hot and cold pipelines.",
-        "specs": {"diametri": "18-273mm", "qalinligi": "20-100mm", "harorat": "-180...+650°C", "zichlik": "100 kg/m³"},
-        "is_featured": True, "price_from": 4, "price_currency": "USD/m", "order": 4
-    },
-    {
-        "slug": "rockwool-slab", "category_slug": "rockwool-insulation",
-        "name_uz": "Bazalt izolyatsiya plitalari", "name_ru": "Базальтовые плиты", "name_en": "Basalt insulation slabs",
-        "short_uz": "Devor va shift uchun bazalt plitalar",
-        "short_ru": "Базальтовые плиты для стен и потолков",
-        "short_en": "Basalt slabs for walls and ceilings",
-        "description_uz": "100-200kg/m³ zichlikdagi plitalar. Bino izolyatsiyasi uchun.",
-        "description_ru": "Плиты плотностью 100-200кг/м³. Для теплоизоляции зданий.",
-        "description_en": "Slabs with density 100-200kg/m³. For building insulation.",
-        "specs": {"qalinligi": "50-200mm", "zichlik": "100-200 kg/m³", "λ": "0.036 W/m·K", "yongin": "A1"},
-        "is_featured": False, "price_from": 6, "price_currency": "USD/m²", "order": 5
-    },
-
-    # Basalt Fiber (2 ta)
-    {
-        "slug": "basalt-roving", "category_slug": "basalt-fiber",
-        "name_uz": "Bazalt roving", "name_ru": "Базальтовый ровинг", "name_en": "Basalt roving",
-        "short_uz": "Kompozit materiallar uchun uzluksiz tola",
-        "short_ru": "Непрерывное волокно для композитов",
-        "short_en": "Continuous fiber for composites",
-        "description_uz": "Yuqori mustahkamlikdagi bazalt roving. Beton armaturasi, kompozit materiallar.",
-        "description_ru": "Высокопрочный базальтовый ровинг. Армирование бетона, композиты.",
-        "description_en": "High-strength basalt roving. Concrete reinforcement, composites.",
-        "specs": {"tex": "300-4800", "diametri": "9-17μm", "mustahkamlik": "4000 MPa"},
-        "is_featured": True, "price_from": 3.5, "price_currency": "USD/kg", "order": 6
+        "slug": "hydroponic-mats", "category_slug": "hydroponics", "order": 5,
+        "name_uz": "Gidroponik matlar",
+        "name_ru": "Гидропонные маты",
+        "name_en": "Hydroponic slabs",
+        "short_uz": "Gidroponik yetishtirish uchun tosh paxta substrati",
+        "short_ru": "Субстрат из каменной ваты для гидропонного выращивания",
+        "short_en": "Stone wool substrate for hydroponic growing",
+        "description_uz": "ECO BASALT gidroponik matlari — sabzavot, rezavor meva va gul ekinlarini gidroponika usulida yetishtirish uchun mo'ljallangan tosh paxtadan tayyorlangan zamonaviy substrat. Materialning optimal tuzilishi namlik va havoning bir tekis taqsimlanishini ta'minlab, ildiz tizimining rivojlanishi, ozuqa moddalarining samarali o'zlashtirilishi va o'simliklarning barqaror o'sishi uchun qulay sharoit yaratadi.",
+        "description_ru": "Гидропонные маты ECO BASALT — современный субстрат из каменной ваты, предназначенный для выращивания овощных, ягодных и цветочных культур методом гидропоники. Оптимальная структура материала обеспечивает равномерное распределение влаги и воздуха, создавая благоприятные условия для развития корневой системы, эффективного усвоения питательных веществ и стабильного роста растений.",
+        "description_en": "ECO BASALT hydroponic slabs are a modern stone wool substrate for growing vegetables, berries and flowers hydroponically. The optimal structure of the material ensures even distribution of moisture and air, creating favourable conditions for root development, efficient nutrient uptake and stable plant growth.",
+        "advantages_uz": ["Optimal suv-havo muvozanati", "Namlikning bir tekis taqsimlanishi", "Ildiz tizimi rivojlanishi uchun qulay sharoit", "Kimyoviy va biologik inertlik", "Foydalanishda soddalik", "Turli ekinlarni yetishtirish uchun mos"],
+        "advantages_ru": ["Оптимальный водно-воздушный баланс", "Равномерное распределение влаги", "Благоприятные условия для развития корневой системы", "Химическая и биологическая инертность", "Простота эксплуатации", "Подходит для выращивания различных культур"],
+        "advantages_en": ["Optimal water-air balance", "Even moisture distribution", "Favourable conditions for root development", "Chemically and biologically inert", "Easy to use", "Suitable for a wide range of crops"],
+        "applications_uz": ["Issiqxona majmualari", "Sabzavot ekinlarini yetishtirish", "Rezavor meva ekinlarini yetishtirish", "Gulchilik"],
+        "applications_ru": ["Тепличные комплексы", "Выращивание овощных культур", "Выращивание ягодных культур", "Цветоводство"],
+        "applications_en": ["Greenhouse complexes", "Vegetable growing", "Berry growing", "Floriculture"],
     },
     {
-        "slug": "basalt-chopped", "category_slug": "basalt-fiber",
-        "name_uz": "Maydalangan bazalt tola", "name_ru": "Рубленое базальтовое волокно", "name_en": "Chopped basalt fiber",
-        "short_uz": "Beton va asfalt uchun mikro tola",
-        "short_ru": "Микроволокно для бетона и асфальта",
-        "short_en": "Microfiber for concrete and asphalt",
-        "description_uz": "3-24mm uzunlikdagi maydalangan bazalt tola. Beton mustahkamlash.",
-        "description_ru": "Рубленое базальтовое волокно длиной 3-24мм. Усиление бетона.",
-        "description_en": "Chopped basalt fiber 3-24mm. Concrete reinforcement.",
-        "specs": {"uzunligi": "3-24mm", "diametri": "13-17μm", "kg_qop": "20kg"},
-        "is_featured": False, "price_from": 4, "price_currency": "USD/kg", "order": 7
-    },
-
-    # Accessories (1 ta)
-    {
-        "slug": "fasteners-set", "category_slug": "accessories",
-        "name_uz": "O'rnatish to'plamlari", "name_ru": "Монтажные наборы", "name_en": "Installation kits",
-        "short_uz": "Sendvich panel uchun vintlar va profillar",
-        "short_ru": "Винты и профили для сэндвич-панелей",
-        "short_en": "Screws and profiles for sandwich panels",
-        "description_uz": "Sendvich panel o'rnatish uchun barcha kerakli aksessuarlar.",
-        "description_ru": "Все необходимые аксессуары для монтажа сэндвич-панелей.",
-        "description_en": "All necessary accessories for sandwich panel installation.",
-        "specs": {"vint": "5.5×60", "profil": "U/Z/L", "rang": "RAL"},
-        "is_featured": False, "price_from": 0.2, "price_currency": "USD/dona", "order": 8
+        "slug": "hydroponic-plugs", "category_slug": "hydroponics", "order": 6,
+        "name_uz": "Gidroponik tiqinlar (kubiklar)",
+        "name_ru": "Гидропонные пробки (кубики)",
+        "name_en": "Hydroponic plugs (cubes)",
+        "short_uz": "Urug' undirish va ko'chat yetishtirish uchun tosh paxta substrati",
+        "short_ru": "Субстрат из каменной ваты для проращивания семян и рассады",
+        "short_en": "Stone wool substrate for seed germination and seedlings",
+        "description_uz": "ECO BASALT gidroponik tiqinlari (kubiklari) — urug' undirish, qalamchalarni ildiz otdirish va ko'chat yetishtirish uchun mo'ljallangan tosh paxta substrati. Materialning optimal tuzilishi bir tekis namlanish, ildiz tizimiga havoning erkin kirishi va yosh o'simliklar rivojlanishi uchun qulay sharoitni ta'minlaydi.",
+        "description_ru": "Гидропонные пробки (кубики) ECO BASALT — субстрат из каменной ваты, предназначенный для проращивания семян, укоренения черенков и выращивания рассады. Оптимальная структура материала обеспечивает равномерное увлажнение, свободный доступ воздуха к корневой системе и благоприятные условия для развития молодых растений.",
+        "description_en": "ECO BASALT hydroponic plugs (cubes) are a stone wool substrate for seed germination, rooting cuttings and growing seedlings. The optimal structure of the material ensures even moistening, free air access to the roots and favourable conditions for young plants.",
+        "advantages_uz": ["Optimal suv-havo muvozanati", "Urug' undirish uchun qulay sharoit", "Ildiz tizimining faol rivojlanishi", "Substratning bir tekis namlanishi", "O'simliklarni ko'chirib o'tkazish qulayligi", "Kimyoviy va biologik inertlik"],
+        "advantages_ru": ["Оптимальный водно-воздушный баланс", "Благоприятные условия для проращивания семян", "Активное развитие корневой системы", "Равномерное увлажнение субстрата", "Удобство пересадки растений", "Химическая и биологическая инертность"],
+        "advantages_en": ["Optimal water-air balance", "Favourable conditions for seed germination", "Active root development", "Even substrate moistening", "Easy transplanting", "Chemically and biologically inert"],
+        "applications_uz": ["Urug' undirish", "Qalamchalarni ildiz otdirish", "Ko'chat yetishtirish", "O'simliklarni ko'chirib o'tkazishga tayyorlash"],
+        "applications_ru": ["Проращивание семян", "Укоренение черенков", "Выращивание рассады", "Подготовка растений к пересадке"],
+        "applications_en": ["Seed germination", "Rooting cuttings", "Growing seedlings", "Preparing plants for transplanting"],
     },
 ]
 
@@ -579,12 +584,30 @@ async def seed_initial_content(session: AsyncSession):
             continue
         session.add(ContentBlock(**block_data))
 
+    # Katalog v2 (feedback #04) — yangi mahsulotlardan hech biri bo'lmasa, bu birinchi ishga tushirish:
+    # eski demo kategoriya/mahsulotlar yashiriladi (o'chirilmaydi), yangi 3 kategoriya yangilanadi.
+    new_prod_slugs = [p["slug"] for p in DEFAULT_PRODUCTS]
+    new_cat_slugs = [c["slug"] for c in DEFAULT_CATEGORIES]
+    res = await session.execute(select(Product.id).where(Product.slug.in_(new_prod_slugs)))
+    catalog_v2_first_run = res.first() is None
+    if catalog_v2_first_run:
+        await session.execute(
+            update(Product).where(Product.slug.not_in(new_prod_slugs)).values(is_active=False)
+        )
+        await session.execute(
+            update(Category).where(Category.slug.not_in(new_cat_slugs)).values(is_active=False)
+        )
+
     # Categories
     cat_map = {}
     for cat_data in DEFAULT_CATEGORIES:
         res = await session.execute(select(Category).where(Category.slug == cat_data["slug"]))
         existing = res.scalar_one_or_none()
         if existing:
+            if catalog_v2_first_run:
+                for k, v in cat_data.items():
+                    setattr(existing, k, v)
+                existing.is_active = True
             cat_map[cat_data["slug"]] = existing.id
             continue
         cat = Category(**cat_data)

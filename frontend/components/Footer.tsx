@@ -38,13 +38,22 @@ export default function Footer() {
           {/* Brand — kattaroq logo, o'ng ustunlar textiga nisbatan tik markazga joylashgan */}
           <div className="sm:col-span-2 md:col-span-4 flex justify-center md:self-center">
             <Link href="/" className="flex flex-col items-center gap-4 group">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full ring-2 ring-pearl-100/25 group-hover:ring-pearl-100/45 transition-all" />
-                <Logo size={80} className="group-hover:rotate-12 transition-transform duration-500" />
+              {/* Ramkasiz, kattaroq va bo'rtiq (qatlamli soyalar) logo */}
+              <div
+                className="transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-105"
+                style={{
+                  filter:
+                    "drop-shadow(0 1px 0 rgba(255,255,255,0.25)) drop-shadow(0 6px 6px rgba(0,0,0,0.55)) drop-shadow(0 16px 28px rgba(0,0,0,0.6)) drop-shadow(0 0 32px rgba(169,29,42,0.35))",
+                }}
+              >
+                <Logo size={128} className="w-28 h-28 sm:w-32 sm:h-32" />
               </div>
               <div
-                className="font-bold text-gold-400 text-3xl tracking-tight"
-                style={{ textShadow: "0 0 24px rgba(169, 29, 42, 0.4), 0 1px 0 rgba(0, 0, 0, 0.5)" }}
+                className="font-extrabold text-gold-400 text-3xl sm:text-4xl tracking-tight"
+                style={{
+                  textShadow:
+                    "0 1px 0 #d6414e, 0 2px 0 #7d1820, 0 3px 0 #601319, 0 4px 0 #460f13, 0 8px 14px rgba(0,0,0,0.6), 0 0 28px rgba(169,29,42,0.35)",
+                }}
               >
                 ECO BASALT
               </div>
@@ -61,6 +70,9 @@ export default function Footer() {
               </Link></li>
               <li><Link href="/products?cat=hydroponics" className="hover:text-gold-400 transition-colors">
                 {lang === "uz" ? "Gidroponika substratlari" : lang === "ru" ? "Гидропонные субстраты" : "Hydroponic substrates"}
+              </Link></li>
+              <li><Link href="/products?cat=panels" className="hover:text-gold-400 transition-colors">
+                {lang === "uz" ? "Sendvich panellar" : lang === "ru" ? "Сэндвич-панели" : "Sandwich panels"}
               </Link></li>
               <li><Link href="/downloads" className="hover:text-gold-400 transition-colors">
                 {lang === "uz" ? "Texnik hujjatlar" : lang === "ru" ? "Техническая документация" : "Technical documentation"}

@@ -1,5 +1,5 @@
 """Pydantic schemas — API request/response validation"""
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, field_validator
 from typing import Optional, Any
 from datetime import datetime, date
 
@@ -69,6 +69,12 @@ class ProductBase(BaseModel):
     description_uz: Optional[str] = None
     description_ru: Optional[str] = None
     description_en: Optional[str] = None
+    advantages_uz: list[str] = Field(default_factory=list)
+    advantages_ru: list[str] = Field(default_factory=list)
+    advantages_en: list[str] = Field(default_factory=list)
+    applications_uz: list[str] = Field(default_factory=list)
+    applications_ru: list[str] = Field(default_factory=list)
+    applications_en: list[str] = Field(default_factory=list)
     specs: dict = Field(default_factory=dict)
     cover_image: Optional[str] = None
     gallery: list[str] = Field(default_factory=list)
@@ -77,6 +83,18 @@ class ProductBase(BaseModel):
     is_featured: bool = False
     is_active: bool = True
     order: int = 0
+
+    # Eski yozuvlarda bu ustunlar NULL bo'lishi mumkin
+    @field_validator(
+        "advantages_uz", "advantages_ru", "advantages_en",
+        "applications_uz", "applications_ru", "applications_en",
+        "specs", "gallery", mode="before",
+    )
+    @classmethod
+    def _none_to_empty(cls, v, info):
+        if v is None:
+            return {} if info.field_name == "specs" else []
+        return v
 
 
 class ProductCreate(ProductBase):
@@ -95,6 +113,12 @@ class ProductUpdate(BaseModel):
     description_uz: Optional[str] = None
     description_ru: Optional[str] = None
     description_en: Optional[str] = None
+    advantages_uz: Optional[list[str]] = None
+    advantages_ru: Optional[list[str]] = None
+    advantages_en: Optional[list[str]] = None
+    applications_uz: Optional[list[str]] = None
+    applications_ru: Optional[list[str]] = None
+    applications_en: Optional[list[str]] = None
     specs: Optional[dict] = None
     cover_image: Optional[str] = None
     gallery: Optional[list[str]] = None

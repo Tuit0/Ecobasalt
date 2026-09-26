@@ -4,11 +4,11 @@ import useSWR from "swr";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Package, Sparkles } from "lucide-react";
+import { ArrowUpRight, Package } from "lucide-react";
 import { fetcher, pickLang } from "@/lib/api";
 import { useLang } from "@/lib/lang-context";
 import { t } from "@/lib/i18n";
-import { productImage } from "@/lib/sample-images";
+import ProductImage from "./ProductImage";
 import { useSectionVisible } from "@/lib/section-visibility";
 
 type Category = { id: number; slug: string; name_uz: string; name_ru: string; name_en: string };
@@ -18,11 +18,7 @@ type Product = {
   category_id: number;
   name_uz: string; name_ru: string; name_en: string;
   short_uz: string; short_ru: string; short_en: string;
-  cover_image?: string;
-  specs?: Record<string, string>;
-  is_featured?: boolean;
-  price_from?: number;
-  price_currency?: string;
+  cover_image?: string | null;
 };
 
 export default function Products() {
@@ -67,7 +63,7 @@ export default function Products() {
     <section id="products" className="py-14 sm:py-20 lg:py-28 xl:py-32 bg-onyx-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <div className="mb-8 sm:mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -76,20 +72,10 @@ export default function Products() {
             className="max-w-2xl"
           >
             <span className="badge-pill mb-5">{t(lang, "products.eyebrow")}</span>
-            <h2 className="h-display text-pearl-100 text-4xl sm:text-5xl md:text-6xl text-balance leading-tight">
-              {t(lang, "products.title").split(" ")[0]}{" "}
-              <span className="text-gradient-red">{t(lang, "products.title").split(" ").slice(1).join(" ")}</span>
-            </h2>
+            <h1 className="h-display text-pearl-50 text-4xl sm:text-5xl md:text-6xl text-balance leading-tight">
+              {t(lang, "products.title")}
+            </h1>
           </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-pearl-200 text-base max-w-md"
-          >
-            {t(lang, "products.subtitle")}
-          </motion.p>
         </div>
 
         {/* Filter chips */}
@@ -136,20 +122,14 @@ export default function Products() {
                   href={`/products/${p.slug}`}
                   className="group block overflow-hidden rounded-3xl bg-onyx-900/60 border border-pearl-100/5 hover:border-gold-400/40 transition-all duration-500 h-full backdrop-blur-sm"
                 >
-                  <div className="aspect-[4/3] relative overflow-hidden bg-onyx-800">
-                    <img
-                      src={productImage(p.slug, p.cover_image)}
+                  <div className="relative">
+                    <ProductImage
+                      src={p.cover_image}
                       alt={pickLang(p, lang, "name")}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      category={categories.find((c) => c.id === p.category_id)?.slug}
+                      className="aspect-[4/3]"
+                      imgClassName="transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-onyx-950/80 via-transparent to-transparent" />
-
-                    {p.is_featured && (
-                      <div className="absolute top-4 left-4 badge-pill bg-onyx-950/70 backdrop-blur border-gold-400/30 text-gold-400">
-                        <Sparkles className="w-3 h-3" strokeWidth={2} />
-                        <span className="text-[11px]">Featured</span>
-                      </div>
-                    )}
 
                     <motion.div className="absolute top-4 right-4 w-11 h-11 rounded-full bg-gold-400 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-500">
                       <ArrowUpRight className="w-5 h-5 text-pearl-100" strokeWidth={2.5} />
@@ -157,34 +137,16 @@ export default function Products() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="h-display text-pearl-100 text-xl mb-2 group-hover:text-gradient-red transition-all line-clamp-1">
+                    <h3 className="h-display text-pearl-100 text-xl mb-2 group-hover:text-gradient-red transition-all line-clamp-2">
                       {pickLang(p, lang, "name")}
                     </h3>
                     <p className="text-pearl-200 text-sm leading-relaxed line-clamp-2 mb-4">
                       {pickLang(p, lang, "short")}
                     </p>
 
-                    {p.specs && Object.keys(p.specs).length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {Object.entries(p.specs).slice(0, 3).map(([k, v]) => (
-                          <span key={k} className="text-[11px] px-2.5 py-1 rounded-full bg-pearl-100/5 text-pearl-200 font-medium">
-                            <span className="text-gold-400">{k}</span> · {v}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between pt-4 border-t border-pearl-100/5">
-                      {p.price_from ? (
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-xs text-pearl-300">from</span>
-                          <span className="h-display text-gradient-red text-lg">${p.price_from}</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-pearl-300">{t(lang, "products.details") || "Details"}</span>
-                      )}
-                      <div className="text-gold-400 text-sm font-semibold">
-                        {lang === "uz" ? "Batafsil" : lang === "ru" ? "Подробнее" : "View"} →
+                    <div className="flex justify-end pt-4 border-t border-pearl-100/5">
+                      <div className="text-gold-300 text-sm font-semibold">
+                        {lang === "uz" ? "Batafsil" : lang === "ru" ? "Подробнее" : "Learn more"} →
                       </div>
                     </div>
                   </div>
